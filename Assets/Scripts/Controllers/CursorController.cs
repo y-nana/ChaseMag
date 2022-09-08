@@ -6,19 +6,22 @@ using UnityEngine.UI;
 public class CursorController : MonoBehaviour
 {
 
-    [SerializeField] List<GameObject> buttonObjects;
-    List<Transform> buttonsTransform;
-    List<Button> buttons;
+    //[SerializeField] List<GameObject> buttonObjects;
+    //List<Transform> buttonsTransform;
+    //List<Button> buttons;
+    [SerializeField] 
+    private Button firstSelect;
 
 
 
-    int selectNum;
-    bool isDown;
+    //int selectNum;
+    //bool isDown;
     Transform cursorTransform;
 
     // Start is called before the first frame update
     void Start()
     {
+        /*
         buttonsTransform = new List<Transform>();
         buttons = new List<Button>();
         for (int i = 0; i < buttonObjects.Count; i++)
@@ -26,16 +29,20 @@ public class CursorController : MonoBehaviour
             buttonsTransform.Add(buttonObjects[i].GetComponent<Transform>());
             buttons.Add(buttonObjects[i].GetComponent<Button>());
         }
-        cursorTransform = GetComponent<Transform>();
         isDown = true;
         selectNum = 0;
         cursorTransform.position = new Vector2(cursorTransform.position.x, buttonsTransform[selectNum].position.y);
         buttons[selectNum].Select();
+        */
+        cursorTransform = GetComponent<Transform>();
+
+        firstSelect.Select();
     }
 
     // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             isDown = false;
@@ -48,11 +55,14 @@ public class CursorController : MonoBehaviour
             ChangeSelect();
         }
         buttons[selectNum].Select();
+        */
     }
 
+    /*
 
     void ChangeSelect()
     {
+
         if (isDown)
         {
             selectNum++;
@@ -72,5 +82,11 @@ public class CursorController : MonoBehaviour
 
         cursorTransform.position = new Vector2(cursorTransform.position.x, buttonsTransform[selectNum].position.y);
         buttons[selectNum].Select();
+    }
+    */
+
+    public void ChangeSelect(Transform buttonTransform)
+    {
+        cursorTransform.position = new Vector2(cursorTransform.position.x, buttonTransform.position.y);
     }
 }

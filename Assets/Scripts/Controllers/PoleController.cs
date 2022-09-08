@@ -47,10 +47,16 @@ public class PoleController : MonoBehaviour
         if (!PauseManager.nowPause)
         {
             // 極の向きを変更する
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetMouseButtonDown(1)) PoleChange(turnRight);
-            if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetMouseButtonDown(0)) PoleChange(turnLeft);
+            if (Input.GetKeyDown(KeyCode.RightArrow) 
+                || Input.GetMouseButtonDown(1)
+                || Input.GetButtonDown("Action1")) PoleChange(turnRight);
+            if (Input.GetKeyDown(KeyCode.LeftArrow) 
+                || Input.GetMouseButtonDown(0)
+                || Input.GetButtonDown("Action0")) PoleChange(turnLeft);
 
-            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow)) PoleChange(reverse);
+            if (Input.GetKeyDown(KeyCode.UpArrow)
+                || Input.GetKeyDown(KeyCode.DownArrow)
+                || Input.GetButtonDown("Action2")) PoleChange(reverse);
 
         }
 

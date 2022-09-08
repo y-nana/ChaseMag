@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameStartDirector : MonoBehaviour
 {
     
-    private readonly string mainScene = "GameScene";                // ゲームメインシーン名
+    private readonly string stageSelectScene = "StageSelectScene";  // ステージセレクトシーン名
     private readonly string titleScene = "GameStartScene";          // タイトルシーン名
     private readonly string tutorialScene = "GameTutorialScene";    // チュートリアルシーン名
 
@@ -14,7 +14,7 @@ public class GameStartDirector : MonoBehaviour
     {
  
         // spaceキーでゲームメインシーンへ
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) || Input.GetButtonDown("Start"))
         {
             ToMain();
         }
@@ -27,7 +27,7 @@ public class GameStartDirector : MonoBehaviour
 
     public void ToMain()
     {
-        SceneManager.LoadScene(mainScene);
+        SceneManager.LoadScene(stageSelectScene);
     }
 
     public void ToTitle()

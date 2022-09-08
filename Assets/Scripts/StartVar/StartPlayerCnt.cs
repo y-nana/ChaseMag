@@ -52,13 +52,13 @@ public class StartPlayerCnt : MonoBehaviour
             key = 1;
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") > 0)
         {
             actioned = true;
             key = 1;
             spriteRenderer.flipX = true;
         }
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal") < 0)
         {
             actioned = true;
             key = -1;

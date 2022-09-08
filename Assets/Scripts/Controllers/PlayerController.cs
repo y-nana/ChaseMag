@@ -42,14 +42,14 @@ public class PlayerController : MonoBehaviour
         if (!PauseManager.nowPause)
         {
             // 右
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") > 0)
             {
                 key = 1;
                 // 身体の向きを右に
                 this.spriteRenderer.flipX = true;
             }
             // 左
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal") < 0)
             {
                 key = -1;
                 // 身体の向きを左に

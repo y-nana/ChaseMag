@@ -30,9 +30,9 @@ public class ItemBoxController : MonoBehaviour
     // 取得用タグ名
     private readonly string playerTagName = "Player";   // プレイヤ
 
-    private readonly string chooseGuide = "";
+    private readonly string chooseGuide = "Yボタンで\nアイテム抽選";
     //private readonly string chooseGuide = "spaceキーで\nアイテム抽選";
-    private readonly string getGuide = "";
+    private readonly string getGuide = "もう一度Yボタンで\nアイテムゲット";
     //private readonly string getGuide = "もう一度\nspaceキーで\nアイテム獲得";
     private readonly string coolTimeGuide = "クールタイム...";
 
@@ -54,7 +54,8 @@ public class ItemBoxController : MonoBehaviour
         {
             guideTextObj.SetActive(true);
 
-            if (Input.GetKeyDown(KeyCode.Space) && !PauseManager.nowPause)
+            if ((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Action3"))
+                && !PauseManager.nowPause)
             {
                 if (choosed)
                 {
