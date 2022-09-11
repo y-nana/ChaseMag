@@ -37,11 +37,14 @@ public class CursorController : MonoBehaviour
         cursorTransform = GetComponent<Transform>();
 
         firstSelect.Select();
+        //ChangeSelect(firstSelect.gameObject.transform);
+        //Debug.Log(firstSelect.transform.position.y);
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(firstSelect.transform.position.y);
         /*
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {

@@ -8,7 +8,8 @@ public enum StageLevelState
 {
     easy,
     normal,
-    hard
+    hard,
+    extra
 }
 
 
@@ -65,6 +66,10 @@ public class SceneDirector : MonoBehaviour, SceneCaller
                 SceneManager.LoadScene(hardGameScene);
 
                 break;
+            case StageLevelState.extra:
+                SceneManager.LoadScene(gameScene);
+
+                break;
         }
     }
 
@@ -78,6 +83,7 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     public void ToGameStart(StageLevelState stageLevel)
     {
         Time.timeScale = 1f;
+        NextStageLevel = stageLevel;
 
         switch (stageLevel)
         {
@@ -91,6 +97,10 @@ public class SceneDirector : MonoBehaviour, SceneCaller
                 break;
             case StageLevelState.hard:
                 SceneManager.LoadScene(hardGameScene);
+
+                break;
+            case StageLevelState.extra:
+                SceneManager.LoadScene(gameScene);
 
                 break;
         }
