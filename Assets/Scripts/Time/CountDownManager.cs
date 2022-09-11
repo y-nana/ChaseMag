@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CountDownManager : MonoBehaviour
 {    
@@ -10,7 +11,8 @@ public class CountDownManager : MonoBehaviour
     [SerializeField] float cageDestroyTime = 1.0f;  // 檻を破壊するまでの時間
 
     // コントロール用コンポーネント
-    [SerializeField] Text countDownText; // 文字を表示する(子オブジェクト)
+    //[SerializeField] Text countDownText; // 文字を表示する(子オブジェクト)
+    [SerializeField] TextMeshProUGUI countDownText; // 文字を表示する(子オブジェクト)
     private Image gage;         // 周りのゲージ
 
     [SerializeField] TimeMamager timeManage;     // ゲームを始めるため

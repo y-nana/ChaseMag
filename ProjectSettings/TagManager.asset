@@ -9,6 +9,7 @@ TagManager:
   - Chaser
   - Timer
   - Cage
+  - SceneDirector
   layers:
   - Default
   - TransparentFX

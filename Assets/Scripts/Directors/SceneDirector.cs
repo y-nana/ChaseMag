@@ -4,14 +4,35 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
+public enum StageLevelState
+{
+    easy,
+    normal,
+    hard
+}
+
 
 public class SceneDirector : MonoBehaviour, SceneCaller
 {
     private readonly string gameOver = "GameOverScene";     // ゲームオーバーシーン名
     private readonly string gameClear = "GameClearScene";   // ゲームクリアシーン名
-    private readonly string mainScene = "GameScene";                // ゲームメインシーン名
+    private readonly string gameScene = "GameScene";                // ゲームメインシーン名
+    private readonly string stageSelectScene = "StageSelectScene";  // ステージセレクトシーン名
     private readonly string titleScene = "GameStartScene";          // タイトルシーン名
+    
+    private readonly string easyGameScene = "EasyGameScene";        // かんたんゲームシーン名
+    private readonly string normalGameScene = "normalGameScene";    // ふつうゲームシーン名
+    private readonly string hardGameScene = "hardGameScene";        // むずかしいゲームシーン名
 
+
+    private readonly string sceneDirectorTag = "SceneDirector";     // オブジェクト取得用タグ
+
+
+    [SerializeField]
+    private StageLevelState thisStageLevel;
+
+
+    private static StageLevelState NextStageLevel;
 
 
     private void Update()
@@ -21,12 +42,30 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         {
             ToTitle();
         }
+        //Debug.Log("this"+thisStageLevel);
+        //Debug.Log("next"+NextStageLevel);
     }
 
-    public void ToMain()
+    public void ToGameStart()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainScene);
+        //Debug.Log(NextStageLevel);
+
+        switch (NextStageLevel)
+        {
+            case StageLevelState.easy:
+                SceneManager.LoadScene(easyGameScene);
+
+                break;
+            case StageLevelState.normal:
+                SceneManager.LoadScene(normalGameScene);
+
+                break;
+            case StageLevelState.hard:
+                SceneManager.LoadScene(hardGameScene);
+
+                break;
+        }
     }
 
     public void ToTitle()
@@ -35,18 +74,68 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         SceneManager.LoadScene(titleScene);
     }
 
+    // 難易度によってシーンを変える
+    public void ToGameStart(StageLevelState stageLevel)
+    {
+        Time.timeScale = 1f;
+
+        switch (stageLevel)
+        {
+            case StageLevelState.easy:
+                SceneManager.LoadScene(easyGameScene);
+
+                break;
+            case StageLevelState.normal:
+                SceneManager.LoadScene(normalGameScene);
+
+                break;
+            case StageLevelState.hard:
+                SceneManager.LoadScene(hardGameScene);
+
+                break;
+        }
+    }
+
+    public void ToStageSelect()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(stageSelectScene);
+    }
 
 
     // ゲームオーバーシーンへ
     public void ToGameOver()
     {
         Time.timeScale = 1f;
+        //SceneManager.sceneLoaded += SendToNextScene;
+        NextStageLevel = thisStageLevel;
+
         SceneManager.LoadScene(gameOver);
     }
     // ゲームクリアシーンへ
     public void ToGameClear()
     {
         Time.timeScale = 1f;
+        //SceneManager.sceneLoaded += SendToNextScene;
+        NextStageLevel = thisStageLevel;
         SceneManager.LoadScene(gameClear);
     }
+
+    // 遷移時のイベント登録で変数を渡したいけどうまくいかないので没
+    /*
+    private void SendToNextScene(Scene next, LoadSceneMode mode)
+    {
+        Debug.Log(thisStageLevel);
+
+        var nextSceneDirector =
+            GameObject.FindWithTag(sceneDirectorTag)
+            .GetComponent<SceneDirector>();
+
+        nextSceneDirector.NextStageLevel = thisStageLevel;
+        nextSceneDirector.test = testInt;
+        Debug.Log(nextSceneDirector.NextStageLevel);
+
+        SceneManager.sceneLoaded -= SendToNextScene;
+    }
+    */
 }
