@@ -11,7 +11,9 @@ public class TutrialManager : MonoBehaviour
     private TextMeshProUGUI tutrialText;
 
     [SerializeField, TextArea]
-    private string viewText;
+    private List<string> viewTextList = new List<string>();
+
+    private int textListIndex;
 
     [SerializeField]
     private float textSpeed = 0.1f;
@@ -22,6 +24,7 @@ public class TutrialManager : MonoBehaviour
     void Start()
     {
         StartCoroutine("Cotest");
+        textListIndex = 0;
     }
 
     // Update is called once per frame
@@ -32,11 +35,13 @@ public class TutrialManager : MonoBehaviour
 
     IEnumerator CoDrawText(string text)
     {
+
         isDrowing = true;
         float time = 0;
         while (true)
         {
-            yield return 0;
+
+            yield return null;
             time += Time.deltaTime;
             int len = Mathf.FloorToInt(time / textSpeed);
             if (len > text.Length)
@@ -46,26 +51,30 @@ public class TutrialManager : MonoBehaviour
             tutrialText.text = text.Substring(0, len);
         }
         tutrialText.text = text;
-        yield return 0;
+        yield return null;
         isDrowing = false;
     }
 
     // クリック待ちのコルーチン
     IEnumerator Skip()
     {
-        while (isDrowing) yield return 0;
-        //while (!uitext.IsClicked()) yield return 0;
+        while (isDrowing) yield return null;
+        while (!(Input.GetMouseButtonDown(0) && !PauseManager.nowPause)) yield return null;
+        Debug.Log("test");
     }
 
     // 文章を表示させるコルーチン
     IEnumerator Cotest()
     {
-        //uitext.DrawText("ナレーションだったらこのまま書けばOK");
-        //yield return StartCoroutine("Skip");
 
-        //uitext.DrawText("名前", "人が話すのならこんな感じ");
-        CoDrawText(viewText);
-        yield return StartCoroutine("Skip");
+        while (textListIndex < viewTextList.Count)
+        {
+            StartCoroutine("CoDrawText", viewTextList[textListIndex]);
+
+            yield return StartCoroutine("Skip");
+            textListIndex++;
+        }
+
 
     }
 

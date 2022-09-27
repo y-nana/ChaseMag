@@ -2468,7 +2468,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutrialText: {fileID: 1094081956}
-  viewText: "\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042\u3042"
+  viewTextList:
+  - "\u4ECA\u65E5\u306E"
+  - "\u671D\u3054\u306F\u3093\u306F"
+  - "\u30A2\u30B9\u30D1\u30E9\u30AC\u30B9"
   textSpeed: 0.1
 --- !u!222 &629474632
 CanvasRenderer:
