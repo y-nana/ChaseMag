@@ -30,6 +30,10 @@ public class PoleController : MonoBehaviour
     // 向きをわかりやすくするためのもの(子オブジェクト)
     [SerializeField] Transform pole;
 
+    private AudioSource audioSource;        // サウンド
+                                            // 効果音
+    [SerializeField]
+    private AudioClip changePoleSE;
 
     private void Start()
     {
@@ -38,6 +42,7 @@ public class PoleController : MonoBehaviour
 
         // 極の向きを最初はs極を左に
         southPole = (int)PoleOrientation.Left;
+        this.audioSource = GetComponent<AudioSource>();
 
         //pole = transform.GetChild(0);
     }
@@ -81,6 +86,8 @@ public class PoleController : MonoBehaviour
         // southPoleが範囲外になったら修正
         if (southPole < poleMin) southPole += 4;
         if (southPole > poleMax) southPole -= 4;
+
+        audioSource.PlayOneShot(changePoleSE);
 
     }
 

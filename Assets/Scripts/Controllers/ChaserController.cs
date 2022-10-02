@@ -18,6 +18,8 @@ public class ChaserController : MonoBehaviour
     private SpriteRenderer spriteRenderer;  // 身体の向き変更
     private Animator animator;              // アニメーション
     [SerializeField] private GameObject sceneDirector;        // シーン遷移用
+    private AudioSource audioSource;        // サウンド
+
 
     // アニメーションのbool名
     private readonly string walk = "NowWalk";  // 歩いているか
@@ -49,6 +51,14 @@ public class ChaserController : MonoBehaviour
     private Vector2 prePos;
     private Vector2 MyPos;
 
+    // 効果音
+    [SerializeField]
+    private AudioClip jumpSE;
+
+    // 効果音
+    [SerializeField]
+    private AudioClip upSE;
+
     // 取得用タグ名
     //private readonly string playerTagName = "Player";   // プレイヤ
 
@@ -65,6 +75,8 @@ public class ChaserController : MonoBehaviour
         rigid2D = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        this.audioSource = GetComponent<AudioSource>();
+
 
         // プレイヤ取得
         //player = GameObject.FindGameObjectWithTag(playerTagName);
@@ -197,12 +209,20 @@ public class ChaserController : MonoBehaviour
         {
             this.rigid2D.velocity = new Vector2(this.rigid2D.velocity.x, 0f);
             this.rigid2D.AddForce(transform.up * this.jumpForce);
+            audioSource.PlayOneShot(jumpSE);
+
         }
     }
 
     // 上に移動する(壁用)
     public void MoveUp()
     {
+        if (!audioSource.isPlaying)
+        {
+            //audioSource.Play(upSE);
+
+        }
+
         this.rigid2D.velocity = Vector2.up * this.upForce;
     }
 

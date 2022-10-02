@@ -17,6 +17,13 @@ public class WallController : MonoBehaviour
     // 極の向きを確認する用
     private PoleController poleCnt;
 
+    private AudioSource audioSource;        // サウンド
+
+
+    // 効果音
+    [SerializeField]
+    private AudioClip upSE;
+
     //private GameObject[] moveObjects;
     // コントローラもインタフェースか継承使えば配列にできる？
 
@@ -41,6 +48,8 @@ public class WallController : MonoBehaviour
         playerCnt = player.GetComponent<PlayerController>();
         chaserCnt = chaser.GetComponent<ChaserController>();
         poleCnt = player.GetComponentInChildren<PoleController>();
+        this.audioSource = GetComponent<AudioSource>();
+
         // 自身のタグを確認して、自身のspriteを変える
         tag = this.gameObject.tag;
         this.gameObject.name += tag;
@@ -64,6 +73,11 @@ public class WallController : MonoBehaviour
             if (poleCnt.PoleCheck(GetOrientation()))
             {
                 playerCnt.MoveUp();
+                if (!audioSource.isPlaying)
+                {
+                    audioSource.PlayOneShot(upSE);
+
+                }
             }
             else
             {
@@ -77,6 +91,11 @@ public class WallController : MonoBehaviour
         if (collision.gameObject == chaser)
         {
             chaserCnt.MoveUp();
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(upSE);
+
+            }
         }
     }
 

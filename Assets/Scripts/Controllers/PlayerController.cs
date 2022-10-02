@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rigid2D;            // 移動
     private SpriteRenderer spriteRenderer;  // 身体の向き変更
     private Animator animator;              // アニメーション
+    private AudioSource audioSource;        // サウンド
 
     // 磁力をコントロールするクラス(子オブジェクト内)
     [SerializeField] PoleController poleCnt;
@@ -23,12 +24,21 @@ public class PlayerController : MonoBehaviour
     private readonly string walk = "NowWalk";  // 歩いているか
     private readonly string jump = "NowJump";  // ジャンプ中か
 
+    // 効果音
+    [SerializeField]
+    private AudioClip jumpSE;
+
+    // 効果音
+    [SerializeField]
+    private AudioClip upSE;
+
     void Start()
     {
         // コンポーネント取得
         this.rigid2D = GetComponent<Rigidbody2D>();
         this.animator = GetComponent<Animator>();
         this.spriteRenderer = GetComponent<SpriteRenderer>();
+        this.audioSource = GetComponent<AudioSource>();
 
         //this.poleCnt = transform.GetChild(0).GetComponent<PoleController>();
     }
@@ -74,12 +84,20 @@ public class PlayerController : MonoBehaviour
             // 重力との相殺を防止
             this.rigid2D.velocity = new Vector2(this.rigid2D.velocity.x, 0f);
             this.rigid2D.AddForce(transform.up * this.jumpForce * poleCnt.PoleStrong);
+            audioSource.PlayOneShot(jumpSE);
         }
     }
 
     // 上に移動する(壁用)
     public void MoveUp()
     {
+
+        if (!audioSource.isPlaying)
+        {
+            //audioSource.PlayOneShot(upSE);
+
+        }
+
         this.rigid2D.velocity = new Vector2(this.rigid2D.velocity.x, upForce * poleCnt.PoleStrong);
         // 壁にくっついているので動かないようにする
         this.rigid2D.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
