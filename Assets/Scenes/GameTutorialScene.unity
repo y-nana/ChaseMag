@@ -2568,9 +2568,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutrialText: {fileID: 1094081956}
   viewTextList:
-  - "\u4ECA\u65E5\u306E"
-  - "\u671D\u3054\u306F\u3093\u306F"
-  - "\u30A2\u30B9\u30D1\u30E9\u30AC\u30B9"
+  - "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3092\u306F\u3058\u3081\u307E\u3057\u3087\u3046"
+  - "\u307E\u305A\u306F\u79FB\u52D5\u3067\u3059"
+  - "\u5DE6\u306E\u30B8\u30E7\u30A4\u30B9\u30C6\u30A3\u30C3\u30AF\u3067\u79FB\u52D5\u304C\u3067\u304D\u307E\u3059"
   textSpeed: 0.1
 --- !u!222 &629474632
 CanvasRenderer:
@@ -3584,6 +3584,49 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 830936086}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &932422429
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 932422431}
+  - component: {fileID: 932422430}
+  m_Layer: 0
+  m_Name: test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &932422430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932422429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2ee191669da7ed45abd7bdd524136c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &932422431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 932422429}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 372.5, y: 209.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &935259587
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4332,8 +4375,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3067\u3059"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dc1279eb4c373244a895ace45755630b, type: 2}
-  m_sharedMaterial: {fileID: 2268386384330949992, guid: dc1279eb4c373244a895ace45755630b,
+  m_fontAsset: {fileID: 11400000, guid: be0a68801a510824d9f472d4d23be290, type: 2}
+  m_sharedMaterial: {fileID: 2268386384330949992, guid: be0a68801a510824d9f472d4d23be290,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

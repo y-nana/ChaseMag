@@ -16,6 +16,7 @@ public class PauseManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         pauseObject.SetActive(false);
+        
         nowPause = false;
     }
 
@@ -28,6 +29,7 @@ public class PauseManager : MonoBehaviour
             {
                 pauseObject.SetActive(true);
                 Time.timeScale = 0f;
+                GameStateManager.instance.ToPause();
                 nowPause = true;
             }
             else
@@ -42,6 +44,7 @@ public class PauseManager : MonoBehaviour
     {
         pauseObject.SetActive(false);
         Time.timeScale = 1f;
+        GameStateManager.instance.ToPlaying();
         nowPause = false;
     }
 

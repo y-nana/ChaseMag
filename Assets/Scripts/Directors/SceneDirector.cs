@@ -20,6 +20,7 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     private readonly string gameScene = "GameScene";                // ゲームメインシーン名
     private readonly string stageSelectScene = "StageSelectScene";  // ステージセレクトシーン名
     private readonly string titleScene = "GameStartScene";          // タイトルシーン名
+    private readonly string tutorialScene = "GameTutorialScene";    // チュートリアルシーン名
     
     private readonly string easyGameScene = "EasyGameScene";        // かんたんゲームシーン名
     private readonly string normalGameScene = "normalGameScene";    // ふつうゲームシーン名
@@ -129,6 +130,13 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         //SceneManager.sceneLoaded += SendToNextScene;
         NextStageLevel = thisStageLevel;
         SceneManager.LoadScene(gameClear);
+    }
+
+    // チュートリアルシーンへ
+    public void ToTurorial()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(tutorialScene);
     }
 
     // 遷移時のイベント登録で変数を渡したいけどうまくいかないので没

@@ -49,7 +49,8 @@ public class PoleController : MonoBehaviour
 
     void Update()
     {
-        if (!PauseManager.nowPause)
+        if (GameStateManager.instance.IsInputtable())
+        //if (!PauseManager.nowPause)
         {
             // 極の向きを変更する
             if (Input.GetKeyDown(KeyCode.RightArrow) 

@@ -23,6 +23,7 @@ public class TutrialManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GameStateManager.instance.ToEvent();
         StartCoroutine("Cotest");
         textListIndex = 0;
     }
@@ -59,7 +60,8 @@ public class TutrialManager : MonoBehaviour
     IEnumerator Skip()
     {
         while (isDrowing) yield return null;
-        while (!(Input.GetMouseButtonDown(0) && !PauseManager.nowPause)) yield return null;
+        //while (!(Input.GetMouseButtonDown(0) && !PauseManager.nowPause)) yield return null;
+        while (!(Input.GetMouseButtonDown(0) && GameStateManager.instance.gameState == GameState.inEvent)) yield return null;
         Debug.Log("test");
     }
 
@@ -75,6 +77,7 @@ public class TutrialManager : MonoBehaviour
             textListIndex++;
         }
 
+        GameStateManager.instance.ToPlaying();
 
     }
 

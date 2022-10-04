@@ -49,7 +49,8 @@ public class PlayerController : MonoBehaviour
 
         // 左右移動
         int key = 0;
-        if (!PauseManager.nowPause)
+        //if (!PauseManager.nowPause)
+        if (GameStateManager.instance.IsInputtable())
         {
             // 右
             if (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") > 0)
