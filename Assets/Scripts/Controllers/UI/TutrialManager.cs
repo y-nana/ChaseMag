@@ -39,7 +39,7 @@ public class TutrialManager : MonoBehaviour
     private List<TutorialData> tutorialDatas = new List<TutorialData>();
     private int tutorialIndex;
 
-    private TutorialEventManage eventManage;
+    private TutorialTryManage tryManage;
 
     [SerializeField]
     private float textSpeed = 0.1f;
@@ -53,7 +53,7 @@ public class TutrialManager : MonoBehaviour
         StartCoroutine("Cotest");
         textListIndex = 0;
         tutorialIndex = 0;
-        eventManage =GetComponent<TutorialEventManage>();
+        tryManage =GetComponent<TutorialTryManage>();
     }
 
     // Update is called once per frame
@@ -102,8 +102,7 @@ public class TutrialManager : MonoBehaviour
             StartCoroutine("CoDrawText", tutorialDatas[tutorialIndex].viewText);
 
             yield return StartCoroutine("Skip");
-            //yield return eventManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
-            yield return eventManage.StartCoroutine("WalkEvent");
+            yield return tryManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
             tutorialIndex++;
         }
 

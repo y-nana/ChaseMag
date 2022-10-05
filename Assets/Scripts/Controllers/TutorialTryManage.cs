@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TutorialEventManage : MonoBehaviour
+public class TutorialTryManage : MonoBehaviour
 {
 
     [SerializeField]
@@ -82,6 +82,8 @@ public class TutorialEventManage : MonoBehaviour
                 break;
             }
         }
+        GameStateManager.instance.ToEvent();
+
     }
 
 
