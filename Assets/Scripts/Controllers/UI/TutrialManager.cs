@@ -4,6 +4,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+public enum TutorialState
+{
+    none,
+    walk,
+    jump,
+    wall,
+    poleRotation,
+    item,
+    rule
+}
+[System.Serializable]
+struct TutorialData
+{
+    [field:SerializeField, TextArea]
+    public string viewText { get; set; }
+
+    [field:SerializeField]
+    public TutorialState tutorialState { get; set; }
+
+}
 public class TutrialManager : MonoBehaviour
 {
 
@@ -16,6 +36,12 @@ public class TutrialManager : MonoBehaviour
     private int textListIndex;
 
     [SerializeField]
+    private List<TutorialData> tutorialDatas = new List<TutorialData>();
+    private int tutorialIndex;
+
+    private TutorialEventManage eventManage;
+
+    [SerializeField]
     private float textSpeed = 0.1f;
 
     private bool isDrowing = false;
@@ -26,6 +52,8 @@ public class TutrialManager : MonoBehaviour
         GameStateManager.instance.ToEvent();
         StartCoroutine("Cotest");
         textListIndex = 0;
+        tutorialIndex = 0;
+        eventManage =GetComponent<TutorialEventManage>();
     }
 
     // Update is called once per frame
@@ -69,12 +97,14 @@ public class TutrialManager : MonoBehaviour
     IEnumerator Cotest()
     {
 
-        while (textListIndex < viewTextList.Count)
+        while (tutorialIndex < tutorialDatas.Count)
         {
-            StartCoroutine("CoDrawText", viewTextList[textListIndex]);
+            StartCoroutine("CoDrawText", tutorialDatas[tutorialIndex].viewText);
 
             yield return StartCoroutine("Skip");
-            textListIndex++;
+            //yield return eventManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
+            yield return eventManage.StartCoroutine("WalkEvent");
+            tutorialIndex++;
         }
 
         GameStateManager.instance.ToPlaying();
