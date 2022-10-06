@@ -24,22 +24,35 @@ struct TutorialData
     public TutorialState tutorialState { get; set; }
 
 }
+[System.Serializable]
+public class TutorialJsonData
+{
+    public string viewText;
+
+    public TutorialState tutorialState;
+
+}
+[System.Serializable]
+public class TutorialJsonWrapper
+{
+    public TutorialJsonData[] tutorialJsonDatas;
+}
+
 public class TutrialManager : MonoBehaviour
 {
 
     [SerializeField]
     private TextMeshProUGUI tutrialText;
 
-    [SerializeField, TextArea]
-    private List<string> viewTextList = new List<string>();
-
-    private int textListIndex;
-
     [SerializeField]
     private List<TutorialData> tutorialDatas = new List<TutorialData>();
     private int tutorialIndex;
 
+    private List<TutorialJsonData> tutorialJsonDatas = new List<TutorialJsonData>();
+
     private TutorialTryManage tryManage;
+    private TextLoadManage textLoadManage;
+
 
     [SerializeField]
     private float textSpeed = 0.1f;
@@ -50,10 +63,13 @@ public class TutrialManager : MonoBehaviour
     void Start()
     {
         GameStateManager.instance.ToEvent();
-        StartCoroutine("Cotest");
-        textListIndex = 0;
+        textLoadManage = GetComponent<TextLoadManage>();
+
         tutorialIndex = 0;
         tryManage =GetComponent<TutorialTryManage>();
+        StartCoroutine(Cotest());
+
+
     }
 
     // Update is called once per frame
@@ -72,6 +88,13 @@ public class TutrialManager : MonoBehaviour
 
             yield return null;
             time += Time.deltaTime;
+
+            // 一気に表示
+            if (Input.GetMouseButtonDown(0))
+            {
+                break;
+            }
+
             int len = Mathf.FloorToInt(time / textSpeed);
             if (len > text.Length)
             {
@@ -96,13 +119,18 @@ public class TutrialManager : MonoBehaviour
     // 文章を表示させるコルーチン
     IEnumerator Cotest()
     {
-
-        while (tutorialIndex < tutorialDatas.Count)
+        Debug.Log(textLoadManage);
+        Debug.Log(textLoadManage.tutorialDatas);
+        Debug.Log(textLoadManage.tutorialDatas.tutorialJsonDatas);
+        //while (tutorialIndex < tutorialDatas.Count)
+        while (tutorialIndex < textLoadManage.tutorialDatas.tutorialJsonDatas.Length)
         {
-            StartCoroutine("CoDrawText", tutorialDatas[tutorialIndex].viewText);
+            //StartCoroutine("CoDrawText", tutorialDatas[tutorialIndex].viewText);
+            StartCoroutine("CoDrawText", textLoadManage.tutorialDatas.tutorialJsonDatas[tutorialIndex].viewText);
 
             yield return StartCoroutine("Skip");
-            yield return tryManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
+            //yield return tryManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
+            yield return tryManage.StartCoroutine("TryStart", textLoadManage.tutorialDatas.tutorialJsonDatas[tutorialIndex].tutorialState);
             tutorialIndex++;
         }
 

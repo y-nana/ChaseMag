@@ -1175,6 +1175,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 338606459}
   m_CullTransparentMesh: 0
+--- !u!1 &369026822
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 369026823}
+  - component: {fileID: 369026825}
+  - component: {fileID: 369026824}
+  m_Layer: 5
+  m_Name: AchievementGuageBack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &369026823
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 369026822}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1921276858}
+  m_Father: {fileID: 801045150}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -40, y: 0}
+  m_SizeDelta: {x: 150, y: 200}
+  m_Pivot: {x: 1, y: 0.5}
+--- !u!114 &369026824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 369026822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.8113208, g: 0.39942652, b: 0.11863652, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: f3f498d11bcb45942a358c04581cb053, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 0.889
+  m_FillClockwise: 1
+  m_FillOrigin: 2
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 0.5
+--- !u!222 &369026825
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 369026822}
+  m_CullTransparentMesh: 1
 --- !u!4 &393592599 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2849358630658521906, guid: 58fb084fe16cd1448bc9396fc64e498d,
@@ -2528,6 +2604,7 @@ GameObject:
   - component: {fileID: 629474632}
   - component: {fileID: 629474631}
   - component: {fileID: 629474633}
+  - component: {fileID: 629474634}
   m_Layer: 5
   m_Name: TutrialUI
   m_TagString: Untagged
@@ -2568,10 +2645,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutrialText: {fileID: 1094081956}
-  viewTextList:
-  - aaa
-  - "\u307E\u305A\u306F\u79FB\u52D5\u3067\u3059"
-  - "\u5DE6\u306E\u30B8\u30E7\u30A4\u30B9\u30C6\u30A3\u30C3\u30AF\u3067\u79FB\u52D5\u304C\u3067\u304D\u307E\u3059"
   tutorialDatas:
   - <viewText>k__BackingField: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3092\u306F\u3058\u3081\u307E\u3057\u3087\u3046"
     <tutorialState>k__BackingField: 0
@@ -2579,7 +2652,9 @@ MonoBehaviour:
     <tutorialState>k__BackingField: 0
   - <viewText>k__BackingField: "\u5DE6\u306E\u30B8\u30E7\u30A4\u30B9\u30C6\u30A3\u30C3\u30AF\u3067\u79FB\u52D5\u304C\u3067\u304D\u307E\u3059"
     <tutorialState>k__BackingField: 1
-  - <viewText>k__BackingField: "\u5929\u624D\u3067\u3059\u306D"
+  - <viewText>k__BackingField: "\u3044\u3044\u611F\u3058\u3067\u3059"
+    <tutorialState>k__BackingField: 0
+  - <viewText>k__BackingField: "\u6B21\u306F"
     <tutorialState>k__BackingField: 0
   textSpeed: 0.1
 --- !u!222 &629474632
@@ -2605,6 +2680,20 @@ MonoBehaviour:
   achievementGauge: {fileID: 1921276860}
   player: {fileID: 464377414}
   reachingPoint: {fileID: 1856475040}
+--- !u!114 &629474634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629474629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf6614bd629207d4488e27f48d3a60ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialDatas:
+    tutorialJsonDatas: []
 --- !u!1 &645084684
 GameObject:
   m_ObjectHideFlags: 0
@@ -3212,7 +3301,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1094081955}
-  - {fileID: 1921276858}
+  - {fileID: 369026823}
   m_Father: {fileID: 629474630}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6792,7 +6881,6 @@ GameObject:
   - component: {fileID: 1921276858}
   - component: {fileID: 1921276861}
   - component: {fileID: 1921276860}
-  - component: {fileID: 1921276859}
   m_Layer: 5
   m_Name: AchievementGuage
   m_TagString: Untagged
@@ -6811,29 +6899,14 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 801045150}
-  m_RootOrder: 1
+  m_Father: {fileID: 369026823}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -50, y: 0}
-  m_SizeDelta: {x: 150, y: 0}
-  m_Pivot: {x: 1, y: 0.5}
---- !u!114 &1921276859
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1921276857}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 0.8490566, g: 0.2809789, b: 0.1481844, a: 1}
-  m_EffectDistance: {x: 4, y: 4}
-  m_UseGraphicAlpha: 1
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 125, y: 200}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1921276860
 MonoBehaviour:
   m_ObjectHideFlags: 0
