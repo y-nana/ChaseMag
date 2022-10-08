@@ -12,7 +12,7 @@ public class TextLoadManage : MonoBehaviour
     private void Awake()
     {
         // AssetsƒtƒHƒ‹ƒ_’¼‰º
-        dataPath = Application.dataPath + "/TestJson.json";
+        dataPath = Application.dataPath + "/tutorialData.json";
     }
     // Start is called before the first frame update
     void Start()
@@ -20,7 +20,7 @@ public class TextLoadManage : MonoBehaviour
 
         tutorialDatas = LoadTest();
 
-        Debug.Log(tutorialDatas.tutorialJsonDatas[0].viewText);
+        Debug.Log(tutorialDatas.tutorialDataList[0].viewText);
         //TutorialJsonWrapper tutorialJsonWrapper = new TutorialJsonWrapper();
         //tutorialJsonWrapper.tutorialJsonDatas = new TutorialJsonData[3];
 
@@ -48,11 +48,12 @@ public class TextLoadManage : MonoBehaviour
     }
 
 
-    private TutorialJsonWrapper LoadTest()
+    public TutorialJsonWrapper LoadTest()
     {
         StreamReader reader = new StreamReader(dataPath);
         string datastr = reader.ReadToEnd();
         reader.Close();
+        tutorialDatas = JsonUtility.FromJson<TutorialJsonWrapper>(datastr);
 
         return JsonUtility.FromJson<TutorialJsonWrapper>(datastr);
     }

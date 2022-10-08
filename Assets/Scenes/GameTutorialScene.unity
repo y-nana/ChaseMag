@@ -2693,7 +2693,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tutorialDatas:
-    tutorialJsonDatas: []
+    tutorialDataList: []
 --- !u!1 &645084684
 GameObject:
   m_ObjectHideFlags: 0
@@ -4490,8 +4490,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3067\u3059"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c32a9997896dee44cae071739f54c553, type: 2}
-  m_sharedMaterial: {fileID: 2268386384330949992, guid: c32a9997896dee44cae071739f54c553,
+  m_fontAsset: {fileID: 11400000, guid: c286d671f3fbbfd47b5f4bfdf084dca8, type: 2}
+  m_sharedMaterial: {fileID: 2268386384330949992, guid: c286d671f3fbbfd47b5f4bfdf084dca8,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}

@@ -29,13 +29,13 @@ public class TutorialJsonData
 {
     public string viewText;
 
-    public TutorialState tutorialState;
+    public TutorialState state;
 
 }
 [System.Serializable]
 public class TutorialJsonWrapper
 {
-    public TutorialJsonData[] tutorialJsonDatas;
+    public TutorialJsonData[] tutorialDataList;
 }
 
 public class TutrialManager : MonoBehaviour
@@ -64,7 +64,7 @@ public class TutrialManager : MonoBehaviour
     {
         GameStateManager.instance.ToEvent();
         textLoadManage = GetComponent<TextLoadManage>();
-
+        textLoadManage.LoadTest();
         tutorialIndex = 0;
         tryManage =GetComponent<TutorialTryManage>();
         StartCoroutine(Cotest());
@@ -119,18 +119,20 @@ public class TutrialManager : MonoBehaviour
     // 文章を表示させるコルーチン
     IEnumerator Cotest()
     {
-        Debug.Log(textLoadManage);
+
         Debug.Log(textLoadManage.tutorialDatas);
-        Debug.Log(textLoadManage.tutorialDatas.tutorialJsonDatas);
+        Debug.Log(textLoadManage.tutorialDatas.tutorialDataList);
         //while (tutorialIndex < tutorialDatas.Count)
-        while (tutorialIndex < textLoadManage.tutorialDatas.tutorialJsonDatas.Length)
+        while (tutorialIndex < textLoadManage.tutorialDatas.tutorialDataList.Length)
         {
+            Debug.Log(textLoadManage);
+
             //StartCoroutine("CoDrawText", tutorialDatas[tutorialIndex].viewText);
-            StartCoroutine("CoDrawText", textLoadManage.tutorialDatas.tutorialJsonDatas[tutorialIndex].viewText);
+            StartCoroutine("CoDrawText", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].viewText);
 
             yield return StartCoroutine("Skip");
             //yield return tryManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
-            yield return tryManage.StartCoroutine("TryStart", textLoadManage.tutorialDatas.tutorialJsonDatas[tutorialIndex].tutorialState);
+            yield return tryManage.StartCoroutine("TryStart", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].state);
             tutorialIndex++;
         }
 

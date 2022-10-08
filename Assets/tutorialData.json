@@ -1,0 +1,20 @@
+{
+  "tutorialDataList": [
+    {
+      "viewText": "チュートリアルを始めましょう",
+      "state": 0
+    },
+    {
+      "viewText": "左のジョイスティックで歩けます\r\n矢印の方向に歩いてみましょう",
+      "state": 1
+    },
+    {
+      "viewText": "いいですね",
+      "state": 0
+    },
+    {
+      "viewText": "チュートリアルを終わります\r\nおつかれさまでした",
+      "state": 0
+    }
+  ]
+}
