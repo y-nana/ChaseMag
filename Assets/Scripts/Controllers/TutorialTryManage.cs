@@ -39,13 +39,14 @@ public class TutorialTryManage : MonoBehaviour
             case TutorialState.none:
                 break;
             case TutorialState.walk:
-                yield return StartCoroutine("WalkEvent");
+                yield return StartCoroutine(WalkEvent());
                 break;
             case TutorialState.jump:
                 break;
             case TutorialState.wall:
                 break;
             case TutorialState.poleRotation:
+                yield return StartCoroutine(PoleRotationEvent());
                 break;
             case TutorialState.item:
                 break;
@@ -56,7 +57,39 @@ public class TutorialTryManage : MonoBehaviour
         }
     }
 
+    // チュートリアル　歩く
     private IEnumerator WalkEvent()
+    {
+        achievementGauge.gameObject.SetActive(true);
+        achievementGauge.fillAmount = 0.0f;
+        Transform playerTransform = player.transform;
+        float startPos = playerTransform.position.x;
+        GameStateManager.instance.ToPlaying();
+
+        while (true)
+        {
+
+            yield return null;
+            float movingDistance = playerTransform.position.x - startPos;
+            if (movingDistance < 0)
+            {
+                achievementGauge.fillAmount = Mathf.Abs(movingDistance / (reachingPoint.position.x - startPos));
+
+            }
+
+            if (reachingPoint.position.x >= player.transform.position.x)
+            {
+                GameStateManager.instance.ToEvent();
+
+                break;
+            }
+        }
+        GameStateManager.instance.ToEvent();
+
+    }
+
+    // チュートリアル　極の向きを変える
+    private IEnumerator PoleRotationEvent()
     {
         achievementGauge.gameObject.SetActive(true);
         achievementGauge.fillAmount = 0.0f;
