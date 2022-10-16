@@ -11,10 +11,15 @@ public class TutorialTryManage : MonoBehaviour
 
     [SerializeField]
     PlayerController player;
+    [SerializeField]
+    PoleController poleCnt;
 
     // walk用
     [SerializeField]
     private Transform reachingPoint;    // 到達地点
+
+    // poleRotation用
+    private bool[] poleChanged = new bool[4];
 
     
 
@@ -93,22 +98,26 @@ public class TutorialTryManage : MonoBehaviour
     {
         achievementGauge.gameObject.SetActive(true);
         achievementGauge.fillAmount = 0.0f;
-        Transform playerTransform = player.transform;
-        float startPos = playerTransform.position.x;
+        poleChanged.Initialize();
+        poleCnt.tutorialAction = TryChangePole;
         GameStateManager.instance.ToPlaying();
 
         while (true)
         {
 
             yield return null;
-            float movingDistance = playerTransform.position.x - startPos;
-            if (movingDistance < 0)
+            int finished = 0;
+            for (int i = 0; i < poleChanged.Length; i++)
             {
-                achievementGauge.fillAmount = Mathf.Abs(movingDistance / (reachingPoint.position.x - startPos));
-
+                if (poleChanged[i])
+                {
+                    finished++;
+                }
             }
+            achievementGauge.fillAmount = Mathf.Abs((float)finished / poleChanged.Length);
 
-            if (reachingPoint.position.x >= player.transform.position.x)
+
+            if (finished>=poleChanged.Length)
             {
                 GameStateManager.instance.ToEvent();
 
@@ -116,8 +125,12 @@ public class TutorialTryManage : MonoBehaviour
             }
         }
         GameStateManager.instance.ToEvent();
-
+        poleCnt.tutorialAction = null;
     }
 
+    private void TryChangePole(Pole.PoleOrientation orientation)
+    {
+        poleChanged[(int)orientation] = true;
+    }
 
 }

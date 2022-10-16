@@ -2679,6 +2679,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   achievementGauge: {fileID: 1921276860}
   player: {fileID: 464377414}
+  poleCnt: {fileID: 1993431645}
   reachingPoint: {fileID: 1856475040}
 --- !u!114 &629474634
 MonoBehaviour:

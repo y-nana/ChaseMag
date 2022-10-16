@@ -15,7 +15,7 @@ public class PoleController : MonoBehaviour
     }
 
     // 極の向き s極を基準に
-    private int southPole;
+    public int southPole { get; private set; }
     // 0～4の間で
     private readonly int poleMin = 0;
     private readonly int poleMax = 3;  
@@ -34,6 +34,9 @@ public class PoleController : MonoBehaviour
                                             // 効果音
     [SerializeField]
     private AudioClip changePoleSE;
+
+    // チュートリアル用イベント
+    public System.Action<Pole.PoleOrientation> tutorialAction { get; set; }
 
     private void Start()
     {
@@ -89,6 +92,8 @@ public class PoleController : MonoBehaviour
         if (southPole > poleMax) southPole -= 4;
 
         audioSource.PlayOneShot(changePoleSE);
+        // チュートリアル用
+        tutorialAction?.Invoke((Pole.PoleOrientation)southPole);
 
     }
 
