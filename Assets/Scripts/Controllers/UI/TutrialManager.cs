@@ -6,13 +6,9 @@ using TMPro;
 
 public enum TutorialState
 {
-    none,
-    walk,
-    jump,
-    wall,
-    poleRotation,
-    item,
-    rule
+    Auto,
+    Trigger,
+    Click
 }
 [System.Serializable]
 struct TutorialData
@@ -53,6 +49,12 @@ public class TutrialManager : MonoBehaviour
     private TutorialTryManage tryManage;
     private TextLoadManage textLoadManage;
 
+    [SerializeField]
+    private float waitTime = 1.0f;
+
+    private float waitTimer;
+
+    private bool waitTrigger = false;
 
     [SerializeField]
     private float textSpeed = 0.1f;
@@ -62,9 +64,9 @@ public class TutrialManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameStateManager.instance.ToEvent();
-        textLoadManage = GetComponent<TextLoadManage>();
-        textLoadManage.LoadTest();
+        //GameStateManager.instance.ToEvent();
+        //textLoadManage = GetComponent<TextLoadManage>();
+        //textLoadManage.LoadTest();
         tutorialIndex = 0;
         tryManage =GetComponent<TutorialTryManage>();
         StartCoroutine(Cotest());
@@ -78,9 +80,22 @@ public class TutrialManager : MonoBehaviour
         
     }
 
-    IEnumerator CoDrawText(string text)
+    IEnumerator CoDrawText(TutorialData data)
     {
-
+        switch (data.tutorialState)
+        {
+            case TutorialState.Auto:
+                GameStateManager.instance.ToPlaying();
+                break;
+            case TutorialState.Trigger:
+                GameStateManager.instance.ToPlaying();
+                break;
+            case TutorialState.Click:
+                GameStateManager.instance.ToEvent();
+                break;
+            default:
+                break;
+        }
         isDrowing = true;
         float time = 0;
         while (true)
@@ -90,29 +105,48 @@ public class TutrialManager : MonoBehaviour
             time += Time.deltaTime;
 
             // 一気に表示
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && GameStateManager.instance.gameState == GameState.inEvent)
             {
                 break;
             }
 
             int len = Mathf.FloorToInt(time / textSpeed);
-            if (len > text.Length)
+            if (len > data.viewText.Length)
             {
                 break;
             }
-            tutrialText.text = text.Substring(0, len);
+            tutrialText.text = data.viewText.Substring(0, len);
         }
-        tutrialText.text = text;
+        tutrialText.text = data.viewText;
         yield return null;
         isDrowing = false;
     }
 
     // クリック待ちのコルーチン
-    IEnumerator Skip()
+    IEnumerator ToNextText(TutorialState state)
     {
         while (isDrowing) yield return null;
-        //while (!(Input.GetMouseButtonDown(0) && !PauseManager.nowPause)) yield return null;
-        while (!(Input.GetMouseButtonDown(0) && GameStateManager.instance.gameState == GameState.inEvent)) yield return null;
+        switch (state)
+        {
+            case TutorialState.Auto:
+                waitTimer = waitTime;
+                while (waitTimer > 0.0f)
+                {
+                    waitTimer -= Time.deltaTime;
+                    yield return null;
+                }
+                break;
+            case TutorialState.Trigger:
+                while (!waitTrigger) yield return null;
+                waitTrigger = false;
+                break;
+            case TutorialState.Click:
+                while (!(Input.GetMouseButtonDown(0) && GameStateManager.instance.gameState == GameState.inEvent)) yield return null;
+                break;
+            default:
+                break;
+        }
+        
         Debug.Log("test");
     }
 
@@ -120,21 +154,22 @@ public class TutrialManager : MonoBehaviour
     IEnumerator Cotest()
     {
 
-        Debug.Log(textLoadManage.tutorialDatas);
-        Debug.Log(textLoadManage.tutorialDatas.tutorialDataList);
-        //while (tutorialIndex < tutorialDatas.Count)
-        while (tutorialIndex < textLoadManage.tutorialDatas.tutorialDataList.Length)
+        //Debug.Log(textLoadManage.tutorialDatas);
+        //Debug.Log(textLoadManage.tutorialDatas.tutorialDataList);
+        while (tutorialIndex < tutorialDatas.Count)
+        //while (tutorialIndex < textLoadManage.tutorialDatas.tutorialDataList.Length)
         {
-            Debug.Log(textLoadManage);
+            Debug.Log(tutorialIndex);
+            StartCoroutine(CoDrawText(tutorialDatas[tutorialIndex]));
+            
+            //StartCoroutine("CoDrawText", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].viewText);
 
-            //StartCoroutine("CoDrawText", tutorialDatas[tutorialIndex].viewText);
-            StartCoroutine("CoDrawText", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].viewText);
-
-            yield return StartCoroutine("Skip");
+            yield return StartCoroutine(ToNextText(tutorialDatas[tutorialIndex].tutorialState));
             //yield return tryManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
-            yield return tryManage.StartCoroutine("TryStart", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].state);
+            //yield return tryManage.StartCoroutine("TryStart", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].state);
             tutorialIndex++;
         }
+        yield return null;
 
         GameStateManager.instance.ToPlaying();
 

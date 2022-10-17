@@ -20,7 +20,7 @@ public class TextLoadManage : MonoBehaviour
 
         tutorialDatas = LoadTest();
 
-        Debug.Log(tutorialDatas.tutorialDataList[0].viewText);
+        //Debug.Log(tutorialDatas.tutorialDataList[0].viewText);
         //TutorialJsonWrapper tutorialJsonWrapper = new TutorialJsonWrapper();
         //tutorialJsonWrapper.tutorialJsonDatas = new TutorialJsonData[3];
 

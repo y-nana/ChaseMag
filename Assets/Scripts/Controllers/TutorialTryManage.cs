@@ -7,7 +7,18 @@ public class TutorialTryManage : MonoBehaviour
 {
 
     [SerializeField]
-    private Image achievementGauge;     // 達成ゲージ
+    private Image viewClipPanel;
+
+    [SerializeField]
+    private Image viewClipPrefab;
+
+    private List<Image> viewClipList = new List<Image>();
+    //private Image achievementGauge;     // 達成ゲージ
+
+    [SerializeField]
+    private List<ClipManager> getClipList = new List<ClipManager>();
+
+    private int getClipCount;
 
     [SerializeField]
     PlayerController player;
@@ -28,7 +39,14 @@ public class TutorialTryManage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        achievementGauge.gameObject.SetActive(false);
+        getClipCount = 0;
+        for (int i = 0; i < getClipList.Count; i++)
+        {
+            getClipList[i].GetAction = GetClip;
+            Image viewClip = Instantiate(viewClipPrefab, viewClipPanel.transform);
+            viewClipList.Add(viewClip);
+        }
+
     }
 
     // Update is called once per frame
@@ -37,6 +55,25 @@ public class TutorialTryManage : MonoBehaviour
         
     }
 
+    // クリップ取得時に呼び出される関数
+    public void GetClip(ClipManager clip)
+    {
+        for (int i = 0; i < getClipList.Count; i++)
+        {
+            if (clip == getClipList[i])
+            {
+                viewClipList[i].color = Color.yellow;
+                getClipCount++;
+
+            }
+        }
+
+
+    }
+
+
+
+    /*
     public IEnumerator TryStart(TutorialState tutorialState)
     {
         switch (tutorialState)
@@ -61,7 +98,7 @@ public class TutorialTryManage : MonoBehaviour
                 break;
         }
     }
-
+    /*
     // チュートリアル　歩く
     private IEnumerator WalkEvent()
     {
@@ -132,5 +169,6 @@ public class TutorialTryManage : MonoBehaviour
     {
         poleChanged[(int)orientation] = true;
     }
+    */
 
 }
