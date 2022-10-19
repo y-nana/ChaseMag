@@ -19,6 +19,12 @@ struct TutorialData
     [field:SerializeField]
     public TutorialState tutorialState { get; set; }
 
+    [field:SerializeField]
+    public bool chaseSetting { get; set; }
+
+    [field: SerializeField]
+    public bool isResult { get; set; }
+
 }
 [System.Serializable]
 public class TutorialJsonData
@@ -42,6 +48,12 @@ public class TutrialManager : MonoBehaviour
 
     [SerializeField]
     private List<TutorialData> tutorialDatas = new List<TutorialData>();
+
+    [SerializeField]
+    private string clearTxt;
+    [SerializeField]
+    private string overTxt;
+
     private int tutorialIndex;
 
     private List<TutorialJsonData> tutorialJsonDatas = new List<TutorialJsonData>();
@@ -55,11 +67,17 @@ public class TutrialManager : MonoBehaviour
     private float waitTimer;
 
     public bool waitTrigger { get; set; } = false;
+    public System.Action setChaser { get; set; }
+    public System.Action startChaser { get; set; }
+    public System.Action tutorialFinish { get; set; }
+
+    public bool clearFlag { get; set; } = false;
 
     [SerializeField]
     private float textSpeed = 0.1f;
 
     private bool isDrowing = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -105,7 +123,7 @@ public class TutrialManager : MonoBehaviour
             time += Time.deltaTime;
 
             // 一気に表示
-            if (Input.GetMouseButtonDown(0) && GameStateManager.instance.gameState == GameState.inEvent)
+            if (Input.GetButtonDown("Submit") && GameStateManager.instance.gameState == GameState.inEvent)
             {
                 break;
             }
@@ -141,13 +159,12 @@ public class TutrialManager : MonoBehaviour
                 waitTrigger = false;
                 break;
             case TutorialState.Click:
-                while (!(Input.GetMouseButtonDown(0) && GameStateManager.instance.gameState == GameState.inEvent)) yield return null;
+                while (!(Input.GetButtonDown("Submit") && GameStateManager.instance.gameState == GameState.inEvent)) yield return null;
                 break;
             default:
                 break;
         }
-        
-        Debug.Log("test");
+
     }
 
     // 文章を表示させるコルーチン
@@ -159,20 +176,47 @@ public class TutrialManager : MonoBehaviour
         while (tutorialIndex < tutorialDatas.Count)
         //while (tutorialIndex < textLoadManage.tutorialDatas.tutorialDataList.Length)
         {
+
             Debug.Log(tutorialIndex);
-            StartCoroutine(CoDrawText(tutorialDatas[tutorialIndex]));
             
+            if (tutorialDatas[tutorialIndex].chaseSetting)
+            {
+                setChaser?.Invoke();
+
+            }
+            // 逃げ切れたかどうかでメッセージを変化
+            if (tutorialDatas[tutorialIndex].isResult)
+            {
+                TutorialData data = new TutorialData();
+                data.viewText = clearFlag ? clearTxt : overTxt;
+                data.tutorialState = tutorialDatas[tutorialIndex].tutorialState;
+               tutorialDatas[tutorialIndex] = data;
+            }
+
+            StartCoroutine(CoDrawText(tutorialDatas[tutorialIndex]));
+
             //StartCoroutine("CoDrawText", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].viewText);
+
+            if (tutorialIndex > 0)
+            {
+                if (tutorialDatas[tutorialIndex - 1].chaseSetting)
+                {
+                    startChaser?.Invoke();
+                }
+            }
 
             yield return StartCoroutine(ToNextText(tutorialDatas[tutorialIndex].tutorialState));
             //yield return tryManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
             //yield return tryManage.StartCoroutine("TryStart", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].state);
+
             tutorialIndex++;
+
+
         }
         yield return null;
 
         GameStateManager.instance.ToPlaying();
-
+        tutorialFinish?.Invoke();
     }
 
 

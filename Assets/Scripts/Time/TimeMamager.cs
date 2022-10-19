@@ -14,11 +14,14 @@ public class TimeMamager : MonoBehaviour
     [SerializeField] float changeOrangeTime = 20.0f;    // 文字色変更オレンジ
     [SerializeField] float changeRedTime = 10.0f;       // 文字色変更赤
 
+
     private Image timeGage;
 
     private Text timeText;  // 表示用
     private float timer;    // タイマー
     private bool playing;   // ゲーム進行中か
+
+
 
     private readonly Color orange = new Color32(255, 100, 0, 255);   // 文字色変更用(オレンジ)
 
@@ -47,11 +50,14 @@ public class TimeMamager : MonoBehaviour
             // タイマーが0以下になったらクリアシーンへ
             if (timer <= 0)
             {
+                playing = false;
                 ExecuteEvents.Execute<SceneCaller>(
                     target: sceneDirector,
                     eventData: null,
                     functor: (reciever, eventData) => reciever.ToGameClear()
                     );
+
+                
             }
             
         }

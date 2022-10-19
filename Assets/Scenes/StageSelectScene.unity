@@ -1952,7 +1952,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a11e2ec07dc64694d8f30df1209a41d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  firstSelectButton: {fileID: 399368396}
+  firstSelectButton: {fileID: 0}
 --- !u!4 &1020909038
 Transform:
   m_ObjectHideFlags: 0
@@ -1979,7 +1979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8b53f0b42759864cb44f52f401f84d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisStageLevel: 0
+  thisStageLevel: 1
 --- !u!114 &1020909040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3386,6 +3386,7 @@ GameObject:
   - component: {fileID: 1483598895}
   - component: {fileID: 1483598894}
   - component: {fileID: 1483598893}
+  - component: {fileID: 1483598897}
   m_Layer: 5
   m_Name: TutorialButton
   m_TagString: Untagged
@@ -3522,6 +3523,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1483598891}
   m_CullTransparentMesh: 0
+--- !u!114 &1483598897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1483598891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da122b787bedde64f982aba3e1295e16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisStageLevel: 4
+  sceneDirector: {fileID: 1020909039}
 --- !u!1 &1614461910
 GameObject:
   m_ObjectHideFlags: 0

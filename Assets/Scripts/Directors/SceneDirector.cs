@@ -9,7 +9,8 @@ public enum StageLevelState
     easy,
     normal,
     hard,
-    extra
+    extra,
+    tutorial
 }
 
 
@@ -33,8 +34,10 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     [SerializeField]
     private StageLevelState thisStageLevel;
 
+    public static StageLevelState NextStageLevel { get; set; }
 
-    private static StageLevelState NextStageLevel;
+    public System.Action tutorialClearAct { get; set; }
+    public System.Action tutorialOverAct { get; set; }
 
 
     private void Update()
@@ -69,8 +72,11 @@ public class SceneDirector : MonoBehaviour, SceneCaller
                 break;
             case StageLevelState.extra:
                 SceneManager.LoadScene(gameScene);
-
                 break;
+            case StageLevelState.tutorial:
+                SceneManager.LoadScene(tutorialScene);
+                break;
+
         }
     }
 
@@ -102,7 +108,9 @@ public class SceneDirector : MonoBehaviour, SceneCaller
                 break;
             case StageLevelState.extra:
                 SceneManager.LoadScene(gameScene);
-
+                break;
+            case StageLevelState.tutorial:
+                SceneManager.LoadScene(tutorialScene);
                 break;
         }
     }
@@ -120,7 +128,11 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         Time.timeScale = 1f;
         //SceneManager.sceneLoaded += SendToNextScene;
         NextStageLevel = thisStageLevel;
-
+        if (thisStageLevel== StageLevelState.tutorial)
+        {
+            tutorialOverAct?.Invoke();
+            return;
+        }
         SceneManager.LoadScene(gameOver);
     }
     // ゲームクリアシーンへ
@@ -129,10 +141,15 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         Time.timeScale = 1f;
         //SceneManager.sceneLoaded += SendToNextScene;
         NextStageLevel = thisStageLevel;
+        if (thisStageLevel == StageLevelState.tutorial)
+        {
+            tutorialClearAct?.Invoke();
+            return;
+        }
         SceneManager.LoadScene(gameClear);
     }
 
-    // チュートリアルシーンへ
+    // チュートリアルシーンへ いらなくなる予定
     public void ToTurorial()
     {
         Time.timeScale = 1f;

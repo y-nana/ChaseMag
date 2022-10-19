@@ -17,38 +17,64 @@ public class TutorialTryManage : MonoBehaviour
 
     [SerializeField]
     private List<ClipManager> getClipList = new List<ClipManager>();
+    private List<bool> isGetClip = new List<bool>();
 
-    private int getClipCount;
+    
 
     [SerializeField]
     PlayerController player;
     [SerializeField]
     PoleController poleCnt;
-
-    // walk用
     [SerializeField]
-    private Transform reachingPoint;    // 到達地点
+    ChaserController chaser;
+    [SerializeField]
+    GameObject triggerCollider;
+
+    [SerializeField]
+    SceneDirector sceneDirector;
+
+    [SerializeField]
+    Transform chaserPoint;
+
+    [SerializeField]
+    CountDownManager countDown;
+
+    [SerializeField]
+    GameObject cage;
+
+    [SerializeField]
+    private float cagePositionY;
+    // walk用
+    //[SerializeField]
+    //private Transform reachingPoint;    // 到達地点
 
     // poleRotation用
-    private bool[] poleChanged = new bool[4];
+    //private bool[] poleChanged = new bool[4];
 
     private TutrialManager manager;
 
-    
 
-    
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        getClipCount = 0;
+
+        countDown.gameObject.SetActive(false);
         for (int i = 0; i < getClipList.Count; i++)
         {
             getClipList[i].GetAction = GetClip;
             Image viewClip = Instantiate(viewClipPrefab, viewClipPanel.transform);
             viewClipList.Add(viewClip);
+            isGetClip.Add(false);
         }
         manager = GetComponent<TutrialManager>();
+        manager.setChaser = SetChaserPos;
+        manager.startChaser = StartChase;
+        manager.tutorialFinish = TutorialFinish;
+        sceneDirector.tutorialClearAct = TutorialClear;
+        sceneDirector.tutorialOverAct = TutorialOver;
 
     }
 
@@ -65,18 +91,75 @@ public class TutorialTryManage : MonoBehaviour
         {
             if (clip == getClipList[i])
             {
+                isGetClip[i] = true;
                 viewClipList[i].color = Color.yellow;
-                getClipCount++;
-                if (getClipCount>= getClipList.Count)
-                {
-                    manager.waitTrigger = true;
-                }
+                
+                Invoke("ClipCompleteCheck", 0.2f);
             }
         }
 
 
     }
 
+    private void ClipCompleteCheck()
+    {
+        int getClipCount = 0;
+        for (int j = 0; j < isGetClip.Count; j++)
+        {
+            if (isGetClip[j])
+            {
+                getClipCount++;
+                manager.waitTrigger = getClipCount >= isGetClip.Count;
+            }
+        }
+
+    }
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject == player.gameObject)
+        {
+            manager.waitTrigger = true;
+            triggerCollider.SetActive(false);
+
+        }
+    }
+
+    public void SetChaserPos()
+    {
+        chaser.transform.position = chaserPoint.position;
+        chaser.GetComponent<Rigidbody2D>().constraints =
+            RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+    }
+
+    public void StartChase()
+    {
+        chaser.GetComponent<Rigidbody2D>().constraints =
+            RigidbodyConstraints2D.FreezeRotation;
+        countDown.gameObject.SetActive(true) ;
+        cage.transform.position = new Vector2( chaser.transform.position.x,chaser.transform.position.y-cagePositionY);
+    }
+
+    public void TutorialClear()
+    {
+        chaser.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+
+        manager.waitTrigger = true;
+        manager.clearFlag = true;
+    }
+
+    public void TutorialOver()
+    {
+        chaser.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        manager.waitTrigger = true;
+        manager.clearFlag = false;
+    }
+
+    public void TutorialFinish()
+    {
+        sceneDirector.ToStageSelect();
+    }
 
 
     /*

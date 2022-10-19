@@ -59,7 +59,7 @@ public class CountDownManager : MonoBehaviour
         // 檻を上に移動させる
         cage.transform.position += Vector3.up * Time.deltaTime * 4;
         // Destroyが実行されるまで透明にしておく
-        countDownText.color = Color.clear;
+        countDownText.gameObject.SetActive(false);
         gage.color = Color.clear;
         // 一定時間後にDestroy
         Invoke(DestroyMethod, cageDestroyTime);
