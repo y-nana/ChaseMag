@@ -32,6 +32,8 @@ public class TutorialTryManage : MonoBehaviour
     // poleRotation—p
     private bool[] poleChanged = new bool[4];
 
+    private TutrialManager manager;
+
     
 
     
@@ -46,6 +48,7 @@ public class TutorialTryManage : MonoBehaviour
             Image viewClip = Instantiate(viewClipPrefab, viewClipPanel.transform);
             viewClipList.Add(viewClip);
         }
+        manager = GetComponent<TutrialManager>();
 
     }
 
@@ -64,7 +67,10 @@ public class TutorialTryManage : MonoBehaviour
             {
                 viewClipList[i].color = Color.yellow;
                 getClipCount++;
-
+                if (getClipCount>= getClipList.Count)
+                {
+                    manager.waitTrigger = true;
+                }
             }
         }
 

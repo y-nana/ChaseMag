@@ -7,7 +7,8 @@ public class CameraController : MonoBehaviour
     // カメラ位置調整用
     [SerializeField] int marginY = 5;       // ド真ん中よりちょっと下に
 
-    private readonly int limitDown = 1;        // 下限
+    [SerializeField]
+    private int limitDown = -2;        // 下限
     private readonly int limitWidth = 35;      // 横の限界値
     private readonly float limitHigh = 14f;    // 上限
     private readonly int posZ = -10;           // Zの値（固定）

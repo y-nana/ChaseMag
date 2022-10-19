@@ -46,7 +46,7 @@ public class TutrialManager : MonoBehaviour
 
     private List<TutorialJsonData> tutorialJsonDatas = new List<TutorialJsonData>();
 
-    private TutorialTryManage tryManage;
+    //private TutorialTryManage tryManage;
     private TextLoadManage textLoadManage;
 
     [SerializeField]
@@ -54,7 +54,7 @@ public class TutrialManager : MonoBehaviour
 
     private float waitTimer;
 
-    private bool waitTrigger = false;
+    public bool waitTrigger { get; set; } = false;
 
     [SerializeField]
     private float textSpeed = 0.1f;
@@ -68,7 +68,7 @@ public class TutrialManager : MonoBehaviour
         //textLoadManage = GetComponent<TextLoadManage>();
         //textLoadManage.LoadTest();
         tutorialIndex = 0;
-        tryManage =GetComponent<TutorialTryManage>();
+        //tryManage =GetComponent<TutorialTryManage>();
         StartCoroutine(Cotest());
 
 
