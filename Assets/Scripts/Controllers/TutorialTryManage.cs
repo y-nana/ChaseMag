@@ -28,6 +28,10 @@ public class TutorialTryManage : MonoBehaviour
     [SerializeField]
     ChaserController chaser;
     [SerializeField]
+    SpriteMask chaserMask;
+    [SerializeField]
+    GameObject spotSprite;
+    [SerializeField]
     GameObject triggerCollider;
 
     [SerializeField]
@@ -75,6 +79,7 @@ public class TutorialTryManage : MonoBehaviour
         manager.tutorialFinish = TutorialFinish;
         sceneDirector.tutorialClearAct = TutorialClear;
         sceneDirector.tutorialOverAct = TutorialOver;
+        spotSprite.SetActive(false);
 
     }
 
@@ -131,6 +136,7 @@ public class TutorialTryManage : MonoBehaviour
         chaser.transform.position = chaserPoint.position;
         chaser.GetComponent<Rigidbody2D>().constraints =
             RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+        spotSprite.SetActive(true);
     }
 
     public void StartChase()
@@ -139,6 +145,7 @@ public class TutorialTryManage : MonoBehaviour
             RigidbodyConstraints2D.FreezeRotation;
         countDown.gameObject.SetActive(true) ;
         cage.transform.position = new Vector2( chaser.transform.position.x,chaser.transform.position.y-cagePositionY);
+        spotSprite.SetActive(false);
     }
 
     public void TutorialClear()
