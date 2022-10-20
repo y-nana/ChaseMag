@@ -97,7 +97,7 @@ public class TutorialTryManage : MonoBehaviour
             if (clip == getClipList[i])
             {
                 isGetClip[i] = true;
-                viewClipList[i].color = Color.yellow;
+                viewClipList[i].color = Color.white;
                 
                 Invoke("ClipCompleteCheck", 0.2f);
             }
