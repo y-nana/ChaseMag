@@ -59,6 +59,7 @@ public class GameStateManager : MonoBehaviour
     public void ToNextScene(Scene nextScene, LoadSceneMode mode)
     {
         instance.gameState = GameState.playing;
+        Time.timeScale = 1.0f;
     }
 
     public void ToEvent()
