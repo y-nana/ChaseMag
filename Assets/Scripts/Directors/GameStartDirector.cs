@@ -18,12 +18,12 @@ public class GameStartDirector : MonoBehaviour
 
 
         // spaceキーでゲームメインシーンへ
-        if (Input.GetKey(KeyCode.Space) || Input.GetButtonDown("Start"))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Start"))
         {
             ToMain();
         }
         // escapeキーでタイトルシーンへ
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (SceneManager.GetActiveScene().name == titleScene)
             {
