@@ -29,6 +29,13 @@ public class PoleController : MonoBehaviour
 
     // 向きをわかりやすくするためのもの(子オブジェクト)
     [SerializeField] Transform pole;
+    // 回転処理用
+    private Transform mTransform;
+    [SerializeField] float rotationTime = 0.1f;
+    private float rotationZ;    // あるべき姿
+    private float changeValue;
+    private float changeValueTemp;
+    private bool isTurnRight;
 
     private AudioSource audioSource;        // サウンド
                                             // 効果音
@@ -40,12 +47,14 @@ public class PoleController : MonoBehaviour
 
     private void Start()
     {
+        mTransform = GetComponent<Transform>();
         // 磁力の強さを初期化
         PoleStrong = defaultPoleStrong;
 
         // 極の向きを最初はs極を左に
         southPole = (int)PoleOrientation.Left;
         this.audioSource = GetComponent<AudioSource>();
+        rotationZ = transform.rotation.z;
 
         //pole = transform.GetChild(0);
     }
@@ -77,14 +86,39 @@ public class PoleController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.DownArrow)) PoleChange(PoleOrientation.DOWN);
         */
 
+        // 回転アニメーション
+        if (changeValue > 0)
+        {
+            float temp = (changeValueTemp / rotationTime) * Time.deltaTime;
+            changeValue -= temp;
+            if (isTurnRight)
+            {
+                temp *= -1;
+            }
+            mTransform.Rotate(0, 0, temp);
+
+
+        }
+        else
+        {
+            mTransform.localEulerAngles = new Vector3(0, 0, rotationZ);
+        }
+
+
+
+
     }
 
     // 極の向き変更
     private void PoleChange(int change)
     {
         // 見た目の角度を変更
-        transform.Rotate(0, 0, angle * change);
-
+        //mTransform.Rotate(0, 0, angle * change);
+        mTransform.localEulerAngles = new Vector3(0,0,rotationZ);
+        changeValue =Mathf.Abs( angle * change);
+        changeValueTemp = changeValue;
+        rotationZ += angle * change;
+        isTurnRight = change > 0;
         southPole += change;
 
         // southPoleが範囲外になったら修正

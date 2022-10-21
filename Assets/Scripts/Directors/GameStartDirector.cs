@@ -10,9 +10,13 @@ public class GameStartDirector : MonoBehaviour
     private readonly string titleScene = "GameStartScene";          // タイトルシーン名
     private readonly string tutorialScene = "GameTutorialScene";    // チュートリアルシーン名
 
+
+
     void Update()
     {
  
+
+
         // spaceキーでゲームメインシーンへ
         if (Input.GetKey(KeyCode.Space) || Input.GetButtonDown("Start"))
         {
@@ -21,6 +25,16 @@ public class GameStartDirector : MonoBehaviour
         // escapeキーでタイトルシーンへ
         if (Input.GetKey(KeyCode.Escape))
         {
+            if (SceneManager.GetActiveScene().name == titleScene)
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+
+                Application.Quit();
+
+#endif
+            }
             ToTitle();
         }
     }

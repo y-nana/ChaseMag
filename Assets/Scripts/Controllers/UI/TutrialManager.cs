@@ -122,11 +122,13 @@ public class TutrialManager : MonoBehaviour
             yield return null;
             time += Time.deltaTime;
 
+            /*
             // ˆê‹C‚É•\Ž¦
             if (Input.GetButtonDown("Submit") && GameStateManager.instance.gameState == GameState.inEvent)
             {
                 break;
             }
+            */
 
             int len = Mathf.FloorToInt(time / textSpeed);
             if (len > data.viewText.Length)
