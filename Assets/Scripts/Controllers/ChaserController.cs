@@ -19,13 +19,16 @@ public class ChaserController : MonoBehaviour
     private Animator animator;              // アニメーション
     [SerializeField] private GameObject sceneDirector;        // シーン遷移用
     private AudioSource audioSource;        // サウンド
-
+    private Transform m_transform;          // トランスフォーム
 
     // アニメーションのbool名
     private readonly string walk = "NowWalk";  // 歩いているか
     private readonly string jump = "NowJump";  // ジャンプ中か
 
     // 対プレイヤ用
+    [SerializeField]
+    private RouteManager routeManager;
+
     [SerializeField] private GameObject player;      // プレイヤオブジェクト
     [SerializeField] private GameObject playerPole;  // 当たり判定取得用
 
@@ -36,6 +39,11 @@ public class ChaserController : MonoBehaviour
     [SerializeField] private Vector2 margin = 
         new Vector2(0.5f, 2.0f);                // 震え防止の余白
 
+    
+
+    private List<Transform> route;
+    private int routeIndex;
+
     private float getPosTimer;      // プレイヤの位置を取得する間隔のタイマー
     private Vector2 distance;       // プレイヤとの距離
     private Vector2 playerPrePos;   // プレイヤの前フレームの位置
@@ -45,6 +53,10 @@ public class ChaserController : MonoBehaviour
     
     private float waitTimer;        // プレイヤが停止している間
     private float throughTimer;     // 足場が透ける状態の間
+
+    private bool isUseRoute;
+    private bool wantToJump;
+
 
     // 壁用
     private Vector2 pPos;
@@ -59,15 +71,7 @@ public class ChaserController : MonoBehaviour
     [SerializeField]
     private AudioClip upSE;
 
-    // 取得用タグ名
-    //private readonly string playerTagName = "Player";   // プレイヤ
 
-    // レイヤの名前と対応するint
-    private enum LayerName
-    {
-        Default = 0,    // デフォルトレイヤ
-        Through = 8,    // 床以外すり抜けるレイヤ
-    }
 
     void Start()
     {
@@ -76,11 +80,8 @@ public class ChaserController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         this.audioSource = GetComponent<AudioSource>();
+        m_transform = transform;
 
-
-        // プレイヤ取得
-        //player = GameObject.FindGameObjectWithTag(playerTagName);
-        //playerPole = player.transform.GetChild(0).gameObject;
 
         //値の初期化
         playerPrePos = new Vector2(0, 0);
@@ -88,22 +89,83 @@ public class ChaserController : MonoBehaviour
         waitTimer = 0.0f;
         throughTimer = 0.0f;
         getPosTimer = 0.0f;
+        SearchRoute();
 
     }
 
 
     void Update()
     {
+
         
         // プレイヤとの距離取得
-        if (getPosTimer > getPosTime)
+
+        if (!isUseRoute&&getPosTimer > getPosTime)
         {
             getPosTimer = 0.0f;
-            distance = GetToPlayer();
+            SearchRoute();
         }
         getPosTimer += Time.deltaTime;
+        
 
 
+        
+        // 左右移動
+        int key = 0;
+        Vector2 vec = Vector2.zero;
+        if (isUseRoute&&routeIndex < route.Count)
+        {
+            // 目標ポイントまでの距離が近かったら次のポイントを目標にする
+            if (Vector2.Distance(route[routeIndex].position, m_transform.position) > 0.5f)
+            {
+                vec = route[routeIndex].position - m_transform.position;
+            }
+            else
+            {
+
+                routeIndex++;
+                if (routeIndex >= route.Count)
+                {
+                    SearchRoute();
+
+                }
+            }
+        }
+        // プレイヤーへの方向をそのまま使う
+        else
+        {
+            vec = GetToPlayer();
+            distance = GetToPlayer();
+        }
+
+        // 目標ポイントへ左右移動
+        if (Mathf.Abs(vec.x) > 0.1f)
+        {
+            if (vec.x < 0)
+            {
+                key = -1;
+            }
+            else
+            {
+                key = 1;
+            }
+        }
+        else if (isUseRoute)
+        {
+            Transform nearly = routeManager.GetNearlyPointTransform(m_transform.position);
+            if (route[routeIndex] != nearly)
+            {
+                Debug.Log("なんかとおい");
+                //SearchRoute();
+            }
+        }
+
+
+        // 目標がジャンプしないと届かない位置か
+        wantToJump = vec.y > margin.y;
+
+
+        /*
         float playerDis = Vector2.Distance(playerPrePos, pPos);
         // プレイヤが安置に停止していないか
         if (playerDis < stopDistance)
@@ -158,20 +220,21 @@ public class ChaserController : MonoBehaviour
                 this.gameObject.layer = (int)LayerName.Default;
             }
         }
-
+ */
         Vector2 vel = this.rigid2D.velocity;
         this.rigid2D.velocity = new Vector2(key * this.walkForce, vel.y);
 
         // アニメーション
         Animation();
 
+       
     }
 
 
     // プレイヤとの相対位置を求める
     private Vector2 GetToPlayer()
     {
-        MyPos = transform.position;
+        MyPos = m_transform.position;
         pPos = player.transform.position;
         Vector2 distance = pPos - MyPos;
 
@@ -197,7 +260,7 @@ public class ChaserController : MonoBehaviour
             isThrough = true;
             throughTimer = throughTime;
             // レイヤ変更により足場を透過
-            this.gameObject.layer = (int)LayerName.Through;
+            //this.gameObject.layer = (int)LayerName.Through;
         }
         
     }
@@ -205,10 +268,10 @@ public class ChaserController : MonoBehaviour
     // ジャンプする
     public void Jump()
     {
-        if (this.rigid2D.velocity.y == 0 && distance.y > margin.y)
+        if (this.rigid2D.velocity.y == 0 && wantToJump)
         {
             this.rigid2D.velocity = new Vector2(this.rigid2D.velocity.x, 0f);
-            this.rigid2D.AddForce(transform.up * this.jumpForce);
+            this.rigid2D.AddForce(m_transform.up * this.jumpForce);
             audioSource.PlayOneShot(jumpSE);
 
         }
@@ -265,6 +328,19 @@ public class ChaserController : MonoBehaviour
 
         prePos = MyPos;
         
+    }
+
+    private void SearchRoute()
+    {
+        route = routeManager.GetRoute(m_transform, player.transform);
+        routeIndex = 0;
+        Debug.Log("今回のルートは");
+        foreach (var item in route)
+        {
+            Debug.Log(item.gameObject.name);
+        }
+        // 目標が一つしかなかったら直接プレイヤーを追う
+        isUseRoute = route.Count > 1;
     }
 
 }
