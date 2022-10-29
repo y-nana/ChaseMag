@@ -39,13 +39,40 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     public System.Action tutorialClearAct { get; set; }
     public System.Action tutorialOverAct { get; set; }
 
+    // テスト用
+#if UNITY_EDITOR
+    [SerializeField]
+    private bool isTest;
+    private readonly string test = "TestScene";        // むずかしいゲームシーン名
+
+#endif
+
+
 
     private void Update()
     {
+
         // escapeキーでタイトルシーンへ
         if (Input.GetKey(KeyCode.Escape))
         {
+
+#if UNITY_EDITOR
+            if (isTest)
+            {
+                SceneManager.LoadScene(test);
+
+            }
+            else
+            {
+                ToTitle();
+
+            }
+#else
             ToTitle();
+
+#endif
+
+
         }
         //Debug.Log("this"+thisStageLevel);
         //Debug.Log("next"+NextStageLevel);
@@ -125,6 +152,26 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     // ゲームオーバーシーンへ
     public void ToGameOver()
     {
+#if UNITY_EDITOR
+        if (isTest)
+        {
+            Debug.Log("捕まりました");
+
+        }
+        else
+        {
+            Time.timeScale = 1f;
+            //SceneManager.sceneLoaded += SendToNextScene;
+            NextStageLevel = thisStageLevel;
+            if (thisStageLevel == StageLevelState.tutorial)
+            {
+                tutorialOverAct?.Invoke();
+                return;
+            }
+            SceneManager.LoadScene(gameOver);
+
+        }
+#else
         Time.timeScale = 1f;
         //SceneManager.sceneLoaded += SendToNextScene;
         NextStageLevel = thisStageLevel;
@@ -134,6 +181,10 @@ public class SceneDirector : MonoBehaviour, SceneCaller
             return;
         }
         SceneManager.LoadScene(gameOver);
+
+#endif
+
+
     }
     // ゲームクリアシーンへ
     public void ToGameClear()
