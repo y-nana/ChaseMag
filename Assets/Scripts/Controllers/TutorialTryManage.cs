@@ -134,6 +134,7 @@ public class TutorialTryManage : MonoBehaviour
     public void SetChaserPos()
     {
         chaser.transform.position = chaserPoint.position;
+        chaser.SearchRoute();
         chaser.GetComponent<Rigidbody2D>().constraints =
             RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
         spotSprite.SetActive(true);

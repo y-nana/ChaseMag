@@ -8,9 +8,9 @@ public class ChaserController : MonoBehaviour
 {
 
     // アクションのパラメータ
-    [SerializeField] private float jumpForce = 800.0f;  // ジャンプ力
-    [SerializeField] private float walkForce = 8.0f;    // 歩くスピード
-    [SerializeField] private float upForce = 10.0f;     // 壁を上るスピード
+    [SerializeField] private float jumpForce;  // ジャンプ力
+    [SerializeField] private float walkForce;    // 歩くスピード
+    [SerializeField] private float upForce;     // 壁を上るスピード
 
 
     // コントロール用コンポーネント
@@ -32,9 +32,9 @@ public class ChaserController : MonoBehaviour
     [SerializeField] private GameObject player;      // プレイヤオブジェクト
     [SerializeField] private GameObject playerPole;  // 当たり判定取得用
 
-    [SerializeField] private float getPosTime = 0.5f;   // プレイヤの位置を取得する間隔
+    [SerializeField] private float getPosTime;   // プレイヤの位置を取得する間隔
     [SerializeField] private float waitTime;     // 自身が停止しているのを待つ時間
-    [SerializeField] private float stopDistance = 0.1f;// プレイヤが留まっていると判定する距離
+    [SerializeField] private float stopDistance;// プレイヤが留まっていると判定する距離
     [SerializeField] private Vector2 margin = 
         new Vector2(0.5f, 2.0f);                // 震え防止の余白
 
@@ -45,25 +45,16 @@ public class ChaserController : MonoBehaviour
 
     private float getPosTimer;      // プレイヤの位置を取得する間隔のタイマー
     private Vector2 distance;       // プレイヤとの距離
-    private Vector2 playerPrePos;   // プレイヤの前フレームの位置
 
     private bool playerIsRight;     // プレイヤが右にいるか(自分が左から追っている状態か)
     
     private float waitTimer;        // 自身が停止している間
 
-    private Vector2 playerDir;              // プレイヤーへの向き
 
-
-
-    private bool isCoolTime;            // 連続して経路探索しないように
     private bool isUseRoute;
     private bool wantToJump;
 
-
-    // 壁用
-    private Vector2 pPos;
-    private Vector2 prePos;
-    private Vector2 MyPos;
+    private Vector2 pPos;       // プレイヤーの位置
 
     // 効果音
     [SerializeField]
@@ -86,8 +77,6 @@ public class ChaserController : MonoBehaviour
 
 
         //値の初期化
-        playerPrePos = new Vector2(0, 0);
-        prePos = new Vector2(0, 0);
         waitTimer = 0.0f;
         getPosTimer = 0.0f;
         SearchRoute();
@@ -145,15 +134,7 @@ public class ChaserController : MonoBehaviour
         {
             if (playerIsRight)
             {
-                /*
-                // プレイヤを余白分通りすぎるようにする処理
-                if (distance.x > -margin.x)
-                {
-                    key = 1;
-                    spriteRenderer.flipX = true;
-                }
-                else 
-                */
+
                 goalDir = new Vector2(distance.x + margin.x,distance.y);
                 // 自分がプレイヤと余白分以上右にいたら
                 if (pPos.x + margin.x < m_transform.position.x)
@@ -165,14 +146,6 @@ public class ChaserController : MonoBehaviour
             // 右から追っている
             else
             {
-                /*
-                if (distance.x < margin.x)
-                {
-                    key = -1;
-                    spriteRenderer.flipX = false;
-                }
-                else DirUpdate();
-                */
                 goalDir = new Vector2(distance.x - margin.x, distance.y);
                 // 自分がプレイヤと余白分以上左にいたら
                 if (pPos.x - margin.x > m_transform.position.x)
@@ -183,7 +156,7 @@ public class ChaserController : MonoBehaviour
         }
 
 
-        // 目標ポイントへ左右移動
+        // 目標ポイントへの左右の向きを判定
         if (Mathf.Abs(goalDir.x) > 0.1f)
         {
             if (goalDir.x < 0)
@@ -201,15 +174,14 @@ public class ChaserController : MonoBehaviour
         }
 
 
-
-
-        // 目標がジャンプしないと届かない位置か
+        // 目標がジャンプしないと届かない位置ならジャンプを行う
         wantToJump = goalDir.y > margin.y;
 
-
+        // 速度に代入
         Vector2 vel = this.rigid2D.velocity;
         this.rigid2D.velocity = new Vector2(key * this.walkForce, vel.y);
 
+        // 動きが停止した状態が続いたら経路探索を行う
         if (Mathf.Approximately((rigid2D.velocity.magnitude), 0.0f))
         {
             waitTimer += Time.deltaTime;
@@ -229,91 +201,22 @@ public class ChaserController : MonoBehaviour
        
     }
 
-    private void OnDrawGizmos()
-    {
-        if (isUseRoute)
-        {
-            Gizmos.color = Color.red;
-            float arrowAngle = 20;
-            float arrowLength = 0.75f;
-
-            for (int i = 0; i < route.Count - 1; i++)
-            {
-                Gizmos.DrawRay(route[i].transform.position, route[i + 1].position - route[i].transform.position);
-                // 矢印追加
-                Vector2 dir = route[i].transform.position - route[i + 1].position;
-                dir = dir.normalized * arrowLength;
-                Vector2 right = Quaternion.Euler(0, 0, arrowAngle) * dir;
-                Vector2 left = Quaternion.Euler(0, 0, -arrowAngle) * dir;
-                Gizmos.DrawRay(route[i + 1].position, right);
-                Gizmos.DrawRay(route[i + 1].position, left);
-            }
-        }
-        else
-        {
-            if (playerIsRight)
-            {
-                Gizmos.color = Color.white;
-
-            }
-            else
-            {
-                Gizmos.color = Color.green;
-            }
-            Gizmos.DrawRay(m_transform.position, distance);
-                
-        }
-
-
-    }
-
-    //プレイヤへの方向の更新
-    private void DirUpdate()
-    {
-        MyPos = m_transform.position;
-        pPos = player.transform.position;
-        playerDir = pPos - MyPos;
-        playerIsRight = playerDir.x > 0;
-        playerDir = pPos - MyPos;
-
-
-    }
-
     // プレイヤとの距離の距離の更新
     private void DistanceUpdate()
     {
-        MyPos = m_transform.position;
+        Vector2 myPos = m_transform.position;
         pPos = player.transform.position;
-        distance =  pPos - MyPos;
-        playerIsRight = playerDir.x > 0;
-        playerDir = pPos - MyPos;
-    }
-
-
-    // プレイヤとの相対位置を求める
-    private void GetToPlayer()
-    {
-        MyPos = m_transform.position;
-        pPos = player.transform.position;
-        playerDir = pPos - MyPos;
-
-        //Turn();
+        distance =  pPos - myPos;
         playerIsRight = distance.x > 0;
 
-
     }
 
-    //プレイヤがどっち向きにいるか
-    private void GoToPlayer()
-    {
-        playerIsRight = distance.x > 0;
-    }
 
 
     // ジャンプする
     public void Jump()
     {
-        if (this.rigid2D.velocity.y == 0 && wantToJump)
+        if (this.rigid2D.velocity.y <= 0 && wantToJump)
         {
             this.rigid2D.velocity = new Vector2(this.rigid2D.velocity.x, 0f);
             this.rigid2D.AddForce(m_transform.up * this.jumpForce);
@@ -363,19 +266,8 @@ public class ChaserController : MonoBehaviour
 
     }
 
-    private void Turn()
-    {
-
-        if (prePos.x == MyPos.x)
-        {
-            playerIsRight = !playerIsRight;
-        }
-
-        prePos = MyPos;
-        
-    }
-
-    private void SearchRoute()
+    // 経路探索をする
+    public void SearchRoute()
     {
         Debug.Log("探索開始");
         DistanceUpdate();
@@ -398,4 +290,51 @@ public class ChaserController : MonoBehaviour
         isUseRoute = route.Count >= 1;
     }
 
+
+#if UNITY_EDITOR
+    // デバッグ用
+    private void OnDrawGizmos()
+    {
+        if (Application.isPlaying)
+        {
+            if (isUseRoute)
+            {
+                // 経路を赤色でシーンビューに表示
+                Gizmos.color = Color.red;
+                float arrowAngle = 20;
+                float arrowLength = 0.75f;
+
+                for (int i = 0; i < route.Count - 1; i++)
+                {
+                    Gizmos.DrawRay(route[i].transform.position, route[i + 1].position - route[i].transform.position);
+                    // 矢印追加
+                    Vector2 dir = route[i].transform.position - route[i + 1].position;
+                    dir = dir.normalized * arrowLength;
+                    Vector2 right = Quaternion.Euler(0, 0, arrowAngle) * dir;
+                    Vector2 left = Quaternion.Euler(0, 0, -arrowAngle) * dir;
+                    Gizmos.DrawRay(route[i + 1].position, right);
+                    Gizmos.DrawRay(route[i + 1].position, left);
+                }
+            }
+            else
+            {
+                // プレイヤーへのベクトルを表示
+                // 右向きなら白、左なら緑色
+                if (playerIsRight)
+                {
+                    Gizmos.color = Color.white;
+                }
+                else
+                {
+                    Gizmos.color = Color.green;
+                }
+                Gizmos.DrawRay(m_transform.position, distance);
+
+            }
+        }
+
+    }
+
+
+#endif
 }

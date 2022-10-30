@@ -24,9 +24,9 @@ public class Point:MonoBehaviour
     {
         m_transform = transform;
     }
-    
-    
 
+
+#if UNITY_EDITOR
 
     void OnDrawGizmosSelected()
     {
@@ -53,7 +53,8 @@ public class Point:MonoBehaviour
         }
 
     }
+#endif
 
-    
+
 
 }

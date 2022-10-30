@@ -6,8 +6,7 @@ using UnityEngine;
 public class RouteManager : MonoBehaviour
 {
     // 有向グラフ
-    [SerializeField]
-    private List<Point> PointList = new List<Point>();
+    private List<Point> pointList = new List<Point>();
     private List<Transform> closeList = new List<Transform>();
     private List<Point> tempList = new List<Point>();
     
@@ -24,7 +23,11 @@ public class RouteManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        var points = GetComponentsInChildren<Point>();
+        foreach (var p in points)
+        {
+            pointList.Add(p);
+        }
     }
 
     // Update is called once per frame
@@ -43,25 +46,26 @@ public class RouteManager : MonoBehaviour
         float startDis = 999;
         float goalDis = 999;
         // スタートで頭上、真下のポイントを選ばないように
-        float dis_y = 999;
+        //float dis_y = 999;
         // それぞれの一番近いRouteポイントを探す
-        for (int i = 0; i < PointList.Count; i++)
+        for (int i = 0; i < pointList.Count; i++)
         {
             float temp;
-            temp = Vector2.Distance(PointList[i].Pos, startPos);
-            float tempY = Mathf.Abs(PointList[i].Pos.y - startPos.y);
-            if (temp < startDis&&tempY <= dis_y)
+            temp = Vector2.Distance(pointList[i].Pos, startPos);
+            //float tempY = Mathf.Abs(PointList[i].Pos.y - startPos.y);
+            temp += Mathf.Abs(pointList[i].Pos.y - startPos.y);
+            if (temp < startDis)//&&tempY <= dis_y)
             {
                 startDis = temp;
-                dis_y = tempY;
-                sPoint = PointList[i];
+                //dis_y = tempY;
+                sPoint = pointList[i];
             }
 
-            temp = Vector2.Distance(PointList[i].Pos, goalPos);
+            temp = Vector2.Distance(pointList[i].Pos, goalPos);
             if (temp < goalDis)
             {
                 goalDis = temp;
-                gPoint = PointList[i];
+                gPoint = pointList[i];
             }
 
         }
@@ -172,7 +176,7 @@ public class RouteManager : MonoBehaviour
 
             }
         }
-        foreach (var item in PointList)
+        foreach (var item in pointList)
         {
             if (item.m_transform == point)
             {
@@ -189,43 +193,19 @@ public class RouteManager : MonoBehaviour
         Point point = null;
         float dis = 99999;
         // 一番近いポイントを探す
-        for (int i = 0; i < PointList.Count; i++)
+        for (int i = 0; i < pointList.Count; i++)
         {
             float temp;
-            temp = Vector2.Distance(PointList[i].Pos, pos);
+            temp = Vector2.Distance(pointList[i].Pos, pos);
             if (temp < dis)
             {
                 dis = temp;
-                point = PointList[i];
+                point = pointList[i];
             }
         }
 
         return point.m_transform;
     }
 
-
-    void OnDrawGizmosSelected()
-
-    {
-        float arrowAngle = 20;
-        float arrowLength = 0.75f;
-        
-        foreach (var point in PointList)
-        {
-            foreach (var adjacent in point.adjacentList)
-            {
-                Gizmos.DrawRay(point.transform.position, adjacent.position - point.transform.position);
-                // 矢印追加
-                Vector2 dir = point.transform.position - adjacent.position;
-                dir = dir.normalized * arrowLength;
-                Vector2 right = Quaternion.Euler(0, 0, arrowAngle) * dir;
-                Vector2 left = Quaternion.Euler(0, 0, -arrowAngle) * dir;
-                Gizmos.DrawRay(adjacent.position, right);
-                Gizmos.DrawRay(adjacent.position, left);
-            }
-
-        }
-
-    }
 
 }
