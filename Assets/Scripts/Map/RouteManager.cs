@@ -2,27 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 有向グラフを管理するクラス
-[System.Serializable]
-public class Point
-{
-    // ポイント
-    [field: SerializeField]
-    public Transform transform { get; private set; }    // からのオブジェクトをそのまま入れれるようにトランスフォーム
-
-    // ベクトルとして扱う
-    public Vector2 Pos 
-    {
-        get { return transform.position; }
-    }
-    
-    // 隣接ポイント
-    [field: SerializeField]
-    public List<Transform> adjacentList { get; private set; }
-
-}
-
-
 
 public class RouteManager : MonoBehaviour
 {
@@ -64,14 +43,18 @@ public class RouteManager : MonoBehaviour
         Point gPoint = null;
         float startDis = 999;
         float goalDis = 999;
+        // スタートで頭上のポイントを選ばないように
+        float dis_y = 999;
         // それぞれの一番近いRouteポイントを探す
         for (int i = 0; i < PointList.Count; i++)
         {
             float temp;
             temp = Vector2.Distance(PointList[i].Pos, startPos);
-            if (temp < startDis)
+            float tempY = PointList[i].Pos.y - startPos.y;
+            if (temp < startDis&&tempY < dis_y)
             {
                 startDis = temp;
+                dis_y = tempY;
                 sPoint = PointList[i];
             }
 
@@ -83,7 +66,8 @@ public class RouteManager : MonoBehaviour
             }
 
         }
-        //Debug.Log(gPoint.transform.gameObject.name);
+        Debug.Log(sPoint.transform.gameObject.name);
+        Debug.Log(gPoint.transform.gameObject.name);
 
 
 
@@ -91,14 +75,13 @@ public class RouteManager : MonoBehaviour
         // スタートからゴールまでの経路を探索する
         if (gPoint != null && sPoint != null)
         {
-
             SearchRoute(sPoint, gPoint);
 
         }
 
 
 
-
+        
         return route;
     }
 
@@ -123,7 +106,7 @@ public class RouteManager : MonoBehaviour
             if (tempPoint == null)
             {
                 // 次の候補がなかったらここを閉じリストに追加
-                closeList.Add(nextPoint.transform);
+                closeList.Add(nextPoint.m_transform);
                 if (tempList.Count > 0)
                 {
                     nextPoint = tempList[tempList.Count - 1];
@@ -142,12 +125,12 @@ public class RouteManager : MonoBehaviour
 
         foreach (var item in tempList)
         {
-            route.Add(item.transform);
-        }
-        route.Add(goal.transform);
-        
+            route.Add(item.m_transform);
 
-         
+        }
+        route.Add(goal.m_transform);
+
+
     }
 
     private Point GetNextPoint(Point start, Point goal)
@@ -176,7 +159,7 @@ public class RouteManager : MonoBehaviour
                 // 今までに通った道じゃないか
                 for (int j = 0; j < tempList.Count; j++)
                 {
-                    if (tempList[j].transform == start.adjacentList[i])
+                    if (tempList[j].m_transform == start.adjacentList[i])
                     {
                         isAlready = true;
                         break;
@@ -193,7 +176,7 @@ public class RouteManager : MonoBehaviour
         }
         foreach (var item in PointList)
         {
-            if (item.transform == point)
+            if (item.m_transform == point)
             {
 
                 return item;
@@ -219,8 +202,31 @@ public class RouteManager : MonoBehaviour
             }
         }
 
-        return point.transform;
+        return point.m_transform;
     }
 
+
+    void OnDrawGizmosSelected()
+
+    {
+        float arrowAngle = 20;
+        float arrowLength = 0.75f;
+        foreach (var point in PointList)
+        {
+            foreach (var adjacent in point.adjacentList)
+            {
+                Gizmos.DrawRay(point.transform.position, adjacent.position - point.transform.position);
+                // 矢印追加
+                Vector2 dir = point.transform.position - adjacent.position;
+                dir = dir.normalized * arrowLength;
+                Vector2 right = Quaternion.Euler(0, 0, arrowAngle) * dir;
+                Vector2 left = Quaternion.Euler(0, 0, -arrowAngle) * dir;
+                Gizmos.DrawRay(adjacent.position, right);
+                Gizmos.DrawRay(adjacent.position, left);
+            }
+
+        }
+
+    }
 
 }

@@ -35,7 +35,6 @@ public class ChaserController : MonoBehaviour
     [SerializeField] private float getPosTime = 0.5f;   // プレイヤの位置を取得する間隔
     [SerializeField] private float waitTime = 5.0f;     // プレイヤが停止しているのを待つ時間
     [SerializeField] private float stopDistance = 0.1f;// プレイヤが留まっていると判定する距離
-    [SerializeField] private float throughTime = 0.5f;  // 何秒足場を透ける状態にするか
     [SerializeField] private Vector2 margin = 
         new Vector2(0.5f, 2.0f);                // 震え防止の余白
 
@@ -49,10 +48,10 @@ public class ChaserController : MonoBehaviour
     private Vector2 playerPrePos;   // プレイヤの前フレームの位置
 
     private bool playerIsRight;     // プレイヤが右にいるか(自分が左から追っている状態か)
-    private bool isThrough;         // 足場を透ける
     
     private float waitTimer;        // プレイヤが停止している間
-    private float throughTimer;     // 足場が透ける状態の間
+
+    private Vector2 dir;              // プレイヤーへの向き
 
     private bool isUseRoute;
     private bool wantToJump;
@@ -87,7 +86,6 @@ public class ChaserController : MonoBehaviour
         playerPrePos = new Vector2(0, 0);
         prePos = new Vector2(0, 0);
         waitTimer = 0.0f;
-        throughTimer = 0.0f;
         getPosTimer = 0.0f;
         SearchRoute();
 
@@ -99,17 +97,23 @@ public class ChaserController : MonoBehaviour
 
         
         // プレイヤとの距離取得
-
+        // ルートを使っていない状態で一定時間たったらルート検索
         if (!isUseRoute&&getPosTimer > getPosTime)
         {
+            Debug.Log("時間経過により探索を開始");
             getPosTimer = 0.0f;
             SearchRoute();
+            DistanceUpdate();    
         }
-        getPosTimer += Time.deltaTime;
-        
+        if (!isUseRoute)
+        {
+            getPosTimer += Time.deltaTime;
+
+        }
 
 
-        
+
+
         // 左右移動
         int key = 0;
         Vector2 vec = Vector2.zero;
@@ -134,8 +138,7 @@ public class ChaserController : MonoBehaviour
         // プレイヤーへの方向をそのまま使う
         else
         {
-            vec = GetToPlayer();
-            distance = GetToPlayer();
+            vec = dir;
         }
 
         // 目標ポイントへ左右移動
@@ -144,20 +147,19 @@ public class ChaserController : MonoBehaviour
             if (vec.x < 0)
             {
                 key = -1;
+                spriteRenderer.flipX = false;
+
             }
             else
             {
                 key = 1;
+                spriteRenderer.flipX = true;
+
             }
         }
-        else if (isUseRoute)
+        else if (isUseRoute && Mathf.Approximately(Vector2.Distance(prePos,m_transform.position),0.0f))
         {
-            Transform nearly = routeManager.GetNearlyPointTransform(m_transform.position);
-            if (route[routeIndex] != nearly)
-            {
-                Debug.Log("なんかとおい");
-                //SearchRoute();
-            }
+            SearchRoute();
         }
 
 
@@ -173,74 +175,75 @@ public class ChaserController : MonoBehaviour
             waitTimer += Time.deltaTime;
         }
         else playerPrePos = pPos;
-
+        */
         // 左右移動
-        int key = 0;
         // 左から追っている状態
-        if (playerIsRight)
+        if (!isUseRoute)
         {
-            // プレイヤを余白分通りすぎるようにする処理
-            if (distance.x > -margin.x)
+            if (playerIsRight)
             {
-                key = 1;
-                spriteRenderer.flipX = true;
+                // プレイヤを余白分通りすぎるようにする処理
+                if (distance.x > -margin.x)
+                {
+                    key = 1;
+                    spriteRenderer.flipX = true;
+                }
+                else DirUpdate();
+
             }
-            else GoToPlayer();
-
-        }
-        // 右から追っている
-        else
-        {
-            if (distance.x < margin.x)
+            // 右から追っている
+            else
             {
-                key = -1;
-                spriteRenderer.flipX = false;
-            }
-            else GoToPlayer();
-        }
-
-        // 一定時間以上プレイヤが動かなくなったら
-        if (waitTimer > waitTime)
-        {
-            waitTimer = 0f;
-            // 真下で待機された時の対応
-            Through(distance);
-            // 上で待機された時の対応 未
-        }
-
-        // 足場透過状態
-        if (isThrough)
-        {
-            // 左右移動はしない
-            key = 0;
-            throughTimer -= Time.deltaTime;
-            if (throughTimer < 0)
-            {
-                isThrough = false;
-                this.gameObject.layer = (int)LayerName.Default;
+                if (distance.x < margin.x)
+                {
+                    key = -1;
+                    spriteRenderer.flipX = false;
+                }
+                else DirUpdate();
             }
         }
- */
+
         Vector2 vel = this.rigid2D.velocity;
         this.rigid2D.velocity = new Vector2(key * this.walkForce, vel.y);
 
         // アニメーション
         Animation();
 
+        prePos = m_transform.position;
+
        
+    }
+
+    private void DirUpdate()
+    {
+        MyPos = m_transform.position;
+        pPos = player.transform.position;
+        dir = pPos - MyPos;
+        playerIsRight = dir.x > 0;
+        dir = pPos - MyPos;
+
+
+    }
+
+    private void DistanceUpdate()
+    {
+        MyPos = m_transform.position;
+        pPos = player.transform.position;
+        distance =  pPos - MyPos;
     }
 
 
     // プレイヤとの相対位置を求める
-    private Vector2 GetToPlayer()
+    private void GetToPlayer()
     {
         MyPos = m_transform.position;
         pPos = player.transform.position;
-        Vector2 distance = pPos - MyPos;
+        dir = pPos - MyPos;
 
-        Turn();
+        //Turn();
+        playerIsRight = distance.x > 0;
 
-        return distance;
+
     }
 
     //プレイヤがどっち向きにいるか
@@ -249,21 +252,6 @@ public class ChaserController : MonoBehaviour
         playerIsRight = distance.x > 0;
     }
 
-    // 足場透過
-    private void Through(Vector2 distance)
-    {
-        
-        // プレイヤが下にいたら
-        if (distance.y < 0 && distance.x < stopDistance && distance.x > -stopDistance)
-        {
-            
-            isThrough = true;
-            throughTimer = throughTime;
-            // レイヤ変更により足場を透過
-            //this.gameObject.layer = (int)LayerName.Through;
-        }
-        
-    }
 
     // ジャンプする
     public void Jump()
@@ -332,14 +320,25 @@ public class ChaserController : MonoBehaviour
 
     private void SearchRoute()
     {
+        Debug.Log("探索開始");
+        dir = player.transform.position - m_transform.position;
         route = routeManager.GetRoute(m_transform, player.transform);
         routeIndex = 0;
         Debug.Log("今回のルートは");
-        foreach (var item in route)
+        if (route == null)
+        {
+            Debug.Log("ないです自分で頑張ってください");
+
+            isUseRoute = false;
+            return;
+
+        }
+        foreach (var item in route ?? new List<Transform>())
         {
             Debug.Log(item.gameObject.name);
         }
         // 目標が一つしかなかったら直接プレイヤーを追う
+
         isUseRoute = route.Count > 1;
     }
 
