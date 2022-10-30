@@ -33,7 +33,7 @@ public class ChaserController : MonoBehaviour
     [SerializeField] private GameObject playerPole;  // 当たり判定取得用
 
     [SerializeField] private float getPosTime = 0.5f;   // プレイヤの位置を取得する間隔
-    [SerializeField] private float waitTime = 5.0f;     // プレイヤが停止しているのを待つ時間
+    [SerializeField] private float waitTime;     // 自身が停止しているのを待つ時間
     [SerializeField] private float stopDistance = 0.1f;// プレイヤが留まっていると判定する距離
     [SerializeField] private Vector2 margin = 
         new Vector2(0.5f, 2.0f);                // 震え防止の余白
@@ -49,10 +49,13 @@ public class ChaserController : MonoBehaviour
 
     private bool playerIsRight;     // プレイヤが右にいるか(自分が左から追っている状態か)
     
-    private float waitTimer;        // プレイヤが停止している間
+    private float waitTimer;        // 自身が停止している間
 
-    private Vector2 dir;              // プレイヤーへの向き
+    private Vector2 playerDir;              // プレイヤーへの向き
 
+
+
+    private bool isCoolTime;            // 連続して経路探索しないように
     private bool isUseRoute;
     private bool wantToJump;
 
@@ -98,53 +101,92 @@ public class ChaserController : MonoBehaviour
         
         // プレイヤとの距離取得
         // ルートを使っていない状態で一定時間たったらルート検索
-        if (!isUseRoute&&getPosTimer > getPosTime)
-        {
-            Debug.Log("時間経過により探索を開始");
-            getPosTimer = 0.0f;
-            SearchRoute();
-            DistanceUpdate();    
-        }
         if (!isUseRoute)
         {
             getPosTimer += Time.deltaTime;
+            if (getPosTimer > getPosTime)
+            {
+                Debug.Log("時間経過により探索を開始");
+                getPosTimer = 0.0f;
+                SearchRoute();
+                DistanceUpdate();
+            }
 
         }
-
-
-
 
         // 左右移動
         int key = 0;
-        Vector2 vec = Vector2.zero;
-        if (isUseRoute&&routeIndex < route.Count)
+        Vector2 goalDir = Vector2.zero;
+        //ルートを使うかどうか
+        if (isUseRoute)//&&routeIndex < route.Count)
         {
-            // 目標ポイントまでの距離が近かったら次のポイントを目標にする
-            if (Vector2.Distance(route[routeIndex].position, m_transform.position) > 0.5f)
-            {
-                vec = route[routeIndex].position - m_transform.position;
-            }
-            else
-            {
+            goalDir = route[routeIndex].position - m_transform.position;
 
+            // 目標ポイントまでの距離が近かったら次のポイントを目標にする
+            if (Vector2.Distance(route[routeIndex].position, m_transform.position) < 0.75f)
+            {
+                Debug.Log(route[routeIndex].gameObject.name + "を通過しました");
                 routeIndex++;
+                
                 if (routeIndex >= route.Count)
                 {
-                    SearchRoute();
+                    //SearchRoute();
+                    Debug.Log("ルートが終了したので自分で追います");
+                    isUseRoute = false;
+                    DistanceUpdate();
 
                 }
             }
+
+
         }
         // プレイヤーへの方向をそのまま使う
-        else
+        if(!isUseRoute)
         {
-            vec = dir;
+            if (playerIsRight)
+            {
+                /*
+                // プレイヤを余白分通りすぎるようにする処理
+                if (distance.x > -margin.x)
+                {
+                    key = 1;
+                    spriteRenderer.flipX = true;
+                }
+                else 
+                */
+                goalDir = new Vector2(distance.x + margin.x,distance.y);
+                // 自分がプレイヤと余白分以上右にいたら
+                if (pPos.x + margin.x < m_transform.position.x)
+                {
+                    DistanceUpdate();
+                }
+
+            }
+            // 右から追っている
+            else
+            {
+                /*
+                if (distance.x < margin.x)
+                {
+                    key = -1;
+                    spriteRenderer.flipX = false;
+                }
+                else DirUpdate();
+                */
+                goalDir = new Vector2(distance.x - margin.x, distance.y);
+                // 自分がプレイヤと余白分以上左にいたら
+                if (pPos.x - margin.x > m_transform.position.x)
+                {
+                    DistanceUpdate();
+                }
+            }
         }
 
+
         // 目標ポイントへ左右移動
-        if (Mathf.Abs(vec.x) > 0.1f)
+        if (Mathf.Abs(goalDir.x) > 0.1f)
         {
-            if (vec.x < 0)
+            if (goalDir.x < 0)
             {
                 key = -1;
                 spriteRenderer.flipX = false;
@@ -157,79 +199,94 @@ public class ChaserController : MonoBehaviour
 
             }
         }
-        else if (isUseRoute && Mathf.Approximately(Vector2.Distance(prePos,m_transform.position),0.0f))
-        {
-            SearchRoute();
-        }
+
+
 
 
         // 目標がジャンプしないと届かない位置か
-        wantToJump = vec.y > margin.y;
+        wantToJump = goalDir.y > margin.y;
 
-
-        /*
-        float playerDis = Vector2.Distance(playerPrePos, pPos);
-        // プレイヤが安置に停止していないか
-        if (playerDis < stopDistance)
-        {
-            waitTimer += Time.deltaTime;
-        }
-        else playerPrePos = pPos;
-        */
-        // 左右移動
-        // 左から追っている状態
-        if (!isUseRoute)
-        {
-            if (playerIsRight)
-            {
-                // プレイヤを余白分通りすぎるようにする処理
-                if (distance.x > -margin.x)
-                {
-                    key = 1;
-                    spriteRenderer.flipX = true;
-                }
-                else DirUpdate();
-
-            }
-            // 右から追っている
-            else
-            {
-                if (distance.x < margin.x)
-                {
-                    key = -1;
-                    spriteRenderer.flipX = false;
-                }
-                else DirUpdate();
-            }
-        }
 
         Vector2 vel = this.rigid2D.velocity;
         this.rigid2D.velocity = new Vector2(key * this.walkForce, vel.y);
 
+        if (Mathf.Approximately((rigid2D.velocity.magnitude), 0.0f))
+        {
+            waitTimer += Time.deltaTime;
+            if (waitTime < waitTimer)
+            {
+                waitTimer = 0.0f;
+                Debug.Log("止まってるよ");
+                SearchRoute();
+
+            }
+        }
+
         // アニメーション
         Animation();
 
-        prePos = m_transform.position;
 
        
     }
 
-    private void DirUpdate()
+    private void OnDrawGizmos()
     {
-        MyPos = m_transform.position;
-        pPos = player.transform.position;
-        dir = pPos - MyPos;
-        playerIsRight = dir.x > 0;
-        dir = pPos - MyPos;
+        if (isUseRoute)
+        {
+            Gizmos.color = Color.red;
+            float arrowAngle = 20;
+            float arrowLength = 0.75f;
+
+            for (int i = 0; i < route.Count - 1; i++)
+            {
+                Gizmos.DrawRay(route[i].transform.position, route[i + 1].position - route[i].transform.position);
+                // 矢印追加
+                Vector2 dir = route[i].transform.position - route[i + 1].position;
+                dir = dir.normalized * arrowLength;
+                Vector2 right = Quaternion.Euler(0, 0, arrowAngle) * dir;
+                Vector2 left = Quaternion.Euler(0, 0, -arrowAngle) * dir;
+                Gizmos.DrawRay(route[i + 1].position, right);
+                Gizmos.DrawRay(route[i + 1].position, left);
+            }
+        }
+        else
+        {
+            if (playerIsRight)
+            {
+                Gizmos.color = Color.white;
+
+            }
+            else
+            {
+                Gizmos.color = Color.green;
+            }
+            Gizmos.DrawRay(m_transform.position, distance);
+                
+        }
 
 
     }
 
+    //プレイヤへの方向の更新
+    private void DirUpdate()
+    {
+        MyPos = m_transform.position;
+        pPos = player.transform.position;
+        playerDir = pPos - MyPos;
+        playerIsRight = playerDir.x > 0;
+        playerDir = pPos - MyPos;
+
+
+    }
+
+    // プレイヤとの距離の距離の更新
     private void DistanceUpdate()
     {
         MyPos = m_transform.position;
         pPos = player.transform.position;
         distance =  pPos - MyPos;
+        playerIsRight = playerDir.x > 0;
+        playerDir = pPos - MyPos;
     }
 
 
@@ -238,7 +295,7 @@ public class ChaserController : MonoBehaviour
     {
         MyPos = m_transform.position;
         pPos = player.transform.position;
-        dir = pPos - MyPos;
+        playerDir = pPos - MyPos;
 
         //Turn();
         playerIsRight = distance.x > 0;
@@ -321,7 +378,7 @@ public class ChaserController : MonoBehaviour
     private void SearchRoute()
     {
         Debug.Log("探索開始");
-        dir = player.transform.position - m_transform.position;
+        DistanceUpdate();
         route = routeManager.GetRoute(m_transform, player.transform);
         routeIndex = 0;
         Debug.Log("今回のルートは");
@@ -337,9 +394,8 @@ public class ChaserController : MonoBehaviour
         {
             Debug.Log(item.gameObject.name);
         }
-        // 目標が一つしかなかったら直接プレイヤーを追う
-
-        isUseRoute = route.Count > 1;
+        // 目標がなかったら直接プレイヤーを追う
+        isUseRoute = route.Count >= 1;
     }
 
 }

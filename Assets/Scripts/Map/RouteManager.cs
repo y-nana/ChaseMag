@@ -16,7 +16,6 @@ public class RouteManager : MonoBehaviour
     // 処理落ち防止の探索回数
     [SerializeField]
     private int maxSearchCount;
-    private int count;
 
     private List<Transform> route;
 
@@ -43,15 +42,15 @@ public class RouteManager : MonoBehaviour
         Point gPoint = null;
         float startDis = 999;
         float goalDis = 999;
-        // スタートで頭上のポイントを選ばないように
+        // スタートで頭上、真下のポイントを選ばないように
         float dis_y = 999;
         // それぞれの一番近いRouteポイントを探す
         for (int i = 0; i < PointList.Count; i++)
         {
             float temp;
             temp = Vector2.Distance(PointList[i].Pos, startPos);
-            float tempY = PointList[i].Pos.y - startPos.y;
-            if (temp < startDis&&tempY < dis_y)
+            float tempY = Mathf.Abs(PointList[i].Pos.y - startPos.y);
+            if (temp < startDis&&tempY <= dis_y)
             {
                 startDis = temp;
                 dis_y = tempY;
@@ -66,8 +65,8 @@ public class RouteManager : MonoBehaviour
             }
 
         }
-        Debug.Log(sPoint.transform.gameObject.name);
-        Debug.Log(gPoint.transform.gameObject.name);
+        //Debug.Log(sPoint.transform.gameObject.name);
+        //Debug.Log(gPoint.transform.gameObject.name);
 
 
 
@@ -87,7 +86,6 @@ public class RouteManager : MonoBehaviour
 
     private void SearchRoute(Point start ,Point goal)
     {
-        count = 0;
         route = new List<Transform>();
         closeList = new List<Transform>();
         tempList = new List<Point>();
@@ -211,6 +209,7 @@ public class RouteManager : MonoBehaviour
     {
         float arrowAngle = 20;
         float arrowLength = 0.75f;
+        
         foreach (var point in PointList)
         {
             foreach (var adjacent in point.adjacentList)

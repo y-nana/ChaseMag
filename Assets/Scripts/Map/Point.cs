@@ -19,10 +19,13 @@ public class Point:MonoBehaviour
     [field: SerializeField]
     public List<Transform> adjacentList { get; private set; }
 
+    
     private void OnEnable()
     {
         m_transform = transform;
     }
+    
+    
 
 
     void OnDrawGizmosSelected()
@@ -30,6 +33,7 @@ public class Point:MonoBehaviour
         Gizmos.color = Color.yellow;
         float arrowAngle = 20;
         float arrowLength = 0.75f;
+
         foreach (var item in adjacentList)
         {
             Gizmos.DrawRay(transform.position, item.position - transform.position);
