@@ -105,13 +105,15 @@ MonoBehaviour:
   walkForce: 4
   upForce: 8
   sceneDirector: {fileID: 0}
+  routeManager: {fileID: 0}
   player: {fileID: 0}
   playerPole: {fileID: 0}
   getPosTime: 2
-  waitTime: 1
+  waitTime: 1.5
   stopDistance: 0.05
-  throughTime: 1
   margin: {x: 4.5, y: 1}
+  toPlayerTime: 0
+  pMoveValue: 0
   jumpSE: {fileID: 8300000, guid: f00b0cc664281444abcf72403bf389de, type: 3}
   upSE: {fileID: 0}
 --- !u!61 &3485505060607321203
