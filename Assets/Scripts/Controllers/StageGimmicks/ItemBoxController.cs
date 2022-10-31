@@ -16,7 +16,7 @@ public class ItemBoxController : MonoBehaviour
     private SpriteRenderer itemImage;
 
 
-    [SerializeField] float interbalTime = 3.0f;              // アイテムを取得できる間隔
+    [SerializeField] float interbalTime;              // アイテムを取得できる間隔
 
     private bool playerGetItem;     // プレイヤがアイテムを取得できる位置にいるか
     private bool choosed;           // アイテムが抽選された状態か
@@ -37,6 +37,7 @@ public class ItemBoxController : MonoBehaviour
     private readonly string coolTimeGuide = "クールタイム...";
 
 
+
     void Start()
     {
         itemManager = GameObject.Find(itemManageName).GetComponent<ItemManager>();
@@ -44,6 +45,8 @@ public class ItemBoxController : MonoBehaviour
         itemImage = showGetItem.GetComponent<SpriteRenderer>();
         guideText = guideTextObj.GetComponent<TextMesh>();
         guideText.text = chooseGuide;
+
+        
     }
 
     void Update()
@@ -67,7 +70,6 @@ public class ItemBoxController : MonoBehaviour
                 }
                 else if (!nowinterbal)
                 {
-
                     // アイテム抽選
                     ChooseItem();
                     choosed = true;
@@ -121,6 +123,8 @@ public class ItemBoxController : MonoBehaviour
         guideText.text = getGuide;
         choosed = true;
     }
+
+
 
     private void ShowClear()
     {

@@ -17,7 +17,8 @@ public class ChaserController : MonoBehaviour
     private Rigidbody2D rigid2D;            // 移動
     private SpriteRenderer spriteRenderer;  // 身体の向き変更
     private Animator animator;              // アニメーション
-    [SerializeField] private GameObject sceneDirector;        // シーン遷移用
+    [SerializeField] 
+    private GameObject sceneDirector;        // シーン遷移用
     private AudioSource audioSource;        // サウンド
     private Transform m_transform;          // トランスフォーム
 
@@ -26,38 +27,29 @@ public class ChaserController : MonoBehaviour
     private readonly string jump = "NowJump";  // ジャンプ中か
 
     // 対プレイヤ用
+
+    [SerializeField] 
+    private GameObject player;      // プレイヤオブジェクト
+    [SerializeField] 
+    private GameObject playerPole;  // 当たり判定取得用
+    private Transform pTransform;   // プレイヤーのトランスフォーム
+
     [SerializeField]
-    private RouteManager routeManager;
+    private RouteManager routeManager;          // 経路探索を行うスクリプト
 
-    [SerializeField] private GameObject player;      // プレイヤオブジェクト
-    [SerializeField] private GameObject playerPole;  // 当たり判定取得用
-    private Transform pTransform;
+    private List<Transform> route;              // 現在たどっているルート
+    private int routeIndex;                     // 現在向かっているポイントを示す添え字
 
-    [SerializeField] private float getPosTime;   // プレイヤの位置を取得する間隔
     [SerializeField] private float waitTime;     // 自身が停止しているのを待つ時間
-    [SerializeField] private float stopDistance;// プレイヤが留まっていると判定する距離
+    private float waitTimer;        
+
     [SerializeField] private Vector2 margin = 
-        new Vector2(0.5f, 2.0f);                // 震え防止の余白
+    new Vector2(0.5f, 2.0f);                // 震え防止の余白
 
-    
-
-    private List<Transform> route;
-    private int routeIndex;
-
-    private float getPosTimer;      // プレイヤの位置を取得する間隔のタイマー
-    private Vector2 distance;       // プレイヤとの距離
-
-    private bool playerIsRight;     // プレイヤが右にいるか(自分が左から追っている状態か)
-    
-    private float waitTimer;        // 自身が停止している間
+    private bool isUseRoute;    // ルートを使っていたらtrue
+    private bool wantToJump;    // ジャンプが必要かどうか
 
 
-    private bool isUseRoute;
-    private bool wantToJump;
-
-    private Vector2 pPos;       // プレイヤーの位置
-
-    // 改善
     [SerializeField]
     private float toPlayerTime;
     private float toPlayerTimer;
@@ -86,12 +78,9 @@ public class ChaserController : MonoBehaviour
         this.audioSource = GetComponent<AudioSource>();
         m_transform = transform;
 
-        //改善
         toPlayerTimer = 0.0f;
         pTransform = player.transform;
-        //値の初期化
         waitTimer = 0.0f;
-        getPosTimer = 0.0f;
         SearchRoute();
 
 
@@ -102,78 +91,7 @@ public class ChaserController : MonoBehaviour
     void Update()
     {
 
-        /*
-        // プレイヤとの距離取得
-        // ルートを使っていない状態で一定時間たったらルート検索
-        if (!isUseRoute)
-        {
-            getPosTimer += Time.deltaTime;
-            if (getPosTimer > getPosTime)
-            {
-                Debug.Log("時間経過により探索を開始");
-                getPosTimer = 0.0f;
-                SearchRoute();
-                DistanceUpdate();
-            }
-
-        }
-
-        // 左右移動
         int key = 0;
-        Vector2 goalDir = Vector2.zero;
-        //ルートを使うかどうか
-        if (isUseRoute)//&&routeIndex < route.Count)
-        {
-            goalDir = route[routeIndex].position - m_transform.position;
-
-            // 目標ポイントまでの距離が近かったら次のポイントを目標にする
-            if (Vector2.Distance(route[routeIndex].position, m_transform.position) < 0.75f)
-            {
-                Debug.Log(route[routeIndex].gameObject.name + "を通過しました");
-                routeIndex++;
-                
-                if (routeIndex >= route.Count)
-                {
-                    //SearchRoute();
-                    Debug.Log("ルートが終了したので自分で追います");
-                    isUseRoute = false;
-                    DistanceUpdate();
-
-                }
-            }
-
-
-        }
-        // プレイヤーへの方向をそのまま使う
-        if(!isUseRoute)
-        {
-            if (playerIsRight)
-            {
-
-                goalDir = new Vector2(distance.x + margin.x,distance.y);
-                // 自分がプレイヤと余白分以上右にいたら
-                if (pPos.x + margin.x < m_transform.position.x)
-                {
-                    DistanceUpdate();
-                }
-
-            }
-            // 右から追っている
-            else
-            {
-                goalDir = new Vector2(distance.x - margin.x, distance.y);
-                // 自分がプレイヤと余白分以上左にいたら
-                if (pPos.x - margin.x > m_transform.position.x)
-                {
-                    DistanceUpdate();
-                }
-            }
-        }
-
-        */
-
-        int key = 0;
-
         Vector2 goalDir = Vector2.zero;
         if (isUseRoute)
         {
@@ -209,20 +127,6 @@ public class ChaserController : MonoBehaviour
         Vector2 vel = this.rigid2D.velocity;
         this.rigid2D.velocity = new Vector2(key * this.walkForce, vel.y);
 
-        /*
-        // 動きが停止した状態が続いたら経路探索を行う
-        if (Mathf.Approximately((rigid2D.velocity.magnitude), 0.0f))
-        {
-            waitTimer += Time.deltaTime;
-            if (waitTime < waitTimer)
-            {
-                waitTimer = 0.0f;
-                Debug.Log("止まってるよ");
-                SearchRoute();
-
-            }
-        }
-        */
         // アニメーション
         Animation();
 
@@ -230,10 +134,10 @@ public class ChaserController : MonoBehaviour
        
     }
 
-
+    // プレイヤーへのベクトルを取得
     private Vector2 ToPlayer()
     {
-        Vector2 toPos = Vector2.zero;
+        Vector2 toPos;
         toPlayerTimer += Time.deltaTime;
         // 一定時間プレイヤーを追っていたら探索を開始
         if (toPlayerTimer > toPlayerTime)
@@ -248,6 +152,7 @@ public class ChaserController : MonoBehaviour
 
     }
 
+    // ルートのポイントへのベクトルを取得
     private Vector2 UseRoute()
     {
 
@@ -319,17 +224,17 @@ public class ChaserController : MonoBehaviour
     }
 
     
-
+    /*
     // プレイヤとの距離の距離の更新
     private void DistanceUpdate()
     {
         Vector2 myPos = m_transform.position;
-        pPos = player.transform.position;
-        distance =  pPos - myPos;
-        playerIsRight = distance.x > 0;
+        //pPos = player.transform.position;
+        //distance =  pPos - myPos;
+        //playerIsRight = distance.x > 0;
 
     }
-
+    */
 
 
     // ジャンプする
@@ -389,7 +294,7 @@ public class ChaserController : MonoBehaviour
     public void SearchRoute()
     {
         Debug.Log("探索開始");
-        DistanceUpdate();
+        //DistanceUpdate();
         route = routeManager.GetRoute(m_transform, pTransform);
         prePlayerPos = pTransform.position;
         routeIndex = 0;
@@ -439,15 +344,8 @@ public class ChaserController : MonoBehaviour
             else
             {
                 // プレイヤーへのベクトルを表示
-                // 右向きなら白、左なら緑色
-                if (playerIsRight)
-                {
-                    Gizmos.color = Color.white;
-                }
-                else
-                {
-                    Gizmos.color = Color.green;
-                }
+
+                Gizmos.color = Color.green;
                 Gizmos.DrawRay(m_transform.position, pTransform.position - m_transform.position);
 
             }

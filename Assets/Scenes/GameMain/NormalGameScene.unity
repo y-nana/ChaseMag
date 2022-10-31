@@ -5240,7 +5240,7 @@ PrefabInstance:
     - target: {fileID: 4874097578322473809, guid: 412018cd82ee59f4f87e9ff3acbcf553,
         type: 3}
       propertyPath: waitTime
-      value: 1.75
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4874097578322473809, guid: 412018cd82ee59f4f87e9ff3acbcf553,
         type: 3}
@@ -7941,7 +7941,7 @@ PrefabInstance:
     - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
       propertyPath: <adjacentList>k__BackingField.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
@@ -7953,6 +7953,11 @@ PrefabInstance:
       propertyPath: <adjacentList>k__BackingField.Array.data[1]
       value: 
       objectReference: {fileID: 1455503698}
+    - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
+        type: 3}
+      propertyPath: <adjacentList>k__BackingField.Array.data[2]
+      value: 
+      objectReference: {fileID: 1626623897}
     - target: {fileID: 7549397249460770051, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
       propertyPath: m_RootOrder
@@ -9734,7 +9739,7 @@ PrefabInstance:
     - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
       propertyPath: <adjacentList>k__BackingField.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
@@ -9746,6 +9751,11 @@ PrefabInstance:
       propertyPath: <adjacentList>k__BackingField.Array.data[1]
       value: 
       objectReference: {fileID: 1178970550}
+    - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
+        type: 3}
+      propertyPath: <adjacentList>k__BackingField.Array.data[2]
+      value: 
+      objectReference: {fileID: 1917324956}
     - target: {fileID: 7549397249460770051, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
       propertyPath: m_RootOrder
@@ -10853,7 +10863,7 @@ PrefabInstance:
     - target: {fileID: 7549397249460770051, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.75
+      value: -4
       objectReference: {fileID: 0}
     - target: {fileID: 7549397249460770051, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}

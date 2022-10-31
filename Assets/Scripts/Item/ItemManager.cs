@@ -22,6 +22,13 @@ public class ItemManager : MonoBehaviour
     private Dictionary<Item, int> itemNum = 
         new Dictionary<Item, int>();
 
+    // チュートリアル用
+    [SerializeField]
+    private List<Item> tutorialItemList = new List<Item>();
+    private int tutorialListIndex;
+    [SerializeField]
+    private bool isTutorial;
+
 
     void Start()
     {
@@ -32,14 +39,31 @@ public class ItemManager : MonoBehaviour
         {
             itemNum.Add(item, 0);
         }
+        if (isTutorial)
+        {
+            tutorialListIndex = 0;
+        }
     }
 
     // アイテム抽選
     public Item ItemRoulette()
     {
+        if (isTutorial)
+        {
+            // チュートリアルだったらリスト通りにアイテムを出す
+            var item = tutorialItemList[tutorialListIndex];
+            tutorialListIndex++;
+            // リストの最後まで行ったら繰り返す
+            if (tutorialListIndex >= tutorialItemList.Count)
+            {
+                tutorialListIndex = 0;
+            }
+            return item;
+        }
         int randmonInt = Random.Range(0, itemList.Count);
         return itemList[randmonInt];
     }
+
 
     // アイテム取得
     public void GetItem(Item item)

@@ -6576,7 +6576,7 @@ PrefabInstance:
     - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
       propertyPath: <adjacentList>k__BackingField.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
@@ -6593,6 +6593,11 @@ PrefabInstance:
       propertyPath: <adjacentList>k__BackingField.Array.data[2]
       value: 
       objectReference: {fileID: 1884015422}
+    - target: {fileID: 6336169486950543158, guid: bff6e29c64d70e94695370358f8ccf0f,
+        type: 3}
+      propertyPath: <adjacentList>k__BackingField.Array.data[3]
+      value: 
+      objectReference: {fileID: 1665125678}
     - target: {fileID: 7549397249460770051, guid: bff6e29c64d70e94695370358f8ccf0f,
         type: 3}
       propertyPath: m_RootOrder
