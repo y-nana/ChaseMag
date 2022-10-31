@@ -563,6 +563,11 @@ PrefabInstance:
       propertyPath: walkForce
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4874097578180230432, guid: 412018cd82ee59f4f87e9ff3acbcf553,
+        type: 3}
+      propertyPath: limitWidth
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 4874097578322473808, guid: 412018cd82ee59f4f87e9ff3acbcf553,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -572,6 +577,11 @@ PrefabInstance:
         type: 3}
       propertyPath: upForce
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4874097578322473809, guid: 412018cd82ee59f4f87e9ff3acbcf553,
+        type: 3}
+      propertyPath: waitTime
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4874097578322473809, guid: 412018cd82ee59f4f87e9ff3acbcf553,
         type: 3}
@@ -588,6 +598,11 @@ PrefabInstance:
       propertyPath: routeManager
       value: 
       objectReference: {fileID: 2120799929}
+    - target: {fileID: 4874097578322473809, guid: 412018cd82ee59f4f87e9ff3acbcf553,
+        type: 3}
+      propertyPath: toPlayerTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4874097578536006890, guid: 412018cd82ee59f4f87e9ff3acbcf553,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisStageLevel: 0
+  isTest: 0
 --- !u!114 &4874097576643884690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -528,6 +529,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   marginY: 1
   limitDown: 1
+  limitWidth: 35
+  limitHigh: 14
   playerTransform: {fileID: 4874097578135671581}
 --- !u!1001 &3659762015888023266
 PrefabInstance:
@@ -1590,9 +1593,24 @@ PrefabInstance:
       objectReference: {fileID: 4874097578135671580}
     - target: {fileID: 3485505060607321196, guid: fdc81503603ae0548b0f626f7633dcfc,
         type: 3}
+      propertyPath: waitTime
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3485505060607321196, guid: fdc81503603ae0548b0f626f7633dcfc,
+        type: 3}
+      propertyPath: pMoveValue
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3485505060607321196, guid: fdc81503603ae0548b0f626f7633dcfc,
+        type: 3}
       propertyPath: playerPole
       value: 
       objectReference: {fileID: 4874097577511018247}
+    - target: {fileID: 3485505060607321196, guid: fdc81503603ae0548b0f626f7633dcfc,
+        type: 3}
+      propertyPath: toPlayerTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3485505060607321196, guid: fdc81503603ae0548b0f626f7633dcfc,
         type: 3}
       propertyPath: sceneDirector
