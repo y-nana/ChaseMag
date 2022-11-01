@@ -8,8 +8,6 @@ public class PauseManager : MonoBehaviour
     [SerializeField] GameObject pauseObject;
     public static bool nowPause;
 
-    [SerializeField] GameObject playingPage;
-    [SerializeField] GameObject settingPage;
 
     // Start is called before the first frame update
     void Start()
@@ -48,14 +46,5 @@ public class PauseManager : MonoBehaviour
         nowPause = false;
     }
 
-    public void ToPlayingPage()
-    {
-
-    }
-
-    public void ToSettingPage()
-    {
-        
-    }
 
 }

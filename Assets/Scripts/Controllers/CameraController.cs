@@ -10,9 +10,9 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private int limitDown;        // 下限
     [SerializeField]
-    private int limitWidth = 35;      // 横の限界値
+    private int limitWidth;      // 横の限界値
     [SerializeField]
-    private float limitHigh = 14f;    // 上限
+    private float limitHigh;    // 上限
     private readonly int posZ = -10;           // Zの値（固定）
 
     // コントロール用コンポーネント

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
@@ -26,11 +27,12 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     private readonly string easyGameScene = "EasyGameScene";        // かんたんゲームシーン名
     private readonly string normalGameScene = "normalGameScene";    // ふつうゲームシーン名
     private readonly string hardGameScene = "hardGameScene";        // むずかしいゲームシーン名
-
-
-    private readonly string sceneDirectorTag = "SceneDirector";     // オブジェクト取得用タグ
-
-
+    /*
+    [SerializeField]
+    private Image fadeImage;
+    [SerializeField]
+    private float fadeTime;
+    */
     [SerializeField]
     private StageLevelState thisStageLevel;
 
@@ -43,11 +45,15 @@ public class SceneDirector : MonoBehaviour, SceneCaller
 #if UNITY_EDITOR
     [SerializeField]
     private bool isTest;
-    private readonly string test = "TestScene";        // むずかしいゲームシーン名
+    private readonly string test = "TestScene";        // テストシーン名
 
 #endif
 
+    private void Start()
+    {
+        //StartCoroutine(Fade(false));
 
+    }
 
     private void Update()
     {
@@ -56,9 +62,11 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         if (Input.GetKey(KeyCode.Escape))
         {
 
+
 #if UNITY_EDITOR
             if (isTest)
             {
+
                 SceneManager.LoadScene(test);
 
             }
@@ -80,6 +88,8 @@ public class SceneDirector : MonoBehaviour, SceneCaller
 
     public void ToGameStart()
     {
+        //yield return StartCoroutine(Fade(true));
+
         Time.timeScale = 1f;
         //Debug.Log(NextStageLevel);
 
@@ -200,13 +210,42 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         SceneManager.LoadScene(gameClear);
     }
 
-    // チュートリアルシーンへ いらなくなる予定
+    // チュートリアルシーンへ 
     public void ToTurorial()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(tutorialScene);
     }
 
+
+    /*
+    private IEnumerator Fade(bool fadeStart)
+    {
+        Color fColor = fadeImage.color;
+        float alphaValue = fadeStart ? 0.0f : 1.0f;
+        float addValue = 1.0f / fadeTime;
+        fadeImage.color = new Color(fColor.r, fColor.g, fColor.b, alphaValue);
+
+        while (true)
+        {
+            yield return null;
+
+            // プラスする値を計算する
+            float temp = addValue * Time.deltaTime;
+            if (!fadeStart) temp *= -1;
+            alphaValue += temp ;
+            fadeImage.color = 
+                new Color(fColor.r, fColor.g, fColor.b, alphaValue);
+
+            // フェードが完了したら終了する
+            if ((fadeStart && fadeImage.color.a >= 1.0f) 
+                || (!fadeStart && fadeImage.color.a <= 1.0f))
+            {
+                break;
+            }
+        }
+    }
+    */
     // 遷移時のイベント登録で変数を渡したいけどうまくいかないので没
     /*
     private void SendToNextScene(Scene next, LoadSceneMode mode)
