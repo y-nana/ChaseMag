@@ -96,7 +96,7 @@ public class CursorManager : MonoBehaviour
 
     }
 
-
+    // アウトラインの初期化
     private void OutLineInit()
     {
         outline.effectDistance = new Vector2(-20, -20);

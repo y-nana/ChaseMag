@@ -301,7 +301,7 @@ public class ChaserController : MonoBehaviour
         Debug.Log("今回のルートは");
         if (route == null)
         {
-            Debug.Log("ないです自分で頑張ってください");
+            Debug.Log("ないです");
 
             isUseRoute = false;
             return;

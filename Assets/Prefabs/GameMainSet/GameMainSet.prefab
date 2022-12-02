@@ -61,8 +61,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseObject: {fileID: 1595641543502326771}
-  playingPage: {fileID: 0}
-  settingPage: {fileID: 0}
 --- !u!114 &4874097576643884691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -431,6 +429,8 @@ MonoBehaviour:
   itemTextList:
   - {fileID: 4874097577332322897}
   - {fileID: 4874097578775238176}
+  tutorialItemList: []
+  isTutorial: 0
 --- !u!1 &4874097578180230434
 GameObject:
   m_ObjectHideFlags: 0
