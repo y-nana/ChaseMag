@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// スクリーンショットを取るためのクラス
 public class ScreenShotCapturer : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -13,6 +14,7 @@ public class ScreenShotCapturer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // バックスペースでスクリーンショットを取る
         if (Input.GetKeyDown(KeyCode.Backspace))
         {
             CaptureScreenShot("ScreenShot.png");

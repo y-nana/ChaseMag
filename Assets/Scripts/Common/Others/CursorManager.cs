@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+// 選択しているボタンをわかりやすく表示するためのクラス
 public class CursorManager : MonoBehaviour
 {
 
@@ -12,15 +13,15 @@ public class CursorManager : MonoBehaviour
     private EventSystem eventSystem;
 
     [SerializeField]
-    private Color outlineColor;
+    private Color outlineColor;     // アウトラインを使ってカーソルを表現
     [SerializeField]
-    private float speed = 2.0f;
+    private float speed = 2.0f;     // アウトラインが明滅するスピード
 
-    private GameObject preSelectedObj;
+    private GameObject preSelectedObj;  // アウトラインを消すために前にセレクトされていたボタンを管理
 
     private Outline outline;
 
-    private bool isPulus;
+    private bool isPulus;           // 明か滅か（アニメーション用）
 
     // Start is called before the first frame update
     void Start()
@@ -34,11 +35,14 @@ public class CursorManager : MonoBehaviour
     {
         try
         {
+            // イベントシステムから選択状態にあるオブジェクトを取得
             var selected = eventSystem.currentSelectedGameObject.gameObject;
+            // オブジェクトが前フレームと違ったら
             if (preSelectedObj != selected)
             {
                 if (preSelectedObj != null)
                 {
+                    // アウトラインを移動
                     Debug.Log(selected);
                     Destroy(outline);
                     outline = selected.AddComponent<Outline>();
@@ -46,17 +50,16 @@ public class CursorManager : MonoBehaviour
                 }
                 else
                 {
-                    
-
+                    // 初めて何かを選択するとき
                     outline = selected.AddComponent<Outline>();
                     OutLineInit();
                 }
+
                 preSelectedObj = selected;
             }
         }
         catch (NullReferenceException ex)
         {
-
             if (preSelectedObj!=null)
             {
                 eventSystem.SetSelectedGameObject(preSelectedObj);
@@ -64,6 +67,7 @@ public class CursorManager : MonoBehaviour
             }
         }
 
+        // カーソルの明滅処理
         if (outline != null)
         {
             float value = speed * Time.deltaTime;
@@ -74,6 +78,7 @@ public class CursorManager : MonoBehaviour
             Color temp = outline.effectColor;
             temp.a += value;
             outline.effectColor =temp;
+
             if (outline.effectColor.a <= 0)
             {
                 isPulus = true;
@@ -87,7 +92,6 @@ public class CursorManager : MonoBehaviour
         if (GameStateManager.instance.gameState == GameState.pause)
         {
             outline.effectColor = outlineColor;
-
         }
 
     }

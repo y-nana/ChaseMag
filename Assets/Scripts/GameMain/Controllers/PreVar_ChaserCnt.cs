@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 
-public class Var2_ChaserCnt : MonoBehaviour
+public class PreVar_ChaserCnt : MonoBehaviour
 {
 
     // アクションのパラメータ

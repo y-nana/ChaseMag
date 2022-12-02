@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
+// ステージの難易度（種類）
 public enum StageLevelState
 {
     easy,
@@ -27,31 +28,26 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     private readonly string easyGameScene = "EasyGameScene";        // かんたんゲームシーン名
     private readonly string normalGameScene = "normalGameScene";    // ふつうゲームシーン名
     private readonly string hardGameScene = "hardGameScene";        // むずかしいゲームシーン名
-    /*
-    [SerializeField]
-    private Image fadeImage;
-    [SerializeField]
-    private float fadeTime;
-    */
-    [SerializeField]
-    private StageLevelState thisStageLevel;
 
-    public static StageLevelState NextStageLevel { get; set; }
+    [SerializeField]
+    private StageLevelState thisStageLevel;     // unityエディター上で設定するこのシーンはどのステージなのか
 
+    public static StageLevelState NextStageLevel { get; set; }      // 遷移時にセットする（ボタン選択用）
+
+    // チュートリアルのときはシーン遷移するタイミングで遷移せずに指定の処理を行う
     public System.Action tutorialClearAct { get; set; }
     public System.Action tutorialOverAct { get; set; }
 
-    // テスト用
+    // テスト用 エディター上のみ
 #if UNITY_EDITOR
     [SerializeField]
-    private bool isTest;
+    private bool isTest;    // このシーンはテストですか
     private readonly string test = "TestScene";        // テストシーン名
 
 #endif
 
     private void Start()
     {
-        //StartCoroutine(Fade(false));
 
     }
 
@@ -62,61 +58,25 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         if (Input.GetKey(KeyCode.Escape))
         {
 
-
 #if UNITY_EDITOR
+            // テストのときは遷移せずリロード
             if (isTest)
             {
-
                 SceneManager.LoadScene(test);
-
             }
             else
             {
                 ToTitle();
-
             }
 #else
             ToTitle();
-
 #endif
 
-
-        }
-        //Debug.Log("this"+thisStageLevel);
-        //Debug.Log("next"+NextStageLevel);
-    }
-
-    public void ToGameStart()
-    {
-        //yield return StartCoroutine(Fade(true));
-
-        Time.timeScale = 1f;
-        //Debug.Log(NextStageLevel);
-
-        switch (NextStageLevel)
-        {
-            case StageLevelState.easy:
-                SceneManager.LoadScene(easyGameScene);
-
-                break;
-            case StageLevelState.normal:
-                SceneManager.LoadScene(normalGameScene);
-
-                break;
-            case StageLevelState.hard:
-                SceneManager.LoadScene(hardGameScene);
-
-                break;
-            case StageLevelState.extra:
-                SceneManager.LoadScene(gameScene);
-                break;
-            case StageLevelState.tutorial:
-                SceneManager.LoadScene(tutorialScene);
-                break;
-
         }
     }
 
+
+    // タイトルへ
     public void ToTitle()
     {
         Time.timeScale = 1f;
@@ -152,6 +112,14 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         }
     }
 
+
+    // ポーズ、リザルトから呼び出される（やりなおす、もう一度やる）
+    public void ToGameStart()
+    {
+        ToGameStart(NextStageLevel);
+    }
+
+    // ステージセレクトへ
     public void ToStageSelect()
     {
         Time.timeScale = 1f;
@@ -163,6 +131,7 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     public void ToGameOver()
     {
 #if UNITY_EDITOR
+        // テスト時は捕まっても遷移しない
         if (isTest)
         {
             Debug.Log("捕まりました");
@@ -173,6 +142,7 @@ public class SceneDirector : MonoBehaviour, SceneCaller
             Time.timeScale = 1f;
             //SceneManager.sceneLoaded += SendToNextScene;
             NextStageLevel = thisStageLevel;
+            // チュートリアルのときは遷移せず指定の処理を行う
             if (thisStageLevel == StageLevelState.tutorial)
             {
                 tutorialOverAct?.Invoke();
@@ -202,11 +172,13 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         Time.timeScale = 1f;
         //SceneManager.sceneLoaded += SendToNextScene;
         NextStageLevel = thisStageLevel;
+        // チュートリアルのときは遷移せず指定の処理を行う
         if (thisStageLevel == StageLevelState.tutorial)
         {
             tutorialClearAct?.Invoke();
             return;
         }
+
         SceneManager.LoadScene(gameClear);
     }
 
@@ -217,35 +189,6 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         SceneManager.LoadScene(tutorialScene);
     }
 
-
-    /*
-    private IEnumerator Fade(bool fadeStart)
-    {
-        Color fColor = fadeImage.color;
-        float alphaValue = fadeStart ? 0.0f : 1.0f;
-        float addValue = 1.0f / fadeTime;
-        fadeImage.color = new Color(fColor.r, fColor.g, fColor.b, alphaValue);
-
-        while (true)
-        {
-            yield return null;
-
-            // プラスする値を計算する
-            float temp = addValue * Time.deltaTime;
-            if (!fadeStart) temp *= -1;
-            alphaValue += temp ;
-            fadeImage.color = 
-                new Color(fColor.r, fColor.g, fColor.b, alphaValue);
-
-            // フェードが完了したら終了する
-            if ((fadeStart && fadeImage.color.a >= 1.0f) 
-                || (!fadeStart && fadeImage.color.a <= 1.0f))
-            {
-                break;
-            }
-        }
-    }
-    */
     // 遷移時のイベント登録で変数を渡したいけどうまくいかないので没
     /*
     private void SendToNextScene(Scene next, LoadSceneMode mode)

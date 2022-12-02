@@ -13,7 +13,8 @@ public class StageSelectButtonController : MonoBehaviour
 
     private void Start()
     {
-        if (thisStageLevel== SceneDirector.NextStageLevel)
+        // 直前やってたステージへのボタンを選択する
+        if (thisStageLevel == SceneDirector.NextStageLevel)
         {
             this.GetComponent<Button>().Select();
         }
