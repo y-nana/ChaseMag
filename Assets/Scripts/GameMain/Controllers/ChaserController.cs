@@ -8,8 +8,8 @@ public class ChaserController : MonoBehaviour
 {
 
     // アクションのパラメータ
-    [SerializeField] private float jumpForce;  // ジャンプ力
-    [SerializeField] private float walkForce;    // 歩くスピード
+    [SerializeField] private float jumpForce;   // ジャンプ力
+    [SerializeField] private float walkForce;   // 歩くスピード
     [SerializeField] private float upForce;     // 壁を上るスピード
 
 
@@ -63,9 +63,6 @@ public class ChaserController : MonoBehaviour
     [SerializeField]
     private AudioClip jumpSE;
 
-    // 効果音
-    [SerializeField]
-    private AudioClip upSE;
 
 
 
@@ -224,19 +221,6 @@ public class ChaserController : MonoBehaviour
     }
 
     
-    /*
-    // プレイヤとの距離の距離の更新
-    private void DistanceUpdate()
-    {
-        Vector2 myPos = m_transform.position;
-        //pPos = player.transform.position;
-        //distance =  pPos - myPos;
-        //playerIsRight = distance.x > 0;
-
-    }
-    */
-
-
     // ジャンプする
     public void Jump()
     {
@@ -252,12 +236,6 @@ public class ChaserController : MonoBehaviour
     // 上に移動する(壁用)
     public void MoveUp()
     {
-        if (!audioSource.isPlaying)
-        {
-            //audioSource.Play(upSE);
-
-        }
-
         this.rigid2D.velocity = Vector2.up * this.upForce;
     }
 
@@ -294,7 +272,6 @@ public class ChaserController : MonoBehaviour
     public void SearchRoute()
     {
         Debug.Log("探索開始");
-        //DistanceUpdate();
         route = routeManager.GetRoute(m_transform, pTransform);
         prePlayerPos = pTransform.position;
         routeIndex = 0;
@@ -317,7 +294,7 @@ public class ChaserController : MonoBehaviour
 
 
 #if UNITY_EDITOR
-    // デバッグ用
+    // デバッグ用 鬼の経路または目標地点までのベクトルをレイで表示
     private void OnDrawGizmos()
     {
         if (Application.isPlaying)
@@ -343,7 +320,7 @@ public class ChaserController : MonoBehaviour
             }
             else
             {
-                // プレイヤーへのベクトルを表示
+                // プレイヤーへのベクトルを表示（緑色）
 
                 Gizmos.color = Color.green;
                 Gizmos.DrawRay(m_transform.position, pTransform.position - m_transform.position);

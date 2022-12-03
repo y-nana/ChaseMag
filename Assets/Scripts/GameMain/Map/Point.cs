@@ -27,7 +27,7 @@ public class Point:MonoBehaviour
 
 
 #if UNITY_EDITOR
-
+    // 自分とつないだポイントへの矢印をレイで表示
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

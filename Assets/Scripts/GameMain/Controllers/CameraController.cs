@@ -8,25 +8,19 @@ public class CameraController : MonoBehaviour
     [SerializeField] int marginY;       // ド真ん中よりちょっと下に
 
     [SerializeField]
-    private int limitDown;        // 下限
+    private int limitDown;          // 下限
     [SerializeField]
-    private int limitWidth;      // 横の限界値
+    private int limitWidth;         // 横の限界値
     [SerializeField]
-    private float limitHigh;    // 上限
+    private float limitHigh;        // 上限
     private readonly int posZ = -10;           // Zの値（固定）
 
     // コントロール用コンポーネント
     private Transform myTransform;
-    [SerializeField] Transform playerTransform;
-
-    // 取得用タグ名
-    //private readonly string playerTagName = "Player";   // プレイヤ
+    [SerializeField] Transform playerTransform; // プレイヤーの位置
 
     void Start()
     {
-        //playerTransform = 
-          //  GameObject.FindGameObjectWithTag(playerTagName)
-            //.GetComponent<Transform>();
         myTransform = this.transform;
 
     }

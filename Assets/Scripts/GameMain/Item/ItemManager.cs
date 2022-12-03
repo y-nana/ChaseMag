@@ -22,7 +22,7 @@ public class ItemManager : MonoBehaviour
     private Dictionary<Item, int> itemNum = 
         new Dictionary<Item, int>();
 
-    // チュートリアル用
+    // チュートリアル時は決まったリストで排出
     [SerializeField]
     private List<Item> tutorialItemList = new List<Item>();
     private int tutorialListIndex;

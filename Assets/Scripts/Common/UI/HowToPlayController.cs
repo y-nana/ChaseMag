@@ -3,35 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 遊び方の表示を制御するクラス
 public class HowToPlayController : MonoBehaviour
 {
 
     [SerializeField]
     private List<Sprite> howToPlayPages
-        = new List<Sprite>();
+        = new List<Sprite>();       // 遊び方の画像のリスト
     [SerializeField]
-    private Image viewImaege;
+    private Image viewImaege;       // 表示するイメージオブジェクト
     [SerializeField]
-    private Button nextButton;
+    private Button nextButton;      // 次へ進むボタン
     [SerializeField]
-    private Button beforeButton;
+    private Button beforeButton;    // 前へ戻るボタン
     [SerializeField]
-    private Button backButton;
+    private Button backButton;      // 閉じるボタン
 
-    private Image image;
-    private int nowPageNum;
+    private int nowPageNum;         // 現ページ数（リストのインデックス）
+    private float preInput;         // 連続してページが進まないように前フレームの入力を保存
 
-    private float preInput;
-
+    // 有効になるたびに初期化
     private void OnEnable()
     {
-        //image = this.GetComponent<Image>();
+        preInput = 0.0f;
         nowPageNum = 0;
         viewImaege.sprite = howToPlayPages[nowPageNum];
         ButtonActiveCheck();
-        nextButton.gameObject.SetActive(true);
-        nextButton.Select();
-        preInput = 0.0f;
     }
 
     // Update is called once per frame
@@ -52,10 +49,12 @@ public class HowToPlayController : MonoBehaviour
             ChangeToPage(false);
         }
 
+        // 入力状態の保存
         preInput = Input.GetAxis("Horizontal");
 
     }
 
+    // ページをめくる
     public void ChangeToPage(bool isNext)
     {
         if (isNext)
@@ -74,6 +73,7 @@ public class HowToPlayController : MonoBehaviour
                 viewImaege.sprite = howToPlayPages[nowPageNum];
             }
         }
+        // ボタンの有効無効化処理
         ButtonActiveCheck();
     }
 

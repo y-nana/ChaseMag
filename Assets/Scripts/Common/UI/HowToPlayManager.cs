@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// 遊び方の表示
 public class HowToPlayManager : MonoBehaviour
 {
 
@@ -18,12 +19,13 @@ public class HowToPlayManager : MonoBehaviour
         howToPlay.gameObject.SetActive(false);
     }
 
-    // ページ数によって表示ボタンを変える
+    // 遊び方を表示する
     public void ViewHowToPlay()
     {
         howToPlay.gameObject.SetActive(true);
     }
 
+    // 遊び方を閉じる
     public void CloseHowToPlay()
     {
         howToPlay.gameObject.SetActive(false);

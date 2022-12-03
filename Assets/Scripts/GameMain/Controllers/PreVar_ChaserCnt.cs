@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-
+// 鬼のスクリプト 前のバージョン
 public class PreVar_ChaserCnt : MonoBehaviour
 {
 
@@ -56,12 +56,7 @@ public class PreVar_ChaserCnt : MonoBehaviour
     [SerializeField]
     private AudioClip jumpSE;
 
-    // 効果音
-    [SerializeField]
-    private AudioClip upSE;
 
-    // 取得用タグ名
-    //private readonly string playerTagName = "Player";   // プレイヤ
 
     // レイヤの名前と対応するint
     private enum LayerName
@@ -79,9 +74,6 @@ public class PreVar_ChaserCnt : MonoBehaviour
         this.audioSource = GetComponent<AudioSource>();
 
 
-        // プレイヤ取得
-        //player = GameObject.FindGameObjectWithTag(playerTagName);
-        //playerPole = player.transform.GetChild(0).gameObject;
 
         //値の初期化
         playerPrePos = new Vector2(0, 0);
@@ -218,12 +210,7 @@ public class PreVar_ChaserCnt : MonoBehaviour
     // 上に移動する(壁用)
     public void MoveUp()
     {
-        if (!audioSource.isPlaying)
-        {
-            //audioSource.Play(upSE);
-
-        }
-
+ 
         this.rigid2D.velocity = Vector2.up * this.upForce;
     }
 

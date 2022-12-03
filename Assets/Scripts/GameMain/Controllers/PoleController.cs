@@ -4,15 +4,13 @@ using UnityEngine;
 
 using Pole;
 
+// 磁力の向き、強さを管理するクラス
 public class PoleController : MonoBehaviour
 {
     // 磁力の強さ
     [SerializeField] float defaultPoleStrong = 1.0f;  // デフォルト値
     // 現在の強さ
-    public float PoleStrong {
-        get;
-        private set;
-    }
+    public float PoleStrong { get; private set; }
 
     // 極の向き s極を基準に
     public int southPole { get; private set; }
@@ -27,15 +25,15 @@ public class PoleController : MonoBehaviour
     private readonly int reverse = 2;      // 上下反転
     private readonly int angle = -90;      // 一回の回転の角度
 
-    // 向きをわかりやすくするためのもの(子オブジェクト)
+    // 向きをわかりやすくするための画像(子オブジェクト)
     [SerializeField] Transform pole;
     // 回転処理用
     private Transform mTransform;
-    [SerializeField] float rotationTime = 0.1f;
-    private float rotationZ;    // あるべき姿
-    private float changeValue;
+    [SerializeField] float rotationTime = 0.1f; // 回転アニメーションにかける時間
+    private float rotationZ;                    // あるべき姿
+    private float changeValue;                  // あるべき姿との差
     private float changeValueTemp;
-    private bool isTurnRight;
+    private bool isTurnRight;                   // 右回転かどうか
 
     private AudioSource audioSource;        // サウンド
                                             // 効果音
@@ -56,13 +54,11 @@ public class PoleController : MonoBehaviour
         this.audioSource = GetComponent<AudioSource>();
         rotationZ = transform.rotation.z;
 
-        //pole = transform.GetChild(0);
     }
 
     void Update()
     {
         if (GameStateManager.instance.IsInputtable())
-        //if (!PauseManager.nowPause)
         {
             // 極の向きを変更する
             if (Input.GetKeyDown(KeyCode.RightArrow) 
@@ -113,7 +109,6 @@ public class PoleController : MonoBehaviour
     private void PoleChange(int change)
     {
         // 見た目の角度を変更
-        //mTransform.Rotate(0, 0, angle * change);
         mTransform.localEulerAngles = new Vector3(0,0,rotationZ);
         changeValue =Mathf.Abs( angle * change);
         changeValueTemp = changeValue;

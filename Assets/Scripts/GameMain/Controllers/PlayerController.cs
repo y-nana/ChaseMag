@@ -28,10 +28,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private AudioClip jumpSE;
 
-    // 効果音
-    [SerializeField]
-    private AudioClip upSE;
-
     void Start()
     {
         // コンポーネント取得
@@ -40,7 +36,6 @@ public class PlayerController : MonoBehaviour
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.audioSource = GetComponent<AudioSource>();
 
-        //this.poleCnt = transform.GetChild(0).GetComponent<PoleController>();
     }
 
 
@@ -49,7 +44,6 @@ public class PlayerController : MonoBehaviour
 
         // 左右移動
         int key = 0;
-        //if (!PauseManager.nowPause)
         if (GameStateManager.instance.IsInputtable())
         {
             // 右
@@ -92,12 +86,6 @@ public class PlayerController : MonoBehaviour
     // 上に移動する(壁用)
     public void MoveUp()
     {
-
-        if (!audioSource.isPlaying)
-        {
-            //audioSource.PlayOneShot(upSE);
-
-        }
 
         this.rigid2D.velocity = new Vector2(this.rigid2D.velocity.x, upForce * poleCnt.PoleStrong);
         // 壁にくっついているので動かないようにする

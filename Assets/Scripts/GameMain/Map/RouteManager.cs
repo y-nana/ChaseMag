@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+// 経路及び経路探索を処理するクラス
 public class RouteManager : MonoBehaviour
 {
     // 有向グラフ
     private List<Point> pointList = new List<Point>();
+    // 探索時に使うリスト
     private List<Transform> closeList = new List<Transform>();
     private List<Point> tempList = new List<Point>();
     
@@ -15,7 +16,7 @@ public class RouteManager : MonoBehaviour
     // 処理落ち防止の探索回数
     [SerializeField]
     private int maxSearchCount;
-
+    // ルート
     private List<Transform> route;
 
 
@@ -23,17 +24,12 @@ public class RouteManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // 子オブジェクトからポイントを取得
         var points = GetComponentsInChildren<Point>();
         foreach (var p in points)
         {
             pointList.Add(p);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public List<Transform> GetRoute(Transform start, Transform goal)
@@ -45,19 +41,16 @@ public class RouteManager : MonoBehaviour
         Point gPoint = null;
         float startDis = 999;
         float goalDis = 999;
-        // スタートで頭上、真下のポイントを選ばないように
-        //float dis_y = 999;
         // それぞれの一番近いRouteポイントを探す
         for (int i = 0; i < pointList.Count; i++)
         {
             float temp;
             temp = Vector2.Distance(pointList[i].Pos, startPos);
-            //float tempY = Mathf.Abs(PointList[i].Pos.y - startPos.y);
+            // 縦移動は無理な場合が多いので重みをつける
             temp += Mathf.Abs(pointList[i].Pos.y - startPos.y);
-            if (temp < startDis)//&&tempY <= dis_y)
+            if (temp < startDis)
             {
                 startDis = temp;
-                //dis_y = tempY;
                 sPoint = pointList[i];
             }
 
@@ -69,11 +62,6 @@ public class RouteManager : MonoBehaviour
             }
 
         }
-        //Debug.Log(sPoint.transform.gameObject.name);
-        //Debug.Log(gPoint.transform.gameObject.name);
-
-
-
 
         // スタートからゴールまでの経路を探索する
         if (gPoint != null && sPoint != null)
@@ -82,12 +70,10 @@ public class RouteManager : MonoBehaviour
 
         }
 
-
-
-        
         return route;
     }
 
+    // 経路探索
     private void SearchRoute(Point start ,Point goal)
     {
         route = new List<Transform>();
@@ -124,7 +110,7 @@ public class RouteManager : MonoBehaviour
 
 
         }
-
+        // ポイントのリストからトランスフォームのリストへ
         foreach (var item in tempList)
         {
             route.Add(item.m_transform);
@@ -135,6 +121,7 @@ public class RouteManager : MonoBehaviour
 
     }
 
+    // 次のポイントを取得する
     private Point GetNextPoint(Point start, Point goal)
     {
         float dis = 999;
@@ -176,6 +163,7 @@ public class RouteManager : MonoBehaviour
 
             }
         }
+        // トランスフォームからポイントを特定
         foreach (var item in pointList)
         {
             if (item.m_transform == point)
@@ -187,6 +175,7 @@ public class RouteManager : MonoBehaviour
         return null;
     }
 
+    // 座標から一番近いポイントを返す
     public Transform GetNearlyPointTransform(Vector2 pos)
     {
 
