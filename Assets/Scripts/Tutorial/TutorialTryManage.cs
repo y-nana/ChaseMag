@@ -20,7 +20,7 @@ public class TutorialTryManage : MonoBehaviour
     private List<ClipManager> getClipList = new List<ClipManager>();    // ステージ上に存在するクリップのリスト
     private List<bool> isGetClip = new List<bool>();                    // クリップの獲得状況
 
-    
+    // チュートリアルに使うオブジェクト
     [SerializeField]
     PlayerController player;    // プレイヤー
     [SerializeField]
@@ -29,25 +29,21 @@ public class TutorialTryManage : MonoBehaviour
     ChaserController chaser;    // 鬼
 
     [SerializeField]
-    SpriteMask chaserMask;      // 暗転用マスク
-    [SerializeField]
-    GameObject spotSprite;      // 鬼にスポットを当てるためのマスク用スプライト
-
-    [SerializeField]
     GameObject triggerCollider; // アイテムの説明に入るトリガー
 
     [SerializeField]
     SceneDirector sceneDirector;    // シーン遷移用
 
     [SerializeField]
+    SpriteMask chaserMask;      // 暗転用マスク
+    [SerializeField]
+    GameObject spotSprite;      // 鬼にスポットを当てるためのマスク用スプライト
+    [SerializeField]
     Transform chaserPoint;      // 鬼をセットする位置
-
     [SerializeField]
     CountDownManager countDown; // 追いかけられる前のカウントダウン用
-
     [SerializeField]
     GameObject cage;            // 鬼を閉じ込めるケージ
-
     [SerializeField]
     private float cagePositionY;// ケージのy座標
 
@@ -89,13 +85,16 @@ public class TutorialTryManage : MonoBehaviour
     // クリップ取得時に呼び出される関数
     public void GetClip(ClipManager clip)
     {
+        // クリップリストから獲得したクリップを探す
         for (int i = 0; i < getClipList.Count; i++)
         {
             if (clip == getClipList[i])
             {
+                // 獲得状況を変更
                 isGetClip[i] = true;
+                // クリップに色を付ける
                 viewClipList[i].color = Color.white;
-                
+                // 少し時間を空けて次へ進むかどうかチェックする
                 Invoke("ClipCompleteCheck", 0.2f);
             }
         }
@@ -107,11 +106,13 @@ public class TutorialTryManage : MonoBehaviour
     private void ClipCompleteCheck()
     {
         int getClipCount = 0;
+        // 獲得状況を一つずつ確認する
         for (int j = 0; j < isGetClip.Count; j++)
         {
             if (isGetClip[j])
             {
                 getClipCount++;
+                // つぎの状態に進めるフラグを立てる
                 manager.waitTrigger = getClipCount >= isGetClip.Count;
             }
         }
@@ -133,36 +134,49 @@ public class TutorialTryManage : MonoBehaviour
     // 鬼をセッティング
     public void SetChaserPos()
     {
+        // 位置の調整
         chaser.transform.position = chaserPoint.position;
         chaser.SearchRoute();
+        // スポットを当てるためにy座標を停止させる
         chaser.GetComponent<Rigidbody2D>().constraints =
             RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+        // スポットオブジェクトを有効化
         spotSprite.SetActive(true);
     }
 
     // ケージを動かし鬼をスタートさせる
     public void StartChase()
     {
+        // 座標の停止の解除
         chaser.GetComponent<Rigidbody2D>().constraints =
             RigidbodyConstraints2D.FreezeRotation;
+        // カウントダウンの開始
         countDown.gameObject.SetActive(true) ;
+        // ケージに閉じ込める
         cage.transform.position = new Vector2( chaser.transform.position.x,chaser.transform.position.y-cagePositionY);
+        // スポットを無効化
         spotSprite.SetActive(false);
     }
 
     // チュートリアルをクリアした際の処理
     public void TutorialClear()
     {
+        // 鬼を停止させる
         chaser.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        // つぎの状態に進めるフラグを立てる
         manager.waitTrigger = true;
+        // クリアしたフラグのセット
         manager.clearFlag = true;
     }
 
     // チュートリアルで捕まった時の処理
     public void TutorialOver()
     {
+        // 鬼を停止させる
         chaser.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        // つぎの状態に進めるフラグを立てる
         manager.waitTrigger = true;
+        // クリアしたフラグのセット
         manager.clearFlag = false;
     }
 

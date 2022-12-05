@@ -4,12 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+// チュートリアルのテキスト送りに関する状態
 public enum TutorialState
 {
-    Auto,
-    Trigger,
-    Click
+    Auto,       // 一定時間後勝手に次のテキストへ
+    Trigger,    // 何かトリガーが発生するまでそのまま
+    Click       // クリックorボタンで次のテキストへ
 }
+
+
 [System.Serializable]
 struct TutorialData
 {
