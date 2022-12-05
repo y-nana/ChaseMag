@@ -5,9 +5,8 @@ using UnityEngine;
 public class PauseManager : MonoBehaviour
 {
 
-    [SerializeField] GameObject pauseObject;
-
-    //public static bool nowPause { get; set; }
+    [SerializeField] GameObject pauseObject;                // ポーズのオブジェクト
+    [SerializeField] HowToPlayManager HowToPlayManager;     // 遊び方を管理するクラス
 
 
     // Start is called before the first frame update
@@ -16,7 +15,6 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f;
         pauseObject.SetActive(false);
         
-        //nowPause = false;
     }
 
     // Update is called once per frame
@@ -32,7 +30,6 @@ public class PauseManager : MonoBehaviour
                 // 時間を止める
                 Time.timeScale = 0f;
                 GameStateManager.instance.ToPause();
-                //nowPause = true;
             }
             else
             {
@@ -45,11 +42,12 @@ public class PauseManager : MonoBehaviour
     // ゲームに戻る ポーズの非表示
     public void GameBack()
     {
+        // 遊び方も非表示に
+        HowToPlayManager.CloseHowToPlay();
         pauseObject.SetActive(false);
         // 時間を進める
         Time.timeScale = 1f;
         GameStateManager.instance.ToPlaying();
-        //nowPause = false;
     }
 
 

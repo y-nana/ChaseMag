@@ -80,21 +80,27 @@ public class HowToPlayController : MonoBehaviour
     // ページ数によって表示ボタンを変える
     private void ButtonActiveCheck()
     {
+        // 一番最初のページだったら
+        if (nowPageNum <= 0)
+        {
+            beforeButton.gameObject.SetActive(false);
+            nextButton.gameObject.SetActive(true);
+            nextButton.Select();
+            return;
+        }  
+
+        // 一番最後のページだったら
         if (nowPageNum >= howToPlayPages.Count - 1)
         {
             nextButton.gameObject.SetActive(false);
-            beforeButton.Select();
-        }
-        else if (nowPageNum <= 0)
-        {
-            beforeButton.gameObject.SetActive(false);
-            nextButton.Select();
-        }
-        else
-        {
-            nextButton.gameObject.SetActive(true);
             beforeButton.gameObject.SetActive(true);
+            beforeButton.Select();
+            return;
         }
+        // どちらでもないとき
+        nextButton.gameObject.SetActive(true);
+        beforeButton.gameObject.SetActive(true);
+        
     }
 
 }

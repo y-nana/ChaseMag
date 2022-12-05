@@ -9,7 +9,7 @@ public class ButtonController : MonoBehaviour
     [SerializeField]
     private Button firstSelectButton;   // 最初に選択するボタン
 
-    void Start()
+    private void OnEnable()
     {
         // 選択処理
         if (firstSelectButton != null)

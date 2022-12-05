@@ -8,10 +8,10 @@ public class HowToPlayManager : MonoBehaviour
 {
 
     [SerializeField]
-    private Button viewHowToPlayButton;
+    private Button viewHowToPlayButton;     // 遊び方を表示するボタン
 
     [SerializeField]
-    private HowToPlayController howToPlay;
+    private HowToPlayController howToPlay;  // 遊び方オブジェクト
 
 
     private void OnEnable()
@@ -29,9 +29,12 @@ public class HowToPlayManager : MonoBehaviour
     public void CloseHowToPlay()
     {
         howToPlay.gameObject.SetActive(false);
+        // 表示するボタンを選択状態にする
         viewHowToPlayButton.Select();
 
     }
+
+    
 
 
 }

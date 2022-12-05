@@ -23,13 +23,6 @@ public class CursorManager : MonoBehaviour
 
     private bool isPulus;           // 明か滅か（アニメーション用）
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -70,7 +63,7 @@ public class CursorManager : MonoBehaviour
         // カーソルの明滅処理
         if (outline != null)
         {
-            float value = speed * Time.deltaTime;
+            float value = speed * Time.unscaledDeltaTime;
             if (!isPulus)
             {
                 value *= -1;
@@ -89,10 +82,7 @@ public class CursorManager : MonoBehaviour
             }
 
         }
-        if (GameStateManager.instance.gameState == GameState.Pause)
-        {
-            outline.effectColor = outlineColor;
-        }
+
 
     }
 
