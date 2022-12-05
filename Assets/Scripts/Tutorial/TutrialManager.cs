@@ -12,97 +12,77 @@ public enum TutorialState
     Click       // クリックorボタンで次のテキストへ
 }
 
-
+// チュートリアルに用いるデータ
 [System.Serializable]
 struct TutorialData
 {
     [field:SerializeField, TextArea]
-    public string viewText { get; set; }
+    public string viewText { get; set; }                // テキストに表示する文章
 
     [field:SerializeField]
-    public TutorialState tutorialState { get; set; }
+    public TutorialState tutorialState { get; set; }    // 文字送りの状態
 
     [field:SerializeField]
-    public bool chaseSetting { get; set; }
+    public bool chaseSetting { get; set; }              // 鬼をセッティングするフェーズかどうか
 
     [field: SerializeField]
-    public bool isResult { get; set; }
+    public bool isResult { get; set; }                  // リザルトのフェーズかどうか
 
 }
-[System.Serializable]
-public class TutorialJsonData
-{
-    public string viewText;
 
-    public TutorialState state;
-
-}
-[System.Serializable]
-public class TutorialJsonWrapper
-{
-    public TutorialJsonData[] tutorialDataList;
-}
-
+// チュートリアルの進行を制御するクラス
 public class TutrialManager : MonoBehaviour
 {
 
     [SerializeField]
-    private TextMeshProUGUI tutrialText;
+    private TextMeshProUGUI tutrialText;    // チュートリアルのテキスト
 
     [SerializeField]
     private List<TutorialData> tutorialDatas = new List<TutorialData>();
+                                            // データのリスト
+
+    // リザルトで表示するテキスト 状況で変化させる
+    [SerializeField]
+    private string clearTxt;                // クリアした時の文章
+    [SerializeField]
+    private string overTxt;                 // 捕まった時の文章
+
+    private int tutorialIndex;              // データリストのインデックス
 
     [SerializeField]
-    private string clearTxt;
-    [SerializeField]
-    private string overTxt;
+    private float waitTime = 1.0f;          // オートのときにすべて表示後待つ時間
 
-    private int tutorialIndex;
+    private float waitTimer;                // 待っている時間を計測するタイマー
 
-    private List<TutorialJsonData> tutorialJsonDatas = new List<TutorialJsonData>();
+    public bool waitTrigger { get; set; }               // 次に進むトリガー
 
-    //private TutorialTryManage tryManage;
-    private TextLoadManage textLoadManage;
+    // チュートリアルで必要な処理をここから呼び出せるようにする
+    public System.Action setChaser { get; set; }        // 鬼をセッティングする処理
+    public System.Action startChaser { get; set; }      // 鬼をスタートさせる処理
+    public System.Action tutorialFinish { get; set; }   // チュートリアル終了後の処理
 
-    [SerializeField]
-    private float waitTime = 1.0f;
-
-    private float waitTimer;
-
-    public bool waitTrigger { get; set; } = false;
-    public System.Action setChaser { get; set; }
-    public System.Action startChaser { get; set; }
-    public System.Action tutorialFinish { get; set; }
-
-    public bool clearFlag { get; set; } = false;
+    public bool clearFlag { get; set; } = false;        // リザルトの状態
 
     [SerializeField]
-    private float textSpeed = 0.1f;
+    private float textSpeed = 0.1f;         // 文字送りのスピード
 
-    private bool isDrowing = false;
+    private bool isDrowing;                 // 現在文字を表示途中かどうか
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        //GameStateManager.instance.ToEvent();
-        //textLoadManage = GetComponent<TextLoadManage>();
-        //textLoadManage.LoadTest();
+        // 初期化
+        waitTrigger = false;
+        isDrowing = false;
         tutorialIndex = 0;
-        //tryManage =GetComponent<TutorialTryManage>();
-        StartCoroutine(Cotest());
-
-
+        // コルーチンの開始
+        StartCoroutine(CoTutorial());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    // 文字を表示させるコルーチン
     IEnumerator CoDrawText(TutorialData data)
     {
+        // クリック待ちのテキストのときは表示終了まで次へ進めなくする
         switch (data.tutorialState)
         {
             case TutorialState.Auto:
@@ -117,8 +97,10 @@ public class TutrialManager : MonoBehaviour
             default:
                 break;
         }
+
         isDrowing = true;
         float time = 0;
+        // 文字の表示
         while (true)
         {
 
@@ -134,10 +116,12 @@ public class TutrialManager : MonoBehaviour
             */
 
             int len = Mathf.FloorToInt(time / textSpeed);
+            // すべての文字を表示し終えたらwhileから出る
             if (len > data.viewText.Length)
             {
                 break;
             }
+
             tutrialText.text = data.viewText.Substring(0, len);
         }
         tutrialText.text = data.viewText;
@@ -145,12 +129,13 @@ public class TutrialManager : MonoBehaviour
         isDrowing = false;
     }
 
-    // クリック待ちのコルーチン
+    // 次のテキストへ送るのを待つコルーチン
     IEnumerator ToNextText(TutorialState state)
     {
         while (isDrowing) yield return null;
         switch (state)
         {
+            // オートだったら時間経過で次へ
             case TutorialState.Auto:
                 waitTimer = waitTime;
                 while (waitTimer > 0.0f)
@@ -159,67 +144,67 @@ public class TutrialManager : MonoBehaviour
                     yield return null;
                 }
                 break;
+
+                // トリガーがtrueになるまで待つ
             case TutorialState.Trigger:
                 while (!waitTrigger) yield return null;
                 waitTrigger = false;
                 break;
+
+                // クリックされるまで待つ
             case TutorialState.Click:
                 while (!(Input.GetButtonDown("Submit") && GameStateManager.instance.gameState == GameState.InEvent)) yield return null;
-                break;
-            default:
                 break;
         }
 
     }
 
-    // 文章を表示させるコルーチン
-    IEnumerator Cotest()
+    // チュートリアルのコルーチン
+    IEnumerator CoTutorial()
     {
-
-        //Debug.Log(textLoadManage.tutorialDatas);
-        //Debug.Log(textLoadManage.tutorialDatas.tutorialDataList);
+        // チュートリアルデータがある限り繰り返す
         while (tutorialIndex < tutorialDatas.Count)
-        //while (tutorialIndex < textLoadManage.tutorialDatas.tutorialDataList.Length)
         {
 
             Debug.Log(tutorialIndex);
-            
+            // 鬼をセッティングするフェーズのとき
             if (tutorialDatas[tutorialIndex].chaseSetting)
             {
                 setChaser?.Invoke();
 
             }
-            // 逃げ切れたかどうかでメッセージを変化
+            // リザルトのフェーズのとき
             if (tutorialDatas[tutorialIndex].isResult)
             {
                 TutorialData data = new TutorialData();
+                // 逃げ切れたかどうかでメッセージを変化
                 data.viewText = clearFlag ? clearTxt : overTxt;
                 data.tutorialState = tutorialDatas[tutorialIndex].tutorialState;
                tutorialDatas[tutorialIndex] = data;
             }
 
+            // 文字を表示する
             StartCoroutine(CoDrawText(tutorialDatas[tutorialIndex]));
 
-            //StartCoroutine("CoDrawText", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].viewText);
-
+            //前のデータで鬼をセッティングしているとき
             if (tutorialIndex > 0)
             {
                 if (tutorialDatas[tutorialIndex - 1].chaseSetting)
                 {
+                    // 鬼を動かし始める処理を行う
                     startChaser?.Invoke();
                 }
             }
-
+            // テキスト送りのコルーチンを開始
             yield return StartCoroutine(ToNextText(tutorialDatas[tutorialIndex].tutorialState));
-            //yield return tryManage.StartCoroutine("TryStart", tutorialDatas[tutorialIndex].tutorialState);
-            //yield return tryManage.StartCoroutine("TryStart", textLoadManage.tutorialDatas.tutorialDataList[tutorialIndex].state);
-
+            // 次のデータへ
             tutorialIndex++;
 
 
         }
         yield return null;
 
+        // チュートリアル終了
         GameStateManager.instance.ToPlaying();
         tutorialFinish?.Invoke();
     }
