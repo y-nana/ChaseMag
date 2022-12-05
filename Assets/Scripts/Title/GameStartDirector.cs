@@ -3,43 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// タイトルシーンを制御するクラス
 public class GameStartDirector : MonoBehaviour
 {
     
     private readonly string stageSelectScene = "StageSelectScene";  // ステージセレクトシーン名
     private readonly string titleScene = "GameStartScene";          // タイトルシーン名
-    private readonly string tutorialScene = "GameTutorialScene";    // チュートリアルシーン名
 
 
 
     void Update()
     {
- 
 
-
-        // spaceキーでゲームメインシーンへ
+        // spaceキーでステージセレクトシーンへ
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Start"))
         {
-            ToMain();
+            ToStageSelect();
         }
         // escapeキーでタイトルシーンへ
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            // すでにタイトルだったらゲームを終了する
             if (SceneManager.GetActiveScene().name == titleScene)
             {
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
 #else
-
                 Application.Quit();
-
 #endif
             }
             ToTitle();
         }
     }
 
-    public void ToMain()
+    public void ToStageSelect()
     {
         SceneManager.LoadScene(stageSelectScene);
     }
@@ -49,8 +46,4 @@ public class GameStartDirector : MonoBehaviour
         SceneManager.LoadScene(titleScene);
     }
 
-    public void ToTutorial()
-    {
-        SceneManager.LoadScene(tutorialScene);
-    }
 }

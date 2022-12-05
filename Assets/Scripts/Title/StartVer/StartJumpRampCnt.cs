@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Pole;
 
+// タイトル用 ジャンプ台の挙動を制御するクラス
 public class StartJumpRampCnt : MonoBehaviour
 {
 

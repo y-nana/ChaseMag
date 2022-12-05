@@ -8,11 +8,11 @@ public class ItemBoxController : MonoBehaviour
 {
     // コントロール用コンポーネント
     private ItemManager itemManager;
-    private Item item;
+    private Item item;              // 抽選されたアイテムを格納する
     private GameObject player;
     [SerializeField] GameObject guideTextObj;
     private TextMesh guideText;
-    [SerializeField] GameObject showGetItem;
+    [SerializeField] GameObject showGetItem;    // 抽選されたアイテムを表示するオブジェクト
     private SpriteRenderer itemImage;
 
 
@@ -38,10 +38,12 @@ public class ItemBoxController : MonoBehaviour
 
     void Start()
     {
+        // コンポーネント、プレイヤー取得
         itemManager = GameObject.Find(itemManageName).GetComponent<ItemManager>();
         player = GameObject.FindGameObjectWithTag(playerTagName);
         itemImage = showGetItem.GetComponent<SpriteRenderer>();
         guideText = guideTextObj.GetComponent<TextMesh>();
+        // テキスト初期化
         guideText.text = chooseGuide;
 
         
@@ -58,6 +60,7 @@ public class ItemBoxController : MonoBehaviour
             if ((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Action3"))
                 && GameStateManager.instance.IsInputtable())
             {
+                // 抽選された状態かどうか
                 if (choosed)
                 {
                     // アイテム獲得
@@ -93,7 +96,6 @@ public class ItemBoxController : MonoBehaviour
         if (collision.gameObject == player)
         {
             playerGetItem = true;
-            
         }
     }
 
@@ -122,10 +124,11 @@ public class ItemBoxController : MonoBehaviour
     }
 
 
-
+    // インターバル状態の解除
     private void ShowClear()
     {
         choosed = false;
+        // アイテムの画像、テキストのリセット
         itemImage.color = Color.clear;
         guideText.text = chooseGuide;
     }

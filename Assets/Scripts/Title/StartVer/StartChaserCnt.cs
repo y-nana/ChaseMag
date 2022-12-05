@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+// タイトル用 鬼の挙動を制御するクラス
 public class StartChaserCnt : MonoBehaviour
 {
 

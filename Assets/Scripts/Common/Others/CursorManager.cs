@@ -89,7 +89,7 @@ public class CursorManager : MonoBehaviour
             }
 
         }
-        if (GameStateManager.instance.gameState == GameState.pause)
+        if (GameStateManager.instance.gameState == GameState.Pause)
         {
             outline.effectColor = outlineColor;
         }

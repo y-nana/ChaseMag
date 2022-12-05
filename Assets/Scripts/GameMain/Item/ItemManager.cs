@@ -75,7 +75,7 @@ public class ItemManager : MonoBehaviour
         // 取得数増加
         itemTextList[item.GetItemNo()-1].text = itemNum[item].ToString();
         // テスラ
-        teslaManage.ChangeWight(item.GetTeslaEffect());
+        teslaManage.ChangeWeight(item.GetTeslaEffect());
     }
     
 }

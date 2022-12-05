@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+// タイトル用 壁の挙動を管理するクラス（子オブジェクト）
 public class StartWallColliderCnt : MonoBehaviour
 {
     // 当たり判定取得用

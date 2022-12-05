@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// ステージセレクトボタンを制御するクラス
 public class StageSelectButtonController : MonoBehaviour
 {
     [SerializeField]

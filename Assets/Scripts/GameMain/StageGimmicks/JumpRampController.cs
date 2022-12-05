@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Pole;
 
+// ジャンプ台の挙動を制御するクラス
 public class JumpRampController : MonoBehaviour
 {
 
@@ -33,11 +34,6 @@ public class JumpRampController : MonoBehaviour
     private readonly string northPath = "Sprite/Stage/jumpRampNorth";   // N極
     private readonly string southPath = "Sprite/Stage/jumpRampSouth";   // S極
 
-    private AudioSource audioSource;        // サウンド
-
-    // 効果音
-    [SerializeField]
-    private AudioClip jumpSE;
 
     void Start()
     {
@@ -48,12 +44,11 @@ public class JumpRampController : MonoBehaviour
         chaserCnt = chaser.GetComponent<ChaserController>();
         poleCnt = player.GetComponentInChildren<PoleController>();
         SpriteRenderer spriteRenderer = this.GetComponent<SpriteRenderer>();
-        this.audioSource = GetComponent<AudioSource>();
 
-        // 自身のタグを確認して、極の向きがどっちになるとジャンプできるのか判定するための変数に代入
-        // タグは宣言いらない？
+        // エディター上での名前にタグ名を追加
         tag = this.gameObject.tag;
         this.gameObject.name += tag;
+        // 自身のタグを確認して、極の向きがどっちになるとジャンプできるのか判定するための変数に代入
         if (tag == southTagName)
         {
             // 自身のspriteを変える
@@ -72,15 +67,12 @@ public class JumpRampController : MonoBehaviour
         // アクションできる位置にいて極の向きが正解
         if (playerCanJump && poleCnt.PoleCheck(orientation))
         {
-            //audioSource.PlayOneShot(jumpSE);
-
             playerCnt.Jump();
             // 連続してすっ飛んでいくのを防ぐ
             playerCanJump = false;
         }
         if (chaserCanJump)
         {
-            //audioSource.PlayOneShot(jumpSE);
 
             chaserCnt.Jump();
             chaserCanJump = false;

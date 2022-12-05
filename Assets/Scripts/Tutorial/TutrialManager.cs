@@ -161,7 +161,7 @@ public class TutrialManager : MonoBehaviour
                 waitTrigger = false;
                 break;
             case TutorialState.Click:
-                while (!(Input.GetButtonDown("Submit") && GameStateManager.instance.gameState == GameState.inEvent)) yield return null;
+                while (!(Input.GetButtonDown("Submit") && GameStateManager.instance.gameState == GameState.InEvent)) yield return null;
                 break;
             default:
                 break;

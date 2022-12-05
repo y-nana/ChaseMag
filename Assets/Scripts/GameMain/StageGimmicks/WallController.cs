@@ -4,6 +4,7 @@ using UnityEngine;
 
 using Pole;
 
+// 壁の挙動を制御するクラス
 public class WallController : MonoBehaviour
 {
 
@@ -27,9 +28,6 @@ public class WallController : MonoBehaviour
     //private GameObject[] moveObjects;
     // コントローラもインタフェースか継承使えば配列にできる？
 
-    // ↓いらない？
-    //private string tag;
-
     // 取得用タグ名
     private readonly string playerTagName = "Player";   // プレイヤ
     private readonly string chaserTagName = "Chaser";   // チェイサー
@@ -50,9 +48,10 @@ public class WallController : MonoBehaviour
         poleCnt = player.GetComponentInChildren<PoleController>();
         this.audioSource = GetComponent<AudioSource>();
 
-        // 自身のタグを確認して、自身のspriteを変える
+        // エディター上での名前にタグ名を追加
         tag = this.gameObject.tag;
         this.gameObject.name += tag;
+        // 自身のタグを確認して、自身のspriteを変える
         SpriteRenderer spriteRenderer = this.GetComponent<SpriteRenderer>();
         if (tag == southTagName)
         {
@@ -81,9 +80,6 @@ public class WallController : MonoBehaviour
             }
             else
             {
-                // 極の向きが変わった場合
-                // 慣性で上に飛んでいくのを防止
-                //playerCnt.UpStop();
                 playerCnt.CanMove();
             }
             

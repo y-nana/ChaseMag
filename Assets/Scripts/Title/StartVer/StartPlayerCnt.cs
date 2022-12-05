@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// タイトル用 プレイヤーの挙動を制御するクラス
 public class StartPlayerCnt : MonoBehaviour
 {
     // 他のスクリプトで自動で走る部分を作れば

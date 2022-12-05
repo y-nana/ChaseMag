@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Pole;
-
+// タイトル用 壁の挙動を管理するクラス
 public class StartWallController : MonoBehaviour
 {
     private GameObject player;

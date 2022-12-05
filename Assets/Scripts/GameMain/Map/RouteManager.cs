@@ -32,6 +32,7 @@ public class RouteManager : MonoBehaviour
         }
     }
 
+    // 経路を取得
     public List<Transform> GetRoute(Transform start, Transform goal)
     {
 
@@ -76,15 +77,16 @@ public class RouteManager : MonoBehaviour
     // 経路探索
     private void SearchRoute(Point start ,Point goal)
     {
+        // 使うリストの初期化
         route = new List<Transform>();
         closeList = new List<Transform>();
         tempList = new List<Point>();
         tempList.Add(start);
-
+        // 次のポイントを見る
         var nextPoint = GetNextPoint(start, goal);
-        //tempList.Add(nextPoint);
         for (int i = 0; i < maxSearchCount; i++)
         {
+            // ゴールだったら探索せず終了
             if (nextPoint == goal)
             {
                 break;
@@ -122,14 +124,17 @@ public class RouteManager : MonoBehaviour
     }
 
     // 次のポイントを取得する
+    // 二つのポイント間で次に進むべきポイントを返す
     private Point GetNextPoint(Point start, Point goal)
     {
         float dis = 999;
         Transform point = null;
+        // 隣接ノードを一つずつ検証する
         for (int i = 0; i < start.adjacentList.Count; i++)
         {
 
             float temp = Vector2.Distance(start.adjacentList[i].position, goal.Pos);
+            // ゴールまでの距離が近いポイントを採用
             if (temp < dis)
             {
                 bool isClose = false;
@@ -154,6 +159,7 @@ public class RouteManager : MonoBehaviour
                         break;
                     }
                 }
+                // どちらにも当てはまらなかったら追加する候補にする
                 if (!isClose && !isAlready)
                 {
                     dis = temp;
@@ -168,7 +174,6 @@ public class RouteManager : MonoBehaviour
         {
             if (item.m_transform == point)
             {
-
                 return item;
             }
         }

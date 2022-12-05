@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
+// テスラの値を制御するクラス
 public class TeslaManager : MonoBehaviour
 {
 
@@ -15,12 +15,12 @@ public class TeslaManager : MonoBehaviour
     [SerializeField] float maxTesla = 50;       // テスラの最大値
     private float itemWeight = 0;
 
-    private string teslaText; // 表示用
+    private string teslaText;   // 表示用
 
-    private Text text;      // UI表示用
+    private Text text;          // UI表示用
 
-    private float distance; // 距離
-    public static float tesla;    // テスラ (小さい方がいい)
+    private float distance;     // 距離
+    public static float tesla;  // テスラ (小さい方がいい)
 
 
     void Start()
@@ -44,7 +44,8 @@ public class TeslaManager : MonoBehaviour
         text.text = teslaText;
     }
 
-    public void ChangeWight(float amount)
+    // アイテムによる効果を加算する
+    public void ChangeWeight(float amount)
     {
         itemWeight += amount;
     }

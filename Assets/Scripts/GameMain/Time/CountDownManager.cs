@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+// ゲームスタート前のカウントダウンを制御するクラス
 public class CountDownManager : MonoBehaviour
 {    
 
@@ -11,12 +12,11 @@ public class CountDownManager : MonoBehaviour
     [SerializeField] float cageDestroyTime = 1.0f;  // 檻を破壊するまでの時間
 
     // コントロール用コンポーネント
-    //[SerializeField] Text countDownText; // 文字を表示する(子オブジェクト)
     [SerializeField] TextMeshProUGUI countDownText; // 文字を表示する(子オブジェクト)
-    private Image gage;         // 周りのゲージ
+    private Image gage;                             // 周りのゲージ
 
     [SerializeField] TimeMamager timeManage;     // ゲームを始めるため
-    [SerializeField] GameObject cage;   // チェイサーを閉じ込めている檻
+    [SerializeField] GameObject cage;           // チェイサーを閉じ込めている檻
 
     private float timer;    // タイマー
 
@@ -65,7 +65,7 @@ public class CountDownManager : MonoBehaviour
         Invoke(DestroyMethod, cageDestroyTime);
     }
 
-    // 檻とカウントダウンを消す
+    // 檻とカウントダウンを消す Invokeで呼び出されている
     private void Destroy()
     {
         Destroy(cage);

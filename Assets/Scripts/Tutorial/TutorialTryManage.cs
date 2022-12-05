@@ -3,91 +3,88 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+// チュートリアルの挙動を制御するクラス
 public class TutorialTryManage : MonoBehaviour
 {
 
+    // クリップ関係
     [SerializeField]
-    private Image viewClipPanel;
+    private Image viewClipPanel;    // 取得したかどうかを表示するパネル
 
     [SerializeField]
-    private Image viewClipPrefab;
+    private Image viewClipPrefab;   // 表示するクリッププレハブ
 
-    private List<Image> viewClipList = new List<Image>();
-    //private Image achievementGauge;     // 達成ゲージ
+    private List<Image> viewClipList = new List<Image>();               // 表示しているクリップ
 
     [SerializeField]
-    private List<ClipManager> getClipList = new List<ClipManager>();
-    private List<bool> isGetClip = new List<bool>();
+    private List<ClipManager> getClipList = new List<ClipManager>();    // ステージ上に存在するクリップのリスト
+    private List<bool> isGetClip = new List<bool>();                    // クリップの獲得状況
 
     
+    [SerializeField]
+    PlayerController player;    // プレイヤー
+    [SerializeField]
+    PoleController poleCnt;     // プレイヤーの磁石
+    [SerializeField]
+    ChaserController chaser;    // 鬼
 
     [SerializeField]
-    PlayerController player;
+    SpriteMask chaserMask;      // 暗転用マスク
     [SerializeField]
-    PoleController poleCnt;
-    [SerializeField]
-    ChaserController chaser;
-    [SerializeField]
-    SpriteMask chaserMask;
-    [SerializeField]
-    GameObject spotSprite;
-    [SerializeField]
-    GameObject triggerCollider;
+    GameObject spotSprite;      // 鬼にスポットを当てるためのマスク用スプライト
 
     [SerializeField]
-    SceneDirector sceneDirector;
+    GameObject triggerCollider; // アイテムの説明に入るトリガー
 
     [SerializeField]
-    Transform chaserPoint;
+    SceneDirector sceneDirector;    // シーン遷移用
 
     [SerializeField]
-    CountDownManager countDown;
+    Transform chaserPoint;      // 鬼をセットする位置
 
     [SerializeField]
-    GameObject cage;
+    CountDownManager countDown; // 追いかけられる前のカウントダウン用
 
     [SerializeField]
-    private float cagePositionY;
-    // walk用
-    //[SerializeField]
-    //private Transform reachingPoint;    // 到達地点
+    GameObject cage;            // 鬼を閉じ込めるケージ
 
-    // poleRotation用
-    //private bool[] poleChanged = new bool[4];
+    [SerializeField]
+    private float cagePositionY;// ケージのy座標
 
-    private TutrialManager manager;
-
-
-
+    // 同じオブジェクトにアタッチされていることが前提
+    private TutrialManager manager; // チュートリアルの進行管理
 
 
     // Start is called before the first frame update
     void Start()
     {
-
-        countDown.gameObject.SetActive(false);
+        // クリップの数に応じて表示と獲得状況の初期化
         for (int i = 0; i < getClipList.Count; i++)
         {
+            // 取得時の処理を登録
             getClipList[i].GetAction = GetClip;
+            // テキストボックスのパネル上に表示する（未獲得時はシルエットで獲得時に色を付けて表示）
             Image viewClip = Instantiate(viewClipPrefab, viewClipPanel.transform);
             viewClipList.Add(viewClip);
+            // 獲得状況を初期化
             isGetClip.Add(false);
         }
+        // 進行に応じて行う処理の登録
         manager = GetComponent<TutrialManager>();
         manager.setChaser = SetChaserPos;
         manager.startChaser = StartChase;
         manager.tutorialFinish = TutorialFinish;
+        // シーン遷移時に行う処理の登録
         sceneDirector.tutorialClearAct = TutorialClear;
         sceneDirector.tutorialOverAct = TutorialOver;
+
+        // まだ使わないオブジェクトの無効化
         spotSprite.SetActive(false);
+        countDown.gameObject.SetActive(false);
+
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     // クリップ取得時に呼び出される関数
     public void GetClip(ClipManager clip)
@@ -106,6 +103,7 @@ public class TutorialTryManage : MonoBehaviour
 
     }
 
+    // クリップをすべて獲得したかどうかをチェックする
     private void ClipCompleteCheck()
     {
         int getClipCount = 0;
@@ -120,17 +118,19 @@ public class TutorialTryManage : MonoBehaviour
 
     }
 
-
+    
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject == player.gameObject)
         {
+            // つぎの状態に進めるフラグを立て、コライダーを無効化
             manager.waitTrigger = true;
             triggerCollider.SetActive(false);
 
         }
     }
 
+    // 鬼をセッティング
     public void SetChaserPos()
     {
         chaser.transform.position = chaserPoint.position;
@@ -140,6 +140,7 @@ public class TutorialTryManage : MonoBehaviour
         spotSprite.SetActive(true);
     }
 
+    // ケージを動かし鬼をスタートさせる
     public void StartChase()
     {
         chaser.GetComponent<Rigidbody2D>().constraints =
@@ -149,14 +150,15 @@ public class TutorialTryManage : MonoBehaviour
         spotSprite.SetActive(false);
     }
 
+    // チュートリアルをクリアした際の処理
     public void TutorialClear()
     {
         chaser.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
-
         manager.waitTrigger = true;
         manager.clearFlag = true;
     }
 
+    // チュートリアルで捕まった時の処理
     public void TutorialOver()
     {
         chaser.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
@@ -164,108 +166,12 @@ public class TutorialTryManage : MonoBehaviour
         manager.clearFlag = false;
     }
 
+    // チュートリアルの終了
     public void TutorialFinish()
     {
+        // ステージセレクトシーンへ遷移
         sceneDirector.ToStageSelect();
     }
 
-
-    /*
-    public IEnumerator TryStart(TutorialState tutorialState)
-    {
-        switch (tutorialState)
-        {
-            case TutorialState.none:
-                break;
-            case TutorialState.walk:
-                yield return StartCoroutine(WalkEvent());
-                break;
-            case TutorialState.jump:
-                break;
-            case TutorialState.wall:
-                break;
-            case TutorialState.poleRotation:
-                yield return StartCoroutine(PoleRotationEvent());
-                break;
-            case TutorialState.item:
-                break;
-            case TutorialState.rule:
-                break;
-            default:
-                break;
-        }
-    }
-    /*
-    // チュートリアル　歩く
-    private IEnumerator WalkEvent()
-    {
-        achievementGauge.gameObject.SetActive(true);
-        achievementGauge.fillAmount = 0.0f;
-        Transform playerTransform = player.transform;
-        float startPos = playerTransform.position.x;
-        GameStateManager.instance.ToPlaying();
-
-        while (true)
-        {
-
-            yield return null;
-            float movingDistance = playerTransform.position.x - startPos;
-            if (movingDistance < 0)
-            {
-                achievementGauge.fillAmount = Mathf.Abs(movingDistance / (reachingPoint.position.x - startPos));
-
-            }
-
-            if (reachingPoint.position.x >= player.transform.position.x)
-            {
-                GameStateManager.instance.ToEvent();
-
-                break;
-            }
-        }
-        GameStateManager.instance.ToEvent();
-
-    }
-
-    // チュートリアル　極の向きを変える
-    private IEnumerator PoleRotationEvent()
-    {
-        achievementGauge.gameObject.SetActive(true);
-        achievementGauge.fillAmount = 0.0f;
-        poleChanged.Initialize();
-        poleCnt.tutorialAction = TryChangePole;
-        GameStateManager.instance.ToPlaying();
-
-        while (true)
-        {
-
-            yield return null;
-            int finished = 0;
-            for (int i = 0; i < poleChanged.Length; i++)
-            {
-                if (poleChanged[i])
-                {
-                    finished++;
-                }
-            }
-            achievementGauge.fillAmount = Mathf.Abs((float)finished / poleChanged.Length);
-
-
-            if (finished>=poleChanged.Length)
-            {
-                GameStateManager.instance.ToEvent();
-
-                break;
-            }
-        }
-        GameStateManager.instance.ToEvent();
-        poleCnt.tutorialAction = null;
-    }
-
-    private void TryChangePole(Pole.PoleOrientation orientation)
-    {
-        poleChanged[(int)orientation] = true;
-    }
-    */
 
 }
