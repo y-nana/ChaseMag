@@ -19,7 +19,7 @@ public class PoleController : MonoBehaviour
     private readonly int poleMax = 3;  
 
 
-    // 極の向きを変更する用の定数 enumのほうがいい？？
+    // 極の向きを変更する用の定数
     private readonly int turnRight = 1;    // 右回転
     private readonly int turnLeft = -1;    // 左回転
     private readonly int reverse = 2;      // 上下反転
@@ -40,8 +40,6 @@ public class PoleController : MonoBehaviour
     [SerializeField]
     private AudioClip changePoleSE;
 
-    // チュートリアル用イベント
-    public System.Action<Pole.PoleOrientation> tutorialAction { get; set; }
 
     private void Start()
     {
@@ -121,8 +119,6 @@ public class PoleController : MonoBehaviour
         if (southPole > poleMax) southPole -= 4;
 
         audioSource.PlayOneShot(changePoleSE);
-        // チュートリアル用
-        tutorialAction?.Invoke((Pole.PoleOrientation)southPole);
 
     }
 

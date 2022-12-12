@@ -20,7 +20,7 @@ public class ChaserController : MonoBehaviour
     [SerializeField] 
     private GameObject sceneDirector;        // シーン遷移用
     private AudioSource audioSource;        // サウンド
-    private Transform m_transform;          // トランスフォーム
+    private Transform myTransform;          // トランスフォーム
 
     // アニメーションのbool名
     private readonly string walk = "NowWalk";  // 歩いているか
@@ -73,7 +73,7 @@ public class ChaserController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         this.audioSource = GetComponent<AudioSource>();
-        m_transform = transform;
+        myTransform = transform;
 
         toPlayerTimer = 0.0f;
         pTransform = player.transform;
@@ -143,7 +143,7 @@ public class ChaserController : MonoBehaviour
             SearchRoute();
         }
         // プレイヤーまでのベクトルを入れる
-        toPos = pTransform.position - m_transform.position;
+        toPos = pTransform.position - myTransform.position;
 
         return toPos;
 
@@ -154,7 +154,7 @@ public class ChaserController : MonoBehaviour
     {
 
         // 今の目標地点についた
-        if (Vector2.Distance(route[routeIndex].position, m_transform.position) < 0.75f)
+        if (Vector2.Distance(route[routeIndex].position, myTransform.position) < 0.75f)
         {
             Debug.Log(route[routeIndex].gameObject.name + "着いた！");
             waitTimer = 0.0f;
@@ -176,13 +176,13 @@ public class ChaserController : MonoBehaviour
                     {
                         Debug.Log("ゴールがちょっと違う");
                         SearchRoute();
-                        return route[routeIndex].position - m_transform.position;
+                        return route[routeIndex].position - myTransform.position;
                     }
                     isUseRoute = false;
                     return ToPlayer();
                 }
             }
-            return route[routeIndex].position-m_transform.position;
+            return route[routeIndex].position-myTransform.position;
         }
 
         // 目標地点へついていない
@@ -191,7 +191,7 @@ public class ChaserController : MonoBehaviour
         {
             Debug.Log("着かなすぎるので検査");
             waitTimer = 0.0f;
-            if (routeManager.GetNearlyPointTransform(m_transform.position) == route[routeIndex])
+            if (routeManager.GetNearlyPointTransform(myTransform.position) == route[routeIndex])
             {
                 Debug.Log("何かがおかしいのでそのままプレイヤーを追ってみます");
                 isUseRoute = false;
@@ -206,7 +206,7 @@ public class ChaserController : MonoBehaviour
 
         if (isUseRoute)
         {
-            return route[routeIndex].position - m_transform.position;
+            return route[routeIndex].position - myTransform.position;
 
         }
         return ToPlayer();
@@ -227,7 +227,7 @@ public class ChaserController : MonoBehaviour
         if (this.rigid2D.velocity.y <= 0 && wantToJump)
         {
             this.rigid2D.velocity = new Vector2(this.rigid2D.velocity.x, 0f);
-            this.rigid2D.AddForce(m_transform.up * this.jumpForce);
+            this.rigid2D.AddForce(myTransform.up * this.jumpForce);
             audioSource.PlayOneShot(jumpSE);
 
         }
@@ -272,7 +272,7 @@ public class ChaserController : MonoBehaviour
     public void SearchRoute()
     {
         Debug.Log("探索開始");
-        route = routeManager.GetRoute(m_transform, pTransform);
+        route = routeManager.GetRoute(myTransform, pTransform);
         prePlayerPos = pTransform.position;
         routeIndex = 0;
         Debug.Log("今回のルートは");
@@ -323,7 +323,7 @@ public class ChaserController : MonoBehaviour
                 // プレイヤーへのベクトルを表示（緑色）
 
                 Gizmos.color = Color.green;
-                Gizmos.DrawRay(m_transform.position, pTransform.position - m_transform.position);
+                Gizmos.DrawRay(myTransform.position, pTransform.position - myTransform.position);
 
             }
         }

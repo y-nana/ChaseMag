@@ -96,7 +96,7 @@ public class RouteManager : MonoBehaviour
             if (tempPoint == null)
             {
                 // 次の候補がなかったらここを閉じリストに追加
-                closeList.Add(nextPoint.m_transform);
+                closeList.Add(nextPoint.myTransform);
                 if (tempList.Count > 0)
                 {
                     nextPoint = tempList[tempList.Count - 1];
@@ -115,10 +115,10 @@ public class RouteManager : MonoBehaviour
         // ポイントのリストからトランスフォームのリストへ
         foreach (var item in tempList)
         {
-            route.Add(item.m_transform);
+            route.Add(item.myTransform);
 
         }
-        route.Add(goal.m_transform);
+        route.Add(goal.myTransform);
 
 
     }
@@ -153,7 +153,7 @@ public class RouteManager : MonoBehaviour
                 // 今までに通った道じゃないか
                 for (int j = 0; j < tempList.Count; j++)
                 {
-                    if (tempList[j].m_transform == start.adjacentList[i])
+                    if (tempList[j].myTransform == start.adjacentList[i])
                     {
                         isAlready = true;
                         break;
@@ -172,7 +172,7 @@ public class RouteManager : MonoBehaviour
         // トランスフォームからポイントを特定
         foreach (var item in pointList)
         {
-            if (item.m_transform == point)
+            if (item.myTransform == point)
             {
                 return item;
             }
@@ -198,7 +198,7 @@ public class RouteManager : MonoBehaviour
             }
         }
 
-        return point.m_transform;
+        return point.myTransform;
     }
 
 

@@ -46,10 +46,6 @@ public class SceneDirector : MonoBehaviour, SceneCaller
 
 #endif
 
-    private void Start()
-    {
-
-    }
 
     private void Update()
     {

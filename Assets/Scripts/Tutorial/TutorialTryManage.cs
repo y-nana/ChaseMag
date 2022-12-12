@@ -28,6 +28,9 @@ public class TutorialTryManage : MonoBehaviour
     [SerializeField]
     ChaserController chaser;    // 鬼
 
+    Transform chaserTransform;  // 鬼のトランスフォーム
+    Rigidbody2D chaserRigid2d;  // 鬼のrigidbody2d
+
     [SerializeField]
     GameObject triggerCollider; // アイテムの説明に入るトリガー
 
@@ -43,7 +46,7 @@ public class TutorialTryManage : MonoBehaviour
     [SerializeField]
     CountDownManager countDown; // 追いかけられる前のカウントダウン用
     [SerializeField]
-    GameObject cage;            // 鬼を閉じ込めるケージ
+    Transform cage;            // 鬼を閉じ込めるケージ
     [SerializeField]
     private float cagePositionY;// ケージのy座標
 
@@ -54,6 +57,11 @@ public class TutorialTryManage : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // コンポーネント取得
+        chaserTransform = chaser.transform;
+        chaserRigid2d = chaser.GetComponent<Rigidbody2D>();
+
+
         // クリップの数に応じて表示と獲得状況の初期化
         for (int i = 0; i < getClipList.Count; i++)
         {
@@ -135,10 +143,10 @@ public class TutorialTryManage : MonoBehaviour
     public void SetChaserPos()
     {
         // 位置の調整
-        chaser.transform.position = chaserPoint.position;
+        chaserTransform.position = chaserPoint.position;
         chaser.SearchRoute();
         // スポットを当てるためにy座標を停止させる
-        chaser.GetComponent<Rigidbody2D>().constraints =
+        chaserRigid2d.constraints =
             RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
         // スポットオブジェクトを有効化
         spotSprite.SetActive(true);
@@ -148,13 +156,12 @@ public class TutorialTryManage : MonoBehaviour
     public void StartChase()
     {
         // 座標の停止の解除
-        chaser.GetComponent<Rigidbody2D>().constraints =
+        chaserRigid2d.constraints =
             RigidbodyConstraints2D.FreezeRotation;
         // カウントダウンの開始
         countDown.gameObject.SetActive(true) ;
         // ケージに閉じ込める
-        cage.transform.position = new Vector2( chaser.transform.position.x,chaser.transform.position.y-cagePositionY);
-        // スポットを無効化
+        cage.position = new Vector2(chaserTransform.position.x, chaserTransform.position.y-cagePositionY);
         spotSprite.SetActive(false);
     }
 
@@ -162,7 +169,7 @@ public class TutorialTryManage : MonoBehaviour
     public void TutorialClear()
     {
         // 鬼を停止させる
-        chaser.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        chaserRigid2d.constraints = RigidbodyConstraints2D.FreezeAll;
         // つぎの状態に進めるフラグを立てる
         manager.waitTrigger = true;
         // クリアしたフラグのセット
@@ -173,7 +180,7 @@ public class TutorialTryManage : MonoBehaviour
     public void TutorialOver()
     {
         // 鬼を停止させる
-        chaser.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+        chaserRigid2d.constraints = RigidbodyConstraints2D.FreezeAll;
         // つぎの状態に進めるフラグを立てる
         manager.waitTrigger = true;
         // クリアしたフラグのセット

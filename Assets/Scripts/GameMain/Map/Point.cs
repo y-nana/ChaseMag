@@ -7,12 +7,12 @@ using UnityEngine;
 public class Point:MonoBehaviour
 {
     // ポイント
-    public Transform m_transform { get; private set; }    // からのオブジェクトをそのまま入れれるようにトランスフォーム
+    public Transform myTransform { get; private set; }    // からのオブジェクトをそのまま入れれるようにトランスフォーム
 
     // ベクトルとして扱う
     public Vector2 Pos
     {
-        get { return m_transform.position; }
+        get { return myTransform.position; }
     }
 
     // 隣接ポイント
@@ -22,7 +22,7 @@ public class Point:MonoBehaviour
     
     private void OnEnable()
     {
-        m_transform = transform;
+        myTransform = transform;
     }
 
 

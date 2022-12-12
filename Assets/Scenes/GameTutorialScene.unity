@@ -1160,6 +1160,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1375049064}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &332276434 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1497507045049566662, guid: 311020300e319eb4494b3e7b84ab8278,
+    type: 3}
+  m_PrefabInstance: {fileID: 1375049064}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &403661195
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6903,7 +6909,7 @@ MonoBehaviour:
   spotSprite: {fileID: 423133746}
   chaserPoint: {fileID: 1074891356}
   countDown: {fileID: 20840107}
-  cage: {fileID: 332276429}
+  cage: {fileID: 332276434}
   cagePositionY: -1
 --- !u!114 &2026328088
 MonoBehaviour:

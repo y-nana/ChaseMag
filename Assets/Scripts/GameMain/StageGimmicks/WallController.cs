@@ -25,9 +25,6 @@ public class WallController : MonoBehaviour
     [SerializeField]
     private AudioClip upSE;
 
-    //private GameObject[] moveObjects;
-    // コントローラもインタフェースか継承使えば配列にできる？
-
     // 取得用タグ名
     private readonly string playerTagName = "Player";   // プレイヤ
     private readonly string chaserTagName = "Chaser";   // チェイサー
