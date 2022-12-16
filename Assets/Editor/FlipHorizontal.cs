@@ -9,7 +9,7 @@ public class FlipHorizontal : EditorWindow
 
     // ウィンドウ
     [MenuItem("Window/Editor extention/FlipHorizontal", false, 1)]
-    private static void ShowWindow()
+    private static void ShowFlipHorizontalWindow()
     {
         FlipHorizontal window = GetWindow<FlipHorizontal>();
         window.titleContent = new GUIContent("FlipHorizontal Window");
