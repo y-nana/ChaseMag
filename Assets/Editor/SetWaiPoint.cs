@@ -13,8 +13,8 @@ public class SetWaiPoint : EditorWindow
     bool isSetJumpRamp;
 
     // 振り分ける用
-    private GameObject jumpRampPrefab;
     private List<GameObject> jumpRamps;
+    private List<GameObject> walls;
 
 
     // ウィンドウ
@@ -32,7 +32,6 @@ public class SetWaiPoint : EditorWindow
     {
         parent = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.stageRoute);
         prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.waiPoint);
-        jumpRampPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.jumpRamp);
         isSetJumpRamp = true;
     }
 
@@ -51,8 +50,14 @@ public class SetWaiPoint : EditorWindow
         // ボタンを押されたら
         if (GUILayout.Button("WaiPoint設置！"))
         {
-            // 親オブジェクトのルートの生成
-            GameObject route = PrefabUtility.InstantiatePrefab(parent) as GameObject;
+            GameObject route = parent;
+            if (!IsObjInScene(parent))
+            {
+                // 親オブジェクトのルートの生成
+                route = PrefabUtility.InstantiatePrefab(parent) as GameObject;
+            }
+
+
             // Ctr+Zで戻せるようにundoに追加
             Undo.RegisterCreatedObjectUndo(route, "Create Route");
 
@@ -60,7 +65,8 @@ public class SetWaiPoint : EditorWindow
 
             InSceneCategorizeObjects();
 
-            SetJumpRampPoint(route);
+            if (isSetJumpRamp) SetJumpRampPoint(route);
+            
             
             
 
@@ -85,39 +91,64 @@ public class SetWaiPoint : EditorWindow
 
     }
 
+    // シーン内のステージギミックを種類分けする
     private void InSceneCategorizeObjects()
     {
+
         var objects = Resources.FindObjectsOfTypeAll<GameObject>();
+        jumpRamps = new List<GameObject>();
         foreach (var obj in objects)
         {
-            string path = AssetDatabase.GetAssetOrScenePath(obj);
-            bool isScene = path.Contains(".unity");
-            if (isScene)
+
+            if (IsObjInScene(obj))
             {
-
-                if (isSetJumpRamp && PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(obj) == PrefabPath.jumpRamp)
+                switch (PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(obj))
                 {
+                    case PrefabPath.jumpRamp:
+                        jumpRamps.Add(obj);
+                        break;
+                    case PrefabPath.wall:
+                        walls.Add(obj);
+                        break;
 
-                    jumpRamps.Add(obj);
-
-
+                    default:
+                        break;
                 }
+
+
                 
 
             }
         }
     }
 
-
+    // ジャンプ台のポイントをセットする
     private void SetJumpRampPoint(GameObject parent)
     {
+        if (jumpRamps.Count <= 0)
+        {
+            return;
+        }
         foreach (var item in jumpRamps)
         {
-            var point = PrefabUtility.InstantiatePrefab(prefab, parent.transform) as GameObject;
-            point.transform.position = item.transform.position;
-            Undo.RegisterCreatedObjectUndo(point, "Create WaiPoint");
+            InstantiateWaiPoint(parent.transform, item.transform.position);
 
         }
+    }
+
+    // ウェイポイントを生成する
+    private void InstantiateWaiPoint(Transform parent, Vector2 pos)
+    {
+        var point = PrefabUtility.InstantiatePrefab(prefab, parent.transform) as GameObject;
+        point.transform.position = pos;
+        Undo.RegisterCreatedObjectUndo(point, "Create WaiPoint");
+    }
+
+    // シーン内にいるオブジェクトかどうか
+    private bool IsObjInScene(GameObject obj)
+    {
+        string path = AssetDatabase.GetAssetOrScenePath(obj);
+        return path.Contains(".unity");
     }
 
 

@@ -9,7 +9,10 @@ namespace Path
     {
         public static readonly string waiPoint = "Assets/Prefabs/Map/WaiPoint.prefab";
         public static readonly string stageRoute = "Assets/Prefabs/Map/StageRoute.prefab";
-        public static readonly string jumpRamp = "Assets/Prefabs/StageGimmick/JumpRamp.prefab";
+        public const string jumpRamp = "Assets/Prefabs/StageGimmick/JumpRamp.prefab";
+        public const string wall = "Assets/Prefabs/StageGimmick/Wall.prefab";
+        public const string scaffold = "Assets/Prefabs/StageGimmick/Scaffold.prefab";
+        public const string itemBox = "Assets/Prefabs/StageGimmick/itemBox.prefab";
 
     }
 
