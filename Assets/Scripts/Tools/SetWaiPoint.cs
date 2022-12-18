@@ -16,6 +16,7 @@ public class SetWaiPoint : EditorWindow
     private List<GameObject> jumpRamps;
     private List<GameObject> walls;
 
+    private ChaserController chaser;
 
     // ウィンドウ
     [MenuItem("Window/Editor extention/SetWaiPoint", false, 1)]
@@ -96,7 +97,9 @@ public class SetWaiPoint : EditorWindow
     {
 
         var objects = Resources.FindObjectsOfTypeAll<GameObject>();
+
         jumpRamps = new List<GameObject>();
+        walls = new List<GameObject>();
         foreach (var obj in objects)
         {
 
