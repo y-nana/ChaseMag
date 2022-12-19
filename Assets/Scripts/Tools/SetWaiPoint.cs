@@ -5,18 +5,73 @@ using UnityEditor;
 
 using Path;
 
+public enum BasePoint
+{
+    Center,
+    TopRight,
+    TopLeft,
+    BottomRight,
+    BottomLeft
+}
+
+[System.Serializable]
+public class PointPosition
+{
+    [field:SerializeField]
+    public Vector2 position { get; set; }
+    [field:SerializeField]
+    public BasePoint basePoint { get; set; }
+
+    public PointPosition()
+    {
+        this.position = Vector2.zero;
+        this.basePoint = BasePoint.Center;
+    }
+
+    
+    public PointPosition(Vector2 pos, BasePoint basePoint)
+    {
+        this.position = pos;
+        this.basePoint = basePoint;
+    }
+    
+
+}
+
+[System.Serializable]
+public class PointSettingData
+{
+    [field: SerializeField]
+    public GameObject obj { get; set; }
+
+    [field: SerializeField]
+    public List<PointPosition> pointPosition { get; set; }
+
+}
+
 public class SetWaiPoint : EditorWindow
 {
 
     private GameObject parent;
     private GameObject prefab;
-    bool isSetJumpRamp;
+
+    private int count;
+
+    [SerializeField]
+    private List<PointSettingData> settingDatas = new List<PointSettingData>();
+
 
     // 振り分ける用
     private List<GameObject> jumpRamps;
     private List<GameObject> walls;
 
+    private Dictionary<GameObject, List<GameObject>> objectLists;
+
     private ChaserController chaser;
+
+
+    //スクロール位置
+    private Vector2 _scrollPosition = Vector2.zero;
 
     // ウィンドウ
     [MenuItem("Window/Editor extention/SetWaiPoint", false, 1)]
@@ -33,45 +88,85 @@ public class SetWaiPoint : EditorWindow
     {
         parent = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.stageRoute);
         prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.waiPoint);
-        isSetJumpRamp = true;
+        if (settingDatas.Count <= 0)
+        {
+
+            PointSettingData data = new PointSettingData();
+            data.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.jumpRamp);
+            data.pointPosition = new List<PointPosition>();
+            data.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopLeft));
+
+            settingDatas.Add(data);
+        }
+
     }
 
     private void OnGUI()
     {
 
         EmptyCheck();
-        
+
+        //描画範囲が足りなければスクロール出来るように
+        _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+
+
         parent = EditorGUILayout.ObjectField("Parent", parent, typeof(GameObject), true) as GameObject;
         prefab = EditorGUILayout.ObjectField("Prefab", prefab, typeof(GameObject), true) as GameObject;
 
+        EditorGUILayout.Space();
+        EditorGUILayout.Space();
 
-        isSetJumpRamp = EditorGUILayout.Toggle("JumpRanp",isSetJumpRamp);
 
+        SerializedObject so = new SerializedObject(this);
+
+        so.Update();
+
+        SerializedProperty stringsProperty = so.FindProperty("settingDatas");
+
+        EditorGUILayout.PropertyField(stringsProperty, true);
+
+        so.ApplyModifiedProperties();
+
+
+       
+
+        //スクロール箇所終了
+        EditorGUILayout.EndScrollView();
 
         // ボタンを押されたら
-        if (GUILayout.Button("WaiPoint設置！"))
+        if (GUILayout.Button("WaiPoint設置！", GUILayout.Height(64)))
         {
-            GameObject route = parent;
+
+            count = 0;
             if (!IsObjInScene(parent))
             {
                 // 親オブジェクトのルートの生成
-                route = PrefabUtility.InstantiatePrefab(parent) as GameObject;
+                parent = PrefabUtility.InstantiatePrefab(parent) as GameObject;
+            }
+            else
+            {
+                Debug.Log(parent.transform.childCount);
+                // 子オブジェクトの削除
+                
+                for (int i = parent.transform.childCount-1; i >= 0; i--)
+                {
+                    Debug.Log(parent.transform.GetChild(i).gameObject.name);
+                    DestroyImmediate(parent.transform.GetChild(i).gameObject);
+                }
+
+
             }
 
 
             // Ctr+Zで戻せるようにundoに追加
-            Undo.RegisterCreatedObjectUndo(route, "Create Route");
+            Undo.RegisterCreatedObjectUndo(parent, "Create Route");
+
 
             // 子オブジェクトのウェイポイントの生成
 
             InSceneCategorizeObjects();
 
-            if (isSetJumpRamp) SetJumpRampPoint(route);
             
-            
-            
-
-
         }
 
     }
@@ -100,52 +195,89 @@ public class SetWaiPoint : EditorWindow
 
         jumpRamps = new List<GameObject>();
         walls = new List<GameObject>();
+        objectLists = new Dictionary<GameObject, List<GameObject>>();
+
+        // ディクショナリーの初期化
+        for (int i = 0; i < settingDatas.Count; i++)
+        {
+            objectLists.Add(settingDatas[i].obj, new List<GameObject>());
+        }
+
+        // すべてのオブジェクトをチェック
         foreach (var obj in objects)
         {
 
             if (IsObjInScene(obj))
             {
-                switch (PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(obj))
-                {
-                    case PrefabPath.jumpRamp:
-                        jumpRamps.Add(obj);
-                        break;
-                    case PrefabPath.wall:
-                        walls.Add(obj);
-                        break;
 
-                    default:
+                for (int i = 0; i < settingDatas.Count; i++)
+                {
+                    if (PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(settingDatas[i].obj) == PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(obj))
+                    {
+
+                        if (obj.GetComponent<SpriteRenderer>())
+                        {
+                            PositionSetting(i, obj.GetComponent<SpriteRenderer>());
+
+                        }
+
+
                         break;
+                    }
+
                 }
 
 
-                
 
             }
         }
     }
 
-    // ジャンプ台のポイントをセットする
-    private void SetJumpRampPoint(GameObject parent)
+
+    // 一つのオブジェクトに対して、データから複数のポイントを生成
+    private void PositionSetting(int index, SpriteRenderer spriteRenderer)
     {
-        if (jumpRamps.Count <= 0)
+        List<PointPosition> posList = settingDatas[index].pointPosition;
+        for (int j = 0; j < posList.Count; j++)
         {
-            return;
-        }
-        foreach (var item in jumpRamps)
-        {
-            InstantiateWaiPoint(parent.transform, item.transform.position);
+            Vector2 move = spriteRenderer.bounds.center;
+            switch (posList[j].basePoint)
+            {
+                case BasePoint.TopRight:
+                    move = spriteRenderer.bounds.max;
+                    break;
+                case BasePoint.TopLeft:
+                    move.x = spriteRenderer.bounds.min.x;
+                    move.y = spriteRenderer.bounds.max.y;
+
+                    break;
+                case BasePoint.BottomRight:
+                    move.x = spriteRenderer.bounds.max.x;
+                    move.y = spriteRenderer.bounds.min.y;
+
+                    break;
+                case BasePoint.BottomLeft:
+                    move = spriteRenderer.bounds.min;
+                    break;
+            }
+
+            InstantiateWaiPoint(move + posList[j].position);
 
         }
     }
 
+
+
     // ウェイポイントを生成する
-    private void InstantiateWaiPoint(Transform parent, Vector2 pos)
+    private void InstantiateWaiPoint(Vector2 pos)
     {
         var point = PrefabUtility.InstantiatePrefab(prefab, parent.transform) as GameObject;
         point.transform.position = pos;
+        point.name += count;
+        count++;
         Undo.RegisterCreatedObjectUndo(point, "Create WaiPoint");
     }
+
 
     // シーン内にいるオブジェクトかどうか
     private bool IsObjInScene(GameObject obj)
