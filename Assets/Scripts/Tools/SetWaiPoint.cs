@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+// 自作クラスの情報を使いたいためeditorフォルダには入れない
+#if UNITY_EDITOR
 using UnityEditor;
 
 using Path;
@@ -61,12 +63,8 @@ public class SetWaiPoint : EditorWindow
     private List<PointSettingData> settingDatas = new List<PointSettingData>();
 
 
-    // 振り分ける用
-    private List<GameObject> jumpRamps;
-    private List<GameObject> walls;
-
-    private Dictionary<GameObject, List<GameObject>> objectLists;
-
+    private float maxDintance;
+    // 最終的にはChaserControllerに設定した値からポイントを置く位置を求めたい
     private ChaserController chaser;
 
 
@@ -94,9 +92,26 @@ public class SetWaiPoint : EditorWindow
             PointSettingData data = new PointSettingData();
             data.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.jumpRamp);
             data.pointPosition = new List<PointPosition>();
-            data.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopLeft));
+            data.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.Center));
 
             settingDatas.Add(data);
+
+            PointSettingData wallData = new PointSettingData();
+            wallData.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.wall);
+            wallData.pointPosition = new List<PointPosition>();
+            wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopLeft));
+            wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopRight));
+            wallData.pointPosition.Add(new PointPosition(new Vector2(0.5f, 0.5f), BasePoint.BottomRight));
+            wallData.pointPosition.Add(new PointPosition(new Vector2(-0.5f, 0.5f), BasePoint.BottomLeft));
+
+            settingDatas.Add(wallData);
+
+        }
+
+        // デフォルトの距離を入れる
+        if (maxDintance <= 0.0f)
+        {
+            maxDintance = 3.0f;
         }
 
     }
@@ -137,7 +152,7 @@ public class SetWaiPoint : EditorWindow
         if (GUILayout.Button("WaiPoint設置！", GUILayout.Height(64)))
         {
 
-            count = 0;
+            count = 1;
             if (!IsObjInScene(parent))
             {
                 // 親オブジェクトのルートの生成
@@ -145,12 +160,11 @@ public class SetWaiPoint : EditorWindow
             }
             else
             {
-                Debug.Log(parent.transform.childCount);
                 // 子オブジェクトの削除
                 
                 for (int i = parent.transform.childCount-1; i >= 0; i--)
                 {
-                    Debug.Log(parent.transform.GetChild(i).gameObject.name);
+
                     DestroyImmediate(parent.transform.GetChild(i).gameObject);
                 }
 
@@ -161,6 +175,7 @@ public class SetWaiPoint : EditorWindow
             // Ctr+Zで戻せるようにundoに追加
             Undo.RegisterCreatedObjectUndo(parent, "Create Route");
 
+            Selection.activeObject = parent;
 
             // 子オブジェクトのウェイポイントの生成
 
@@ -193,41 +208,21 @@ public class SetWaiPoint : EditorWindow
 
         var objects = Resources.FindObjectsOfTypeAll<GameObject>();
 
-        jumpRamps = new List<GameObject>();
-        walls = new List<GameObject>();
-        objectLists = new Dictionary<GameObject, List<GameObject>>();
-
-        // ディクショナリーの初期化
-        for (int i = 0; i < settingDatas.Count; i++)
-        {
-            objectLists.Add(settingDatas[i].obj, new List<GameObject>());
-        }
-
         // すべてのオブジェクトをチェック
         foreach (var obj in objects)
         {
 
-            if (IsObjInScene(obj))
+            // シーン内のオブジェクトじゃなかったら対象を次へ
+            if (!IsObjInScene(obj)) continue;
+
+
+            for (int i = 0; i < settingDatas.Count; i++)
             {
-
-                for (int i = 0; i < settingDatas.Count; i++)
+                if (isEqualBasePrefab(settingDatas[i].obj, obj) && obj.GetComponent<SpriteRenderer>())
                 {
-                    if (PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(settingDatas[i].obj) == PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(obj))
-                    {
-
-                        if (obj.GetComponent<SpriteRenderer>())
-                        {
-                            PositionSetting(i, obj.GetComponent<SpriteRenderer>());
-
-                        }
-
-
-                        break;
-                    }
-
+                    PositionSetting(i, obj.GetComponent<SpriteRenderer>());
+                    break;
                 }
-
-
 
             }
         }
@@ -261,7 +256,15 @@ public class SetWaiPoint : EditorWindow
                     break;
             }
 
-            InstantiateWaiPoint(move + posList[j].position);
+            // 生成位置に問題がないかチェック
+            Vector2 instantiatePosition = move + posList[j].position;
+            if (CollisionCheck(instantiatePosition, spriteRenderer.gameObject))
+            {
+                Debug.Log("埋まるため生成しませんでした");
+                continue;
+            }
+
+            InstantiateWaiPoint(instantiatePosition);
 
         }
     }
@@ -271,9 +274,13 @@ public class SetWaiPoint : EditorWindow
     // ウェイポイントを生成する
     private void InstantiateWaiPoint(Vector2 pos)
     {
+
         var point = PrefabUtility.InstantiatePrefab(prefab, parent.transform) as GameObject;
         point.transform.position = pos;
-        point.name += count;
+
+        point.name += "_"+count;
+        Debug.Log(point.name);
+
         count++;
         Undo.RegisterCreatedObjectUndo(point, "Create WaiPoint");
     }
@@ -287,4 +294,47 @@ public class SetWaiPoint : EditorWindow
     }
 
 
+    // ギミック以外のオブジェクトに埋まっているかどうか
+    private bool CollisionCheck( Vector2 position , GameObject baseObj)
+    {
+        RaycastHit2D hit = Physics2D.Raycast(position, Vector2.right);
+
+        Debug.DrawRay(position,Vector2.right, Color.blue,0.5f);
+        if (hit)
+        {
+            if (Vector2.Distance( hit.point, position) <= 0)
+            {
+                Debug.Log(hit.collider.gameObject.name);
+
+                if (baseObj == hit.collider.gameObject)
+                {
+                    return false;
+                }
+
+
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    // ゲームオブジェクトを二つ受け取り、同じプレハブがもとになっていればtrueを返す
+    private bool isEqualBasePrefab(GameObject gameObjectA, GameObject gameObjectB)
+    {
+        return PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObjectA) ==
+            PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(gameObjectB);
+
+    }
+
+
+    private void ConnectWaiPoint(Point waiPoint)
+    {
+        Vector2 pos = waiPoint.transform.position;
+        Gizmos.DrawWireCube(pos, Vector2.one);
+        Physics2D.BoxCast(pos, Vector2.one, 0.0f, Vector2.right);
+    }
+
+
 }
+#endif
