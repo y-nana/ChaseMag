@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7549397249460770051}
   - component: {fileID: 6336169486950543158}
+  - component: {fileID: 4375576670511474923}
   m_Layer: 0
   m_Name: WaiPoint
   m_TagString: Untagged
@@ -44,3 +45,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <adjacentList>k__BackingField: []
+--- !u!58 &4375576670511474923
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 472189886081376368}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.2

@@ -148,6 +148,7 @@ public class SetWaiPoint : EditorWindow
         //スクロール箇所終了
         EditorGUILayout.EndScrollView();
 
+        EditorGUILayout.BeginHorizontal();
         // ボタンを押されたら
         if (GUILayout.Button("WaiPoint設置！", GUILayout.Height(64)))
         {
@@ -183,6 +184,19 @@ public class SetWaiPoint : EditorWindow
 
             
         }
+
+        if (GUILayout.Button("WaiPointつなげる！", GUILayout.Height(64)))
+        {
+            foreach (Transform child in parent.transform)
+            {
+
+                ConnectWaiPoint(child.GetComponent<Point>());
+
+            }
+        }
+
+        EditorGUILayout.EndHorizontal();
+
 
     }
     
@@ -220,6 +234,7 @@ public class SetWaiPoint : EditorWindow
             {
                 if (isEqualBasePrefab(settingDatas[i].obj, obj) && obj.GetComponent<SpriteRenderer>())
                 {
+
                     PositionSetting(i, obj.GetComponent<SpriteRenderer>());
                     break;
                 }
@@ -331,8 +346,19 @@ public class SetWaiPoint : EditorWindow
     private void ConnectWaiPoint(Point waiPoint)
     {
         Vector2 pos = waiPoint.transform.position;
-        Gizmos.DrawWireCube(pos, Vector2.one);
-        Physics2D.BoxCast(pos, Vector2.one, 0.0f, Vector2.right);
+        //RaycastHit2D hit = Physics2D.BoxCast(pos, Vector2.one, 0.0f, Vector2.right);
+        Debug.DrawRay(pos, Vector2.right, Color.blue, 0.5f);
+
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.right);
+        if (hit)
+        {
+
+            if (hit.collider.GetComponent<Point>())
+            {
+                waiPoint.adjacentList.Add(hit.collider.transform);
+            }
+
+        }
     }
 
 
