@@ -2,12 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+public enum PointCategory
+{
+    Normal,
+    JumpRamp,
+
+
+}
+
+
 // 有向グラフを管理するクラス
 [System.Serializable]
 public class Point:MonoBehaviour
 {
     // ポイント
     public Transform myTransform { get; private set; }    // からのオブジェクトをそのまま入れれるようにトランスフォーム
+
+    public PointCategory category { get; set; }             // ポイントの種類
 
     // ベクトルとして扱う
     public Vector2 Pos

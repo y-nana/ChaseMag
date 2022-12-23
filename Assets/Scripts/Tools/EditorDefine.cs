@@ -20,3 +20,14 @@ namespace Path
 
 }
 
+namespace Layer
+{
+    public static class Layer
+    {
+        public const int waiPoint = 1 << 11;
+        public const int wall = 1 << 12;
+    }
+}
+
+
+

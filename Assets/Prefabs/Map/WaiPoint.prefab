@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7549397249460770051}
   - component: {fileID: 6336169486950543158}
   - component: {fileID: 4375576670511474923}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: WaiPoint
   m_TagString: Untagged
   m_Icon: {fileID: 2488908585195742037, guid: 0000000000000000d000000000000000, type: 0}

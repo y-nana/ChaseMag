@@ -9001,6 +9001,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: NormalWall
       objectReference: {fileID: 0}
+    - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1396609161648723580, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
       propertyPath: m_RootOrder

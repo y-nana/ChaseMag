@@ -24,6 +24,8 @@ public class PointPosition
     [field:SerializeField]
     public BasePoint basePoint { get; set; }
 
+
+
     public PointPosition()
     {
         this.position = Vector2.zero;
@@ -63,6 +65,8 @@ public class SetWaiPoint : EditorWindow
     private List<PointSettingData> settingDatas = new List<PointSettingData>();
 
 
+    // つなげるときに使う
+    private List<Point> pointList = new List<Point>();
     private float maxDintance;
     // 最終的にはChaserControllerに設定した値からポイントを置く位置を求めたい
     private ChaserController chaser;
@@ -180,7 +184,7 @@ public class SetWaiPoint : EditorWindow
 
             // 子オブジェクトのウェイポイントの生成
 
-            InSceneCategorizeObjects();
+            SettingWaiPoints();
 
             
         }
@@ -216,11 +220,12 @@ public class SetWaiPoint : EditorWindow
 
     }
 
-    // シーン内のステージギミックを種類分けする
-    private void InSceneCategorizeObjects()
+    // ポイントの生成
+    private void SettingWaiPoints()
     {
 
         var objects = Resources.FindObjectsOfTypeAll<GameObject>();
+        pointList = new List<Point>();
 
         // すべてのオブジェクトをチェック
         foreach (var obj in objects)
@@ -248,6 +253,7 @@ public class SetWaiPoint : EditorWindow
     private void PositionSetting(int index, SpriteRenderer spriteRenderer)
     {
         List<PointPosition> posList = settingDatas[index].pointPosition;
+
         for (int j = 0; j < posList.Count; j++)
         {
             Vector2 move = spriteRenderer.bounds.center;
@@ -294,6 +300,9 @@ public class SetWaiPoint : EditorWindow
         point.transform.position = pos;
 
         point.name += "_"+count;
+
+
+
         Debug.Log(point.name);
 
         count++;
@@ -342,7 +351,7 @@ public class SetWaiPoint : EditorWindow
 
     }
 
-
+    // ウェイポイントをつなげる
     private void ConnectWaiPoint(Point waiPoint)
     {
         Vector2 pos = waiPoint.transform.position;
