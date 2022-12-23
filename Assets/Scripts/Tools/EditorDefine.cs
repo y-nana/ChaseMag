@@ -22,10 +22,12 @@ namespace Path
 
 namespace Layer
 {
-    public static class Layer
+    public static class LayerNumber
     {
-        public const int waiPoint = 1 << 11;
-        public const int wall = 1 << 12;
+        public const int ignoreRaycast = 2;
+        public const int scaffold = 9;
+        public const int waiPoint = 11;
+        public const int wall = 12;
     }
 }
 

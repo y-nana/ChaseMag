@@ -6,8 +6,7 @@ using UnityEngine;
 public enum PointCategory
 {
     Normal,
-    JumpRamp,
-
+    CanJump,
 
 }
 

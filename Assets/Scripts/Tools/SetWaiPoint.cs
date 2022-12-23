@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEditor;
 
 using Path;
+using Layer;
 
 public enum BasePoint
 {
@@ -51,6 +52,9 @@ public class PointSettingData
     [field: SerializeField]
     public List<PointPosition> pointPosition { get; set; }
 
+    [field:SerializeField]
+    public PointCategory pointCategory { get; set; }
+
 }
 
 public class SetWaiPoint : EditorWindow
@@ -67,9 +71,12 @@ public class SetWaiPoint : EditorWindow
 
     // つなげるときに使う
     private List<Point> pointList = new List<Point>();
-    private float maxDintance;
+    private List<Dictionary<BasePoint, Point>> wallPoints = new List<Dictionary<BasePoint, Point>>();
+    //private float maxDintance;
     // 最終的にはChaserControllerに設定した値からポイントを置く位置を求めたい
     private ChaserController chaser;
+
+    Vector2 maxDistance;
 
 
     //スクロール位置
@@ -113,9 +120,9 @@ public class SetWaiPoint : EditorWindow
         }
 
         // デフォルトの距離を入れる
-        if (maxDintance <= 0.0f)
+        if (maxDistance == Vector2.zero)
         {
-            maxDintance = 3.0f;
+            maxDistance = new Vector2(10.0f, 5.0f);
         }
 
     }
@@ -125,6 +132,7 @@ public class SetWaiPoint : EditorWindow
 
         EmptyCheck();
 
+        maxDistance = EditorGUILayout.Vector2Field("maxDistance", maxDistance);
         //描画範囲が足りなければスクロール出来るように
         _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
@@ -241,6 +249,8 @@ public class SetWaiPoint : EditorWindow
                 {
 
                     PositionSetting(i, obj.GetComponent<SpriteRenderer>());
+
+
                     break;
                 }
 
@@ -252,6 +262,7 @@ public class SetWaiPoint : EditorWindow
     // 一つのオブジェクトに対して、データから複数のポイントを生成
     private void PositionSetting(int index, SpriteRenderer spriteRenderer)
     {
+        Dictionary<BasePoint, Point> connectPoints = new Dictionary<BasePoint, Point>();
         List<PointPosition> posList = settingDatas[index].pointPosition;
 
         for (int j = 0; j < posList.Count; j++)
@@ -284,29 +295,37 @@ public class SetWaiPoint : EditorWindow
                 Debug.Log("埋まるため生成しませんでした");
                 continue;
             }
+            Point point = InstantiateWaiPoint(instantiatePosition, settingDatas[index].pointCategory);
+            connectPoints.Add(posList[j].basePoint, point);
 
-            InstantiateWaiPoint(instantiatePosition);
 
         }
+
+        ConnectWaiPoins(connectPoints);
+
     }
 
 
 
     // ウェイポイントを生成する
-    private void InstantiateWaiPoint(Vector2 pos)
+    private Point InstantiateWaiPoint(Vector2 pos, PointCategory category)
     {
 
-        var point = PrefabUtility.InstantiatePrefab(prefab, parent.transform) as GameObject;
-        point.transform.position = pos;
+        var pointObj = PrefabUtility.InstantiatePrefab(prefab, parent.transform) as GameObject;
+        pointObj.transform.position = pos;
 
-        point.name += "_"+count;
+        pointObj.name += "_"+count;
+        Point point = pointObj.GetComponent<Point>();
+        point.category = category;
+        pointList.Add(point);
 
 
-
-        Debug.Log(point.name);
+        Debug.Log(pointObj.name);
 
         count++;
-        Undo.RegisterCreatedObjectUndo(point, "Create WaiPoint");
+        Undo.RegisterCreatedObjectUndo(pointObj, "Create WaiPoint");
+
+        return point;
     }
 
 
@@ -354,22 +373,102 @@ public class SetWaiPoint : EditorWindow
     // ウェイポイントをつなげる
     private void ConnectWaiPoint(Point waiPoint)
     {
-        Vector2 pos = waiPoint.transform.position;
-        //RaycastHit2D hit = Physics2D.BoxCast(pos, Vector2.one, 0.0f, Vector2.right);
-        Debug.DrawRay(pos, Vector2.right, Color.blue, 0.5f);
 
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.right);
-        if (hit)
+        // foreach (Point toPoint in pointList)
+        foreach (Transform toPointTransform in parent.transform)
         {
+            Point toPoint = toPointTransform.GetComponent<Point>();
+            Vector2 pos = waiPoint.transform.position;
 
-            if (hit.collider.GetComponent<Point>())
+            Vector2 toPos = toPoint.transform.position;
+
+            // 比較ポイントが自身か、遠すぎる場合はパス
+            //if (toPoint.gameObject == waiPoint.gameObject ||Vector2.Distance(toPos, pos) > )
             {
-                waiPoint.adjacentList.Add(hit.collider.transform);
+                Debug.Log(waiPoint.name + "から" + toPoint.name + "は自分自身であるか距離が遠すぎます");
+
+                continue;
             }
 
+
+            if (waiPoint.category == PointCategory.Normal && toPos.y - pos.y >1.0f)
+            {
+                Debug.Log(waiPoint.name + "から" + toPoint.name + "はジャンプできないので届きませんでした");
+                continue;
+
+            }
+
+
+
+            // rayを飛ばして、つながるかどうか判定
+            waiPoint.gameObject.layer = LayerNumber.ignoreRaycast;
+
+
+            int layer = 1 << LayerNumber.waiPoint | 1 << LayerNumber.wall;
+            if (toPos.y - pos.y < 0)
+            {
+                layer |= 1 << LayerNumber.scaffold;
+            }
+            Debug.DrawRay(pos, toPos - pos, Color.blue, 0.5f);
+
+            RaycastHit2D hit = Physics2D.Raycast(pos, toPos - pos, Mathf.Infinity, layer);
+
+            Debug.Log(hit.collider.gameObject.name);
+            if (hit)
+            {
+
+                if (hit.collider.GetComponent<Point>())
+                {
+                    // Ctr+Zで戻せるようにundoに追加したいが、Ctr+Yでエラーが出るので保留
+                    //Undo.RecordObject(waiPoint, "add point to AdjacentList");
+                    waiPoint.adjacentList.Add(hit.collider.transform);
+
+                }
+
+            }
+
+            waiPoint.gameObject.layer = LayerNumber.waiPoint;
+
+
+
         }
+
+
+
+
+
+
+
     }
 
+    // 四隅にあるポイントをつなげる
+    private void ConnectWaiPoins(Dictionary<BasePoint,Point> points)
+    {
+        if (points.ContainsKey(BasePoint.TopLeft))
+        {
+            if (points.ContainsKey(BasePoint.TopRight))
+            {
+                points[BasePoint.TopLeft].adjacentList.Add(points[BasePoint.TopRight].transform);
+                points[BasePoint.TopRight].adjacentList.Add(points[BasePoint.TopLeft].transform);
+
+            }
+            if (points.ContainsKey(BasePoint.BottomLeft))
+            {
+                points[BasePoint.TopLeft].adjacentList.Add(points[BasePoint.BottomLeft].transform);
+                points[BasePoint.BottomLeft].adjacentList.Add(points[BasePoint.TopLeft].transform);
+            }
+        }
+
+        if (points.ContainsKey(BasePoint.TopRight))
+        {
+
+            if (points.ContainsKey(BasePoint.BottomRight))
+            {
+                points[BasePoint.TopRight].adjacentList.Add(points[BasePoint.BottomRight].transform);
+                points[BasePoint.BottomRight].adjacentList.Add(points[BasePoint.TopRight].transform);
+            }
+        }
+    }
 
 }
 #endif

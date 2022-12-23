@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 273599974318638974}
   - component: {fileID: 273599974318638972}
   - component: {fileID: 273599974318638973}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: WallCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
