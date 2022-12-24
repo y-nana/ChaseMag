@@ -104,7 +104,7 @@ public class SetWaiPoint : EditorWindow
             data.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.jumpRamp);
             data.pointPosition = new List<PointPosition>();
             data.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.Center));
-
+            data.pointCategory = PointCategory.CanJump;
             settingDatas.Add(data);
 
             PointSettingData wallData = new PointSettingData();
@@ -112,12 +112,14 @@ public class SetWaiPoint : EditorWindow
             wallData.pointPosition = new List<PointPosition>();
             wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopLeft));
             wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopRight));
-            wallData.pointPosition.Add(new PointPosition(new Vector2(0.5f, 0.5f), BasePoint.BottomRight));
-            wallData.pointPosition.Add(new PointPosition(new Vector2(-0.5f, 0.5f), BasePoint.BottomLeft));
+            wallData.pointPosition.Add(new PointPosition(new Vector2(1.0f, 0.5f), BasePoint.BottomRight));
+            wallData.pointPosition.Add(new PointPosition(new Vector2(-1.0f, 0.5f), BasePoint.BottomLeft));
 
             settingDatas.Add(wallData);
 
         }
+
+        
 
         // デフォルトの距離を入れる
         if (maxDistance == Vector2.zero)
@@ -370,6 +372,8 @@ public class SetWaiPoint : EditorWindow
 
     }
 
+
+
     // ウェイポイントをつなげる
     private void ConnectWaiPoint(Point waiPoint)
     {
@@ -382,16 +386,26 @@ public class SetWaiPoint : EditorWindow
 
             Vector2 toPos = toPoint.transform.position;
 
+
+
             // 比較ポイントが自身か、遠すぎる場合はパス
-            //if (toPoint.gameObject == waiPoint.gameObject ||Vector2.Distance(toPos, pos) > )
+            if (toPoint.gameObject == waiPoint.gameObject )
             {
-                Debug.Log(waiPoint.name + "から" + toPoint.name + "は自分自身であるか距離が遠すぎます");
+                Debug.Log(waiPoint.name + "から" + toPoint.name + "は自分自身です");
 
                 continue;
             }
 
+            Vector2 dis = toPos - pos;
+            if (Mathf.Abs(dis.x) > maxDistance.x || Mathf.Abs(dis.y) > maxDistance.y)
+            {
+                Debug.Log(waiPoint.name + "から" + toPoint.name + "は距離が遠すぎます");
+                continue;
 
-            if (waiPoint.category == PointCategory.Normal && toPos.y - pos.y >1.0f)
+            }
+
+
+            if (waiPoint.category == PointCategory.Normal && dis.y >1.0f)
             {
                 Debug.Log(waiPoint.name + "から" + toPoint.name + "はジャンプできないので届きませんでした");
                 continue;
@@ -405,13 +419,13 @@ public class SetWaiPoint : EditorWindow
 
 
             int layer = 1 << LayerNumber.waiPoint | 1 << LayerNumber.wall;
-            if (toPos.y - pos.y < 0)
+            if (dis.y < 0)
             {
                 layer |= 1 << LayerNumber.scaffold;
             }
-            Debug.DrawRay(pos, toPos - pos, Color.blue, 0.5f);
+            //Debug.DrawRay(pos, dis, Color.blue, 0.5f);
 
-            RaycastHit2D hit = Physics2D.Raycast(pos, toPos - pos, Mathf.Infinity, layer);
+            RaycastHit2D hit = Physics2D.Raycast(pos, dis, Mathf.Infinity, layer);
 
             Debug.Log(hit.collider.gameObject.name);
             if (hit)
@@ -424,6 +438,40 @@ public class SetWaiPoint : EditorWindow
                     waiPoint.adjacentList.Add(hit.collider.transform);
 
                 }
+                else if (dis.y < 0.0f)
+                {
+                    // 足場から降りることでたどりつけるポイントだったらつなげる
+
+                    // rayを飛ばして、つながるかどうか判定
+                    toPoint.gameObject.layer = LayerNumber.ignoreRaycast;
+
+                    Debug.Log("降りれる？");
+                    Vector2 orientation = dis.x < 0.0f ? Vector2.left : Vector2.right;
+                    RaycastHit2D horizonHit = Physics2D.Raycast(pos, orientation, dis.x, layer);
+                    RaycastHit2D TateHit = Physics2D.Raycast(toPos, Vector2.up, dis.y, layer);
+                    Debug.DrawRay(pos, orientation, Color.blue, 0.5f);
+
+                    if (horizonHit)
+                    {
+                        Debug.Log(horizonHit.collider.name);
+
+                    }
+                    if (TateHit)
+                    {
+                        Debug.Log(TateHit.collider.name);
+
+                    }
+
+                    if (!horizonHit && !TateHit)
+                    {
+                        waiPoint.adjacentList.Add(toPoint.transform);
+
+                    }
+
+                    toPoint.gameObject.layer = LayerNumber.waiPoint;
+
+                }
+
 
             }
 
