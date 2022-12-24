@@ -426,16 +426,46 @@ public class SetWaiPoint : EditorWindow
             //Debug.DrawRay(pos, dis, Color.blue, 0.5f);
 
             RaycastHit2D hit = Physics2D.Raycast(pos, dis, Mathf.Infinity, layer);
-
+            
+            Debug.Log(dis);
             Debug.Log(hit.collider.gameObject.name);
             if (hit)
             {
 
-                if (hit.collider.GetComponent<Point>())
+                if (hit.collider.gameObject == toPoint.gameObject)
                 {
+
+                    if (Mathf.Abs(dis.y) < 1.0f)
+                    {
+                        // 到達までに足場がつながっていなかったら追加しない
+                        int footLayer = 1 << LayerNumber.scaffold | 1 << LayerNumber.floor;
+                        RaycastHit2D horizonHit = Physics2D.Raycast(pos, Vector2.down, Mathf.Infinity, footLayer);
+                        RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.down, Mathf.Infinity, footLayer);
+                        if (horizonHit)
+                        {
+                            Debug.Log(horizonHit.collider.name);
+
+                        }
+                        if (verticalHit)
+                        {
+                            Debug.Log(verticalHit.collider.name);
+
+                        }
+                        if (horizonHit.collider.gameObject != verticalHit.collider.gameObject)
+                        {
+                            Debug.Log(waiPoint.name + "から" + toPoint.name + "は足場がありません");
+                            waiPoint.gameObject.layer = LayerNumber.waiPoint;
+
+                            continue;
+                        }
+                    }
+
+
+
                     // Ctr+Zで戻せるようにundoに追加したいが、Ctr+Yでエラーが出るので保留
                     //Undo.RecordObject(waiPoint, "add point to AdjacentList");
-                    waiPoint.adjacentList.Add(hit.collider.transform);
+                    //waiPoint.adjacentList.Add(hit.collider.transform);
+                    waiPoint.adjacentList.Add(toPointTransform);
 
                 }
                 else if (dis.y < 0.0f)
@@ -447,8 +477,9 @@ public class SetWaiPoint : EditorWindow
 
                     Debug.Log("降りれる？");
                     Vector2 orientation = dis.x < 0.0f ? Vector2.left : Vector2.right;
-                    RaycastHit2D horizonHit = Physics2D.Raycast(pos, orientation, dis.x, layer);
-                    RaycastHit2D TateHit = Physics2D.Raycast(toPos, Vector2.up, dis.y, layer);
+                    RaycastHit2D horizonHit = Physics2D.Raycast(pos, orientation, Mathf.Abs( dis.x), layer);
+                    RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.up, Mathf.Abs( dis.y), layer);
+                    //RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.up, dis.y, layer);
                     Debug.DrawRay(pos, orientation, Color.blue, 0.5f);
 
                     if (horizonHit)
@@ -456,13 +487,13 @@ public class SetWaiPoint : EditorWindow
                         Debug.Log(horizonHit.collider.name);
 
                     }
-                    if (TateHit)
+                    if (verticalHit)
                     {
-                        Debug.Log(TateHit.collider.name);
+                        Debug.Log(verticalHit.collider.name);
 
                     }
 
-                    if (!horizonHit && !TateHit)
+                    if (!horizonHit && !verticalHit)
                     {
                         waiPoint.adjacentList.Add(toPoint.transform);
 

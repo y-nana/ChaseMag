@@ -26,6 +26,7 @@ namespace Layer
     {
         public const int ignoreRaycast = 2;
         public const int scaffold = 9;
+        public const int floor = 10;
         public const int waiPoint = 11;
         public const int wall = 12;
     }
