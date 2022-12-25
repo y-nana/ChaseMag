@@ -217,6 +217,11 @@ public class SetWaiPoint : EditorWindow
 
     private void EmptyCheck()
     {
+
+        if (maxDistance == Vector2.zero)
+        {
+            maxDistance = new Vector2(10.0f, 5.0f);
+        }
         if (parent == null)
         {
             parent = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.stageRoute);
@@ -435,7 +440,7 @@ public class SetWaiPoint : EditorWindow
                 if (hit.collider.gameObject == toPoint.gameObject)
                 {
 
-                    if (Mathf.Abs(dis.y) < 1.0f)
+                    if (Mathf.Abs(dis.y) < 1.5f)
                     {
                         // “ž’B‚Ü‚Å‚É‘«ê‚ª‚Â‚È‚ª‚Á‚Ä‚¢‚È‚©‚Á‚½‚ç’Ç‰Á‚µ‚È‚¢
                         int footLayer = 1 << LayerNumber.scaffold | 1 << LayerNumber.floor;
