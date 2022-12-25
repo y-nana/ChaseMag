@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,20 +25,23 @@ public class PointPosition
     public Vector2 position { get; set; }
     [field:SerializeField]
     public BasePoint basePoint { get; set; }
-
+    [field: SerializeField]
+    public PointCategory pointCategory { get; set; }
 
 
     public PointPosition()
     {
         this.position = Vector2.zero;
         this.basePoint = BasePoint.Center;
+        this.pointCategory = PointCategory.Normal;
     }
 
     
-    public PointPosition(Vector2 pos, BasePoint basePoint)
+    public PointPosition(Vector2 pos, BasePoint basePoint, PointCategory category)
     {
         this.position = pos;
         this.basePoint = basePoint;
+        this.pointCategory = category;
     }
     
 
@@ -52,8 +56,7 @@ public class PointSettingData
     [field: SerializeField]
     public List<PointPosition> pointPosition { get; set; }
 
-    [field:SerializeField]
-    public PointCategory pointCategory { get; set; }
+
 
 }
 
@@ -68,10 +71,11 @@ public class SetWaiPoint : EditorWindow
     [SerializeField]
     private List<PointSettingData> settingDatas = new List<PointSettingData>();
 
+    // ポイントを追加設置するときに使う
+    private Dictionary<GameObject, List<float>> objectOnPoints = new Dictionary<GameObject, List<float>>();
 
     // つなげるときに使う
     private List<Point> pointList = new List<Point>();
-    private List<Dictionary<BasePoint, Point>> wallPoints = new List<Dictionary<BasePoint, Point>>();
     //private float maxDintance;
     // 最終的にはChaserControllerに設定した値からポイントを置く位置を求めたい
     private ChaserController chaser;
@@ -103,17 +107,21 @@ public class SetWaiPoint : EditorWindow
             PointSettingData data = new PointSettingData();
             data.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.jumpRamp);
             data.pointPosition = new List<PointPosition>();
-            data.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.Center));
-            data.pointCategory = PointCategory.CanJump;
+            data.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.Center,PointCategory.CanJump));
             settingDatas.Add(data);
 
             PointSettingData wallData = new PointSettingData();
             wallData.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.wall);
             wallData.pointPosition = new List<PointPosition>();
-            wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopLeft));
-            wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopRight));
-            wallData.pointPosition.Add(new PointPosition(new Vector2(1.0f, 0.5f), BasePoint.BottomRight));
-            wallData.pointPosition.Add(new PointPosition(new Vector2(-1.0f, 0.5f), BasePoint.BottomLeft));
+            wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopLeft, PointCategory.Normal));
+            wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopRight, PointCategory.Normal));
+            wallData.pointPosition.Add(new PointPosition(new Vector2(1.0f, 0.5f), BasePoint.BottomRight, PointCategory.Normal));
+            wallData.pointPosition.Add(new PointPosition(new Vector2(-1.0f, 0.5f), BasePoint.BottomLeft, PointCategory.Normal));
+
+            wallData.pointPosition.Add(new PointPosition(new Vector2(1.0f, 0), BasePoint.Center, PointCategory.Floating));
+            wallData.pointPosition.Add(new PointPosition(new Vector2(-1.0f, 0), BasePoint.Center, PointCategory.Floating));
+            
+
 
             settingDatas.Add(wallData);
 
@@ -195,8 +203,9 @@ public class SetWaiPoint : EditorWindow
             // 子オブジェクトのウェイポイントの生成
 
             SettingWaiPoints();
+            AddSetWeiPoint();
 
-            
+
         }
 
         if (GUILayout.Button("WaiPointつなげる！", GUILayout.Height(64)))
@@ -205,7 +214,6 @@ public class SetWaiPoint : EditorWindow
             {
 
                 ConnectWaiPoint(child.GetComponent<Point>());
-
             }
         }
 
@@ -241,6 +249,7 @@ public class SetWaiPoint : EditorWindow
 
         var objects = Resources.FindObjectsOfTypeAll<GameObject>();
         pointList = new List<Point>();
+        objectOnPoints = new Dictionary<GameObject, List<float>>();
 
         // すべてのオブジェクトをチェック
         foreach (var obj in objects)
@@ -299,11 +308,12 @@ public class SetWaiPoint : EditorWindow
             Vector2 instantiatePosition = move + posList[j].position;
             if (CollisionCheck(instantiatePosition, spriteRenderer.gameObject))
             {
-                Debug.Log("埋まるため生成しませんでした");
+                //Debug.Log("埋まるため生成しませんでした");
                 continue;
             }
-            Point point = InstantiateWaiPoint(instantiatePosition, settingDatas[index].pointCategory);
-            connectPoints.Add(posList[j].basePoint, point);
+            Point point = InstantiateWaiPoint(instantiatePosition, posList[j].pointCategory);
+            connectPoints[posList[j].basePoint] = point;
+            //connectPoints.Add(posList[j].basePoint, point);
 
 
         }
@@ -326,8 +336,29 @@ public class SetWaiPoint : EditorWindow
         point.category = category;
         pointList.Add(point);
 
+        int layer = 1 << LayerNumber.floor | 1 << LayerNumber.scaffold;
+        // どのオブジェクトの上に生成したかを記録
+        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.down, 1.0f,layer);
 
-        Debug.Log(pointObj.name);
+        if (hit)
+        {
+
+            if (objectOnPoints.ContainsKey(hit.collider.gameObject))
+            {
+
+                objectOnPoints[hit.collider.gameObject].Add(pos.x);
+
+            }
+            else
+            {
+                List<float> tempList = new List<float>();
+                tempList.Add(pos.x);
+                objectOnPoints.Add(hit.collider.gameObject, tempList);
+            }
+
+            Debug.Log(pointObj.name);
+        }
+
 
         count++;
         Undo.RegisterCreatedObjectUndo(pointObj, "Create WaiPoint");
@@ -377,7 +408,60 @@ public class SetWaiPoint : EditorWindow
 
     }
 
+    // 隙間にウェイポイントを追加する
+    private void AddSetWeiPoint()
+    {
 
+
+        
+
+
+        Debug.Log("隙間にもポイントを追加します");
+        foreach (var item in objectOnPoints)
+        {
+            Debug.Log(item.Key.gameObject.name);
+            Debug.Log(item.Value.Count);
+            float[] posXarray = item.Value.ToArray();
+            // 並び変える
+            Array.Sort(posXarray);
+            // 間隔が一定以上空いていたらポイントを追加する
+            SpriteRenderer spriteRenderer = item.Key.GetComponent<SpriteRenderer>();
+
+            // 足場だったら端から比べる
+            if (item.Key.layer == LayerNumber.scaffold)
+            {
+                Debug.Log("足場の端が空いてないかチェックします");
+                if (Mathf.Abs( spriteRenderer.bounds.min.x - posXarray[0]) > maxDistance.x*0.7f)
+                {
+                    Debug.Log("左端に追加します");
+
+                    InstantiateWaiPoint(new Vector2(spriteRenderer.bounds.min.x + 1.0f, spriteRenderer.bounds.max.y+0.5f),PointCategory.Normal);
+                }
+
+                if (Mathf.Abs(spriteRenderer.bounds.max.x - posXarray[posXarray.Length-1]) > maxDistance.x*0.7f)
+                {
+                    Debug.Log("右端に追加します");
+
+                    InstantiateWaiPoint(new Vector2(spriteRenderer.bounds.max.x - 1.0f, spriteRenderer.bounds.max.y + 0.5f), PointCategory.Normal);
+
+                }
+
+            }
+      
+
+            for (int i = 0; i < posXarray.Length-1; i++)
+            {
+                if (Mathf.Abs(posXarray[i] - posXarray[i+1]) > maxDistance.x-1.0f)
+                {
+                    Debug.Log("ポイント間が空きすぎているので追加します");
+
+                    InstantiateWaiPoint(new Vector2((posXarray[i] + posXarray[i + 1])/2.0f, spriteRenderer.bounds.max.y + 0.5f), PointCategory.Normal);
+
+
+                }
+            }
+        }
+    }
 
     // ウェイポイントをつなげる
     private void ConnectWaiPoint(Point waiPoint)
@@ -402,11 +486,18 @@ public class SetWaiPoint : EditorWindow
             }
 
             Vector2 dis = toPos - pos;
-            if (Mathf.Abs(dis.x) > maxDistance.x || Mathf.Abs(dis.y) > maxDistance.y)
+            if (waiPoint.category != PointCategory.Floating&& (Mathf.Abs(dis.x) > maxDistance.x || Mathf.Abs(dis.y) > maxDistance.y))
             {
                 Debug.Log(waiPoint.name + "から" + toPoint.name + "は距離が遠すぎます");
                 continue;
 
+            }
+
+            if (waiPoint.category == PointCategory.Floating && (Mathf.Abs(dis.x) > 1.0f || dis.y > 0.0f))
+            {
+                Debug.Log(waiPoint.name + "から" + toPoint.name + "は落下時たどり着けません");
+
+                continue;
             }
 
 
@@ -440,7 +531,7 @@ public class SetWaiPoint : EditorWindow
                 if (hit.collider.gameObject == toPoint.gameObject)
                 {
 
-                    if (Mathf.Abs(dis.y) < 1.5f)
+                    if (Mathf.Abs(dis.y) < 1.5f || Mathf.Abs(dis.x) > maxDistance.x/2.0f)
                     {
                         // 到達までに足場がつながっていなかったら追加しない
                         int footLayer = 1 << LayerNumber.scaffold | 1 << LayerNumber.floor;
@@ -468,7 +559,7 @@ public class SetWaiPoint : EditorWindow
 
 
                     // Ctr+Zで戻せるようにundoに追加したいが、Ctr+Yでエラーが出るので保留
-                    //Undo.RecordObject(waiPoint, "add point to AdjacentList");
+                    //Undo.RegisterCreatedObjectUndo(waiPoint, "add point to AdjacentList");
                     //waiPoint.adjacentList.Add(hit.collider.transform);
                     waiPoint.adjacentList.Add(toPointTransform);
 
@@ -482,6 +573,8 @@ public class SetWaiPoint : EditorWindow
 
                     Debug.Log("降りれる？");
                     Vector2 orientation = dis.x < 0.0f ? Vector2.left : Vector2.right;
+                    layer &= ~(1 << LayerNumber.waiPoint) ;
+
                     RaycastHit2D horizonHit = Physics2D.Raycast(pos, orientation, Mathf.Abs( dis.x), layer);
                     RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.up, Mathf.Abs( dis.y), layer);
                     //RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.up, dis.y, layer);

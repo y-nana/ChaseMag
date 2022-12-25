@@ -7,7 +7,7 @@ public enum PointCategory
 {
     Normal,
     CanJump,
-
+    Floating
 }
 
 
@@ -27,8 +27,8 @@ public class Point:MonoBehaviour
     }
 
     // —×Úƒ|ƒCƒ“ƒg
-    [field: SerializeField]
-    public List<Transform> adjacentList { get; private set; }
+    [field:SerializeField]
+    public List<Transform> adjacentList { get; set; }
 
     
     private void OnEnable()
