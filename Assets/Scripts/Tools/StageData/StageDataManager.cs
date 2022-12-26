@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 // 自作クラスの情報を使いたいためeditorフォルダには入れない
 #if UNITY_EDITOR
 using UnityEditor;
@@ -43,6 +44,8 @@ public class StageDataManager : EditorWindow
     private StageData stageData;
     //private GameObject parent;
 
+    string filePath;
+
     //スクロール位置
     private Vector2 _scrollPosition = Vector2.zero;
 
@@ -82,6 +85,49 @@ public class StageDataManager : EditorWindow
         {
             GenerateStage();
         }
+        if (GUILayout.Button("読み込みファイル選択", GUILayout.Height(64)))
+        {
+
+            filePath = EditorUtility.OpenFilePanel("select ", "Assets", "*.json");
+            LoadFromJson();
+        }
+        if (GUILayout.Button("保存フォルダ選択", GUILayout.Height(64)))
+        {
+
+            SaveToJson(EditorUtility.SaveFilePanel("select ", "Assets", "StageData.json", "*.json"));
+        }
+
+
+    }
+
+    private void SaveToJson(string path)
+    {
+        if (path == string.Empty)
+        {
+            Debug.Log("フォルダが選択されていません");
+            return;
+        }
+
+        string jsonstr = JsonUtility.ToJson(stageData);
+        StreamWriter writer = new StreamWriter(path, false);
+        writer.WriteLine(jsonstr);
+        writer.Flush();
+        writer.Close();
+    }
+
+    private void LoadFromJson()
+    {
+        if (filePath == string.Empty)
+        {
+            Debug.Log("ファイルが選択されていません");
+            return;
+        }
+
+        // ファイルを読み込んでデータに流す
+        StreamReader reader = new StreamReader(filePath);
+        string datastr = reader.ReadToEnd();
+        reader.Close();
+        JsonUtility.FromJsonOverwrite(datastr, stageData);
     }
 
     private void GenerateStage()
@@ -90,7 +136,6 @@ public class StageDataManager : EditorWindow
 
         foreach (var part in stageData.stageParts)
         {
-
 
             InstantiateStagePart(part);
         }
