@@ -204,7 +204,12 @@ public class SetWaiPoint : EditorWindow
 
             SettingWaiPoints();
             AddSetWeiPoint();
+            foreach (Transform child in parent.transform)
+            {
 
+                ConnectWaiPoint(child.GetComponent<Point>());
+                Debug.Log(child.name);
+            }
 
         }
 
@@ -214,6 +219,7 @@ public class SetWaiPoint : EditorWindow
             {
 
                 ConnectWaiPoint(child.GetComponent<Point>());
+
             }
         }
 
@@ -379,8 +385,7 @@ public class SetWaiPoint : EditorWindow
     private bool CollisionCheck( Vector2 position , GameObject baseObj)
     {
         RaycastHit2D hit = Physics2D.Raycast(position, Vector2.right);
-
-        Debug.DrawRay(position,Vector2.right, Color.blue,0.5f);
+        
         if (hit)
         {
             if (Vector2.Distance( hit.point, position) <= 0)
@@ -451,7 +456,7 @@ public class SetWaiPoint : EditorWindow
 
             for (int i = 0; i < posXarray.Length-1; i++)
             {
-                if (Mathf.Abs(posXarray[i] - posXarray[i+1]) > maxDistance.x-1.0f)
+                if (Mathf.Abs(posXarray[i] - posXarray[i+1]) > maxDistance.x)
                 {
                     Debug.Log("ポイント間が空きすぎているので追加します");
 
@@ -511,61 +516,60 @@ public class SetWaiPoint : EditorWindow
 
 
             // rayを飛ばして、つながるかどうか判定
+            Debug.Log(waiPoint.name + "から" + toPoint.name + "にレイを飛ばしてみます");
+
             waiPoint.gameObject.layer = LayerNumber.ignoreRaycast;
 
 
-            int layer = 1 << LayerNumber.waiPoint | 1 << LayerNumber.wall;
+            //int layer = 1 << LayerNumber.waiPoint | 1 << LayerNumber.wall;
+            int layer = 1 << LayerNumber.wall;
             if (dis.y < 0)
             {
                 layer |= 1 << LayerNumber.scaffold;
             }
-            //Debug.DrawRay(pos, dis, Color.blue, 0.5f);
+            Debug.Log("レイヤー："+Convert.ToString(layer, 2));
+            Debug.Log(toPoint.transform.position);
+            
 
-            RaycastHit2D hit = Physics2D.Raycast(pos, dis, Mathf.Infinity, layer);
+            RaycastHit2D hit = Physics2D.Raycast(pos, dis, dis.magnitude, layer);
             
             Debug.Log(dis);
-            Debug.Log(hit.collider.gameObject.name);
-            if (hit)
+            // 次のポイントまでレイを飛ばして障害物がなかった場合
+            if (!hit)
             {
-
-                if (hit.collider.gameObject == toPoint.gameObject)
+                if (Mathf.Abs(dis.y) < 1.0f && Mathf.Abs(dis.x) > maxDistance.x / 2.0f)
                 {
-
-                    if (Mathf.Abs(dis.y) < 1.5f || Mathf.Abs(dis.x) > maxDistance.x/2.0f)
+                    // 到達までに足場がつながっていなかったら追加しない
+                    int footLayer = 1 << LayerNumber.scaffold | 1 << LayerNumber.floor;
+                    RaycastHit2D horizonHit = Physics2D.Raycast(pos, Vector2.down, Mathf.Infinity, footLayer);
+                    RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.down, Mathf.Infinity, footLayer);
+                    if (horizonHit)
                     {
-                        // 到達までに足場がつながっていなかったら追加しない
-                        int footLayer = 1 << LayerNumber.scaffold | 1 << LayerNumber.floor;
-                        RaycastHit2D horizonHit = Physics2D.Raycast(pos, Vector2.down, Mathf.Infinity, footLayer);
-                        RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.down, Mathf.Infinity, footLayer);
-                        if (horizonHit)
-                        {
-                            Debug.Log(horizonHit.collider.name);
+                        Debug.Log(horizonHit.collider.name);
 
-                        }
-                        if (verticalHit)
-                        {
-                            Debug.Log(verticalHit.collider.name);
-
-                        }
-                        if (horizonHit.collider.gameObject != verticalHit.collider.gameObject)
-                        {
-                            Debug.Log(waiPoint.name + "から" + toPoint.name + "は足場がありません");
-                            waiPoint.gameObject.layer = LayerNumber.waiPoint;
-
-                            continue;
-                        }
                     }
+                    if (verticalHit)
+                    {
+                        Debug.Log(verticalHit.collider.name);
 
+                    }
+                    if (horizonHit.collider.gameObject != verticalHit.collider.gameObject)
+                    {
+                        Debug.Log(waiPoint.name + "から" + toPoint.name + "は足場がありません");
+                        waiPoint.gameObject.layer = LayerNumber.waiPoint;
 
-
-                    // Ctr+Zで戻せるようにundoに追加したいが、Ctr+Yでエラーが出るので保留
-                    //Undo.RegisterCreatedObjectUndo(waiPoint, "add point to AdjacentList");
-                    //waiPoint.adjacentList.Add(hit.collider.transform);
-                    waiPoint.adjacentList.Add(toPointTransform);
-
+                        continue;
+                    }
                 }
-                else if (dis.y < 0.0f)
+                waiPoint.adjacentList.Add(toPointTransform);
+
+
+            }
+            else if (dis.y < -2.0f)
+            {
+                if (dis.y < -2.0f)
                 {
+                    Debug.Log(dis.y);
                     // 足場から降りることでたどりつけるポイントだったらつなげる
 
                     // rayを飛ばして、つながるかどうか判定
@@ -573,11 +577,10 @@ public class SetWaiPoint : EditorWindow
 
                     Debug.Log("降りれる？");
                     Vector2 orientation = dis.x < 0.0f ? Vector2.left : Vector2.right;
-                    layer &= ~(1 << LayerNumber.waiPoint) ;
+                    layer &= ~(1 << LayerNumber.waiPoint);
 
-                    RaycastHit2D horizonHit = Physics2D.Raycast(pos, orientation, Mathf.Abs( dis.x), layer);
-                    RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.up, Mathf.Abs( dis.y), layer);
-                    //RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.up, dis.y, layer);
+                    RaycastHit2D horizonHit = Physics2D.Raycast(pos, orientation, Mathf.Abs(dis.x), layer);
+                    RaycastHit2D verticalHit = Physics2D.Raycast(toPos, Vector2.up, Mathf.Abs(dis.y), layer);
                     Debug.DrawRay(pos, orientation, Color.blue, 0.5f);
 
                     if (horizonHit)
@@ -600,9 +603,8 @@ public class SetWaiPoint : EditorWindow
                     toPoint.gameObject.layer = LayerNumber.waiPoint;
 
                 }
-
-
             }
+
 
             waiPoint.gameObject.layer = LayerNumber.waiPoint;
 
