@@ -42,7 +42,7 @@ public class StageDataManager : EditorWindow
 {
     [SerializeField]
     private StageData stageData;
-    //private GameObject parent;
+    private Transform parent;
 
     string filePath;
 
@@ -63,7 +63,7 @@ public class StageDataManager : EditorWindow
     private void OnGUI()
     {
 
-        //        parent = EditorGUILayout.ObjectField("Parent", parent, typeof(GameObject), true) as GameObject;
+        parent = EditorGUILayout.ObjectField("Parent", parent, typeof(Transform), true) as Transform;
         //描画範囲が足りなければスクロール出来るように
         _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
@@ -77,6 +77,7 @@ public class StageDataManager : EditorWindow
 
         so.ApplyModifiedProperties();
 
+        
 
         //スクロール箇所終了
         EditorGUILayout.EndScrollView();
@@ -84,17 +85,21 @@ public class StageDataManager : EditorWindow
         if (GUILayout.Button("ステージ生成！", GUILayout.Height(64)))
         {
             GenerateStage();
+            if (parent)
+            {
+                Selection.activeObject = parent;
+            }
         }
         if (GUILayout.Button("読み込みファイル選択", GUILayout.Height(64)))
         {
 
-            filePath = EditorUtility.OpenFilePanel("select ", "Assets", "*.json");
+            filePath = EditorUtility.OpenFilePanel("select ", "Assets", "json");
             LoadFromJson();
         }
         if (GUILayout.Button("保存フォルダ選択", GUILayout.Height(64)))
         {
 
-            SaveToJson(EditorUtility.SaveFilePanel("select ", "Assets", "StageData.json", "*.json"));
+            SaveToJson(EditorUtility.SaveFilePanel("select ", "Assets", "StageData.json", "json"));
         }
 
 
@@ -142,12 +147,13 @@ public class StageDataManager : EditorWindow
 
     }
 
+    // パーツの生成をする
     private void InstantiateStagePart(StagePart partData)
     {
         GameObject baseObject = GetPrefab(partData.category);
         if (!baseObject) return;
 
-        GameObject gameObject = PrefabUtility.InstantiatePrefab(baseObject) as GameObject;
+        GameObject gameObject = PrefabUtility.InstantiatePrefab(baseObject,parent) as GameObject;
         gameObject.transform.position = partData.position;
         gameObject.transform.localScale *= partData.sizeMagnification;
 
@@ -170,6 +176,7 @@ public class StageDataManager : EditorWindow
 
     }
 
+    // パーツのプレハブを取得する
     private GameObject GetPrefab(StagePartsCategory category)
     {
         string path = null;
@@ -200,6 +207,7 @@ public class StageDataManager : EditorWindow
         
     }
 
+    // 磁力の向きを設定するかどうか
     private bool IsSetTag(StagePartsCategory categry)
     {
         return categry == StagePartsCategory.JumpRamp || categry == StagePartsCategory.Wall;

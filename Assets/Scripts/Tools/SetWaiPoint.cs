@@ -213,15 +213,6 @@ public class SetWaiPoint : EditorWindow
 
         }
 
-        if (GUILayout.Button("WaiPointÇ¬Ç»Ç∞ÇÈÅI", GUILayout.Height(64)))
-        {
-            foreach (Transform child in parent.transform)
-            {
-
-                ConnectWaiPoint(child.GetComponent<Point>());
-
-            }
-        }
 
         EditorGUILayout.EndHorizontal();
 
