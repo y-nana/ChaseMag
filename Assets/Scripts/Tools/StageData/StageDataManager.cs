@@ -22,9 +22,13 @@ public enum StagePartsCategory
 [System.Serializable]
 public class StagePart
 {
+    [SerializeField]
     public StagePartsCategory category;
+    [SerializeField]
     public Vector2 position;
+    [SerializeField]
     public Vector2 sizeMagnification = Vector2.one;
+    [SerializeField]
     public bool isNorth;
 }
 
@@ -32,9 +36,12 @@ public class StagePart
 [System.Serializable]
 public class StageData
 {
-    public List<StagePart> stageParts = new List<StagePart>();
-    public Vector2 topRightPos;
-    public Vector2 bottomLeftPos;
+    [SerializeField]
+    public List<StagePart> stageParts;
+    [SerializeField]
+    public float width;
+    [SerializeField]
+    public float height;
 }
 
 

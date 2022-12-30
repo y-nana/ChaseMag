@@ -1,1 +1,30 @@
-{"stageParts":[{"category":4,"position":{"x":1.350000023841858,"y":0.0},"sizeMagnification":{"x":1.0,"y":1.0},"isNorth":false},{"category":2,"position":{"x":4.829999923706055,"y":0.0},"sizeMagnification":{"x":1.0,"y":1.0},"isNorth":true}],"topRightPos":{"x":0.0,"y":0.0},"bottomLeftPos":{"x":0.0,"y":0.0}}
+{
+  "stageParts": [
+    {
+      "category": 0,
+      "position": {
+        "x": 4.86000013,
+        "y": 0.720000029
+      },
+      "sizeMagnification": {
+        "x": 1,
+        "y": 1
+      },
+      "isNorth": false
+    },
+    {
+      "category": 2,
+      "position": {
+        "x": 0.409999996,
+        "y": 2.22000003
+      },
+      "sizeMagnification": {
+        "x": 1,
+        "y": 1.69000006
+      },
+      "isNorth": true
+    }
+  ],
+  "width": 16.5900002,
+  "height": 12.0100002
+}
