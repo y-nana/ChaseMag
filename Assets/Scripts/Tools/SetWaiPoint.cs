@@ -408,10 +408,6 @@ public class SetWaiPoint : EditorWindow
     private void AddSetWeiPoint()
     {
 
-
-        
-
-
         Debug.Log("Œ„ŠÔ‚É‚àƒ|ƒCƒ“ƒg‚ð’Ç‰Á‚µ‚Ü‚·");
         foreach (var item in objectOnPoints)
         {
