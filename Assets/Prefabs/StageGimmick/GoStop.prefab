@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8173562482415344198}
   m_Layer: 0
   m_Name: GoStop
-  m_TagString: Untagged
+  m_TagString: GoStop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -44,6 +44,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: NormalWall
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
+        type: 3}
+      propertyPath: m_TagString
+      value: GoStop
       objectReference: {fileID: 0}
     - target: {fileID: 1396609161648723580, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
@@ -130,6 +135,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: NormalWall (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
+        type: 3}
+      propertyPath: m_TagString
+      value: GoStop
+      objectReference: {fileID: 0}
     - target: {fileID: 1396609161648723580, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
       propertyPath: m_RootOrder
@@ -214,6 +224,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: NormalWall (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
+        type: 3}
+      propertyPath: m_TagString
+      value: GoStop
       objectReference: {fileID: 0}
     - target: {fileID: 1396609161648723580, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}

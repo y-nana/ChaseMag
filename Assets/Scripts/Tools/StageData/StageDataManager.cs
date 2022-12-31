@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -56,6 +57,7 @@ public class StageDataManager : EditorWindow
     //スクロール位置
     private Vector2 _scrollPosition = Vector2.zero;
 
+    private Dictionary<StagePartsCategory, string> pathList;
 
     // ウィンドウ
     [MenuItem("Window/Editor extention/StageDataManager", false, 1)]
@@ -63,9 +65,21 @@ public class StageDataManager : EditorWindow
     {
         StageDataManager window = GetWindow<StageDataManager>();
         window.titleContent = new GUIContent("StageDataManager Window");
-
+        window.Init();
     }
 
+    private void Init()
+    {
+        pathList = new Dictionary<StagePartsCategory, string>();
+        pathList.Add(StagePartsCategory.Scaffold, PrefabPath.scaffold);
+        pathList.Add(StagePartsCategory.JumpRamp, PrefabPath.jumpRamp);
+        pathList.Add(StagePartsCategory.Wall, PrefabPath.wall);
+        pathList.Add(StagePartsCategory.NormalWall, PrefabPath.normalWall);
+        pathList.Add(StagePartsCategory.ItemBox, PrefabPath.itemBox);
+
+
+
+    }
 
     private void OnGUI()
     {
@@ -107,6 +121,59 @@ public class StageDataManager : EditorWindow
         {
 
             SaveToJson(EditorUtility.SaveFilePanel("select ", "Assets", "StageData.json", "json"));
+        }
+
+        if (GUILayout.Button("シーン内からデータにセット", GUILayout.Height(64)))
+        {
+
+            SceneToData();
+        }
+    
+    }
+
+
+
+
+    private void SceneToData()
+    {
+
+        var allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        stageData.stageParts.Clear();
+
+        // すべてのオブジェクトをチェック
+        foreach (var obj in allObjects)
+        {
+
+            // シーン内のオブジェクトじゃなかったら対象を次へ
+            if (!PrefabManager.IsObjInScene(obj)) continue;
+
+            foreach (StagePartsCategory value in Enum.GetValues(typeof(StagePartsCategory)))
+            {
+                
+                if (PrefabManager.isEqualBasePrefab(GetPrefab(value), obj))
+                {
+                    if (obj.CompareTag("GoStop"))
+                    {
+                        break;
+                    }
+                    // 階層のあるprefabで重複するのを防ぐ
+                    if (PrefabManager.isEqualBasePrefab(obj.transform.parent.gameObject, obj))
+                    {
+                        break;
+                    }
+
+                    StagePart part = new StagePart();
+                    part.category = value;
+                    part.position = obj.transform.position;
+                    part.sizeMagnification = GetSizeMagnification(obj.transform.localScale ,GetPrefab(value).transform.localScale);
+                    if (IsSetTag(value))
+                    {
+                        part.isNorth = obj.tag == Tag.PoleTag.north;
+                    }
+                    stageData.stageParts.Add(part);
+                }
+            }
+
         }
 
 
@@ -218,6 +285,13 @@ public class StageDataManager : EditorWindow
     private bool IsSetTag(StagePartsCategory categry)
     {
         return categry == StagePartsCategory.JumpRamp || categry == StagePartsCategory.Wall;
+    }
+
+    // スケールから倍率へ
+    private Vector2 GetSizeMagnification(Vector2 scale, Vector2 baseScale)
+    {
+
+        return new Vector2(scale.x / baseScale.x, scale.y / baseScale.y);
     }
 
 

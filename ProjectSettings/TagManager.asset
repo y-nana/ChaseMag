@@ -10,6 +10,7 @@ TagManager:
   - Timer
   - Cage
   - SceneDirector
+  - GoStop
   layers:
   - Default
   - TransparentFX

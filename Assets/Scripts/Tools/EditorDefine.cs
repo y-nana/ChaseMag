@@ -24,13 +24,15 @@ namespace Path
 
 namespace Tag
 {
-    // プレハブ取得用のパス
+    // タグ
     public static class PoleTag
     {
         public static readonly string north = "North";
         public static readonly string south = "South";
 
     }
+
+
 }
 namespace Layer
 {
