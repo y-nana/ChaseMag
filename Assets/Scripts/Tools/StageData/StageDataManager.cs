@@ -51,6 +51,9 @@ public class StageDataManager : EditorWindow
     [SerializeField]
     private StageData stageData;
     private Transform parent;
+    private Transform celling;
+    private Transform rightWall;
+    private Transform leftWall;
 
     string filePath;
 
@@ -85,6 +88,9 @@ public class StageDataManager : EditorWindow
     {
 
         parent = EditorGUILayout.ObjectField("Parent", parent, typeof(Transform), true) as Transform;
+        celling = EditorGUILayout.ObjectField("celling", celling, typeof(Transform), true) as Transform;
+        rightWall = EditorGUILayout.ObjectField("rightWall", rightWall, typeof(Transform), true) as Transform;
+        leftWall = EditorGUILayout.ObjectField("leftWall", leftWall, typeof(Transform), true) as Transform;
         //描画範囲が足りなければスクロール出来るように
         _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
 
@@ -103,7 +109,7 @@ public class StageDataManager : EditorWindow
         //スクロール箇所終了
         EditorGUILayout.EndScrollView();
 
-        if (GUILayout.Button("ステージ生成！", GUILayout.Height(64)))
+        if (GUILayout.Button("ステージ生成", GUILayout.Height(64)))
         {
             GenerateStage();
             if (parent)
@@ -177,6 +183,13 @@ public class StageDataManager : EditorWindow
         }
 
 
+        if (celling && rightWall && leftWall)
+        {
+            stageData.height = celling.position.y;
+            stageData.width = rightWall.position.x + Mathf.Abs(leftWall.position.x);
+        }
+
+
     }
 
     private void SaveToJson(string path)
@@ -219,6 +232,14 @@ public class StageDataManager : EditorWindow
             InstantiateStagePart(part);
         }
 
+
+        if (celling && rightWall && leftWall)
+        {
+            float half = 0.5f;
+            celling.position = new Vector2( 0.0f, stageData.height);
+            rightWall.position = new Vector2(stageData.width * half, stageData.height * half);
+            leftWall.position = new Vector2(-stageData.width * half, stageData.height * half);
+        }
     }
 
     // パーツの生成をする
