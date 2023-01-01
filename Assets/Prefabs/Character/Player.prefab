@@ -112,7 +112,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2368430385992996400}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.09, y: -3.07, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 0}
   m_Children:
   - {fileID: 2368430386476096046}
@@ -234,7 +234,6 @@ MonoBehaviour:
   upForce: 10
   poleCnt: {fileID: 2368430386476096047}
   jumpSE: {fileID: 8300000, guid: f00b0cc664281444abcf72403bf389de, type: 3}
-  upSE: {fileID: 0}
 --- !u!95 &2368430385992996410
 Animator:
   serializedVersion: 3
