@@ -83,6 +83,7 @@ public class SetWaiPoint : EditorWindow
     Vector2 maxDistance;
 
 
+
     //スクロール位置
     private Vector2 _scrollPosition = Vector2.zero;
 
