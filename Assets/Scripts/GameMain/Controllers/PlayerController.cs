@@ -69,7 +69,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-
     // ジャンプする
     public void Jump()
     {

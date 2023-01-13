@@ -22,6 +22,9 @@ public class ItemManager : MonoBehaviour
     private Dictionary<Item, int> itemNum = 
         new Dictionary<Item, int>();
 
+    [SerializeField]
+    private ChaserStopperManager stopperManager;
+
     // チュートリアル時は決まったリストで排出
     [SerializeField]
     private List<Item> tutorialItemList = new List<Item>();
@@ -60,7 +63,13 @@ public class ItemManager : MonoBehaviour
             }
             return item;
         }
-        int randmonInt = Random.Range(0, itemList.Count);
+        int itemRange = itemList.Count;
+        // ストッパーを持っていたら加算系のアイテムのみでランダム
+        if (stopperManager.isGetStopper)
+        {
+            itemRange = itemNum.Count;
+        }
+        int randmonInt = Random.Range(0, itemRange);
         return itemList[randmonInt];
     }
 
@@ -68,14 +77,25 @@ public class ItemManager : MonoBehaviour
     // アイテム取得
     public void GetItem(Item item)
     {
-        // 取得数増加
-        itemNum[item]++;
-        // 効果付与
-        poleCnt.ChangePoleStrong(item.GetItemEffect());
-        // 取得数増加
-        itemTextList[item.GetItemNo()-1].text = itemNum[item].ToString();
-        // テスラ
-        teslaManage.ChangeWeight(item.GetTeslaEffect());
+        switch (item.GetItemType())
+        {
+            case ItemType.Tesla:
+                // 取得数増加
+                itemNum[item]++;
+                // 効果付与
+                poleCnt.ChangePoleStrong(item.GetItemEffect());
+                // 取得数増加
+                itemTextList[item.GetItemNo() - 1].text = itemNum[item].ToString();
+                // テスラ
+                teslaManage.ChangeWeight(item.GetTeslaEffect());
+                break;
+            case ItemType.Stopper:
+                stopperManager.GetStopper();
+
+                break;
+
+        }
+
     }
     
 }

@@ -14,6 +14,7 @@ namespace Path
         public const string normalWall = "Assets/Prefabs/StageGimmick/NormalWall.prefab";
         public const string scaffold = "Assets/Prefabs/StageGimmick/Scaffold.prefab";
         public const string itemBox = "Assets/Prefabs/StageGimmick/itemBox.prefab";
+        public const string poleScaffold = "Assets/Prefabs/StageGimmick/PoleScaffold.prefab";
 
     }
 

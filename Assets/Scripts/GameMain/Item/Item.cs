@@ -4,6 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
+public enum ItemType
+{
+    Tesla,
+    Stopper
+}
+
+
+
 // アイテムのデータを管理
 [Serializable]
 [CreateAssetMenu(fileName ="Item", menuName ="CreateItem")]
@@ -11,6 +19,7 @@ public class Item : ScriptableObject
 {
 
     [SerializeField] string itemName;   // 名前
+    [SerializeField] ItemType type; // 種類
     [SerializeField] int itemNo;        // 番号
     [SerializeField] float itemEffect;  // 効果 
     [SerializeField] Sprite image;      // 画像
@@ -20,6 +29,12 @@ public class Item : ScriptableObject
     {
         return itemName;
     }
+
+    public ItemType GetItemType()
+    {
+        return type;
+    }
+
     public int GetItemNo()
     {
         return itemNo;

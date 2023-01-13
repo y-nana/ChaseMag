@@ -15,16 +15,16 @@ public enum PoleScaffoldState
 public class PoleScaffoldController : MonoBehaviour
 {
 
-    [SerializeField]
-    private Transform maxTransform; // 最高
-    [SerializeField]
-    private Transform minTransform; // 最低
+    [SerializeField,Min(0.0f)]
+    private float higherMove;       // 最高
+    [SerializeField, Min(0.0f)]
+    private float lowerMove;        // 最低
     [SerializeField, Min(0.0f)]
     private float speed;            // 動くスピード
     [SerializeField, Min(0.0f)]
     private float margin;           // 遊び
 
-    private float defaultPosY;     // 初期位置
+    private float defaultPosY;      // 初期位置
 
 
     private GameObject player;
@@ -34,6 +34,7 @@ public class PoleScaffoldController : MonoBehaviour
     private PlayerController playerCnt;
     private Transform playerTransform;
     private ChaserController chaserCnt;
+    private Transform chaserTransform;
     [SerializeField]
     private Transform moveTransform;    // 動かす足場
     private Rigidbody2D moveRigid;    // 動かす足場
@@ -66,10 +67,11 @@ public class PoleScaffoldController : MonoBehaviour
 
         //プレイヤー、チェイサータグのオブジェクトが一つであること前提
         player = GameObject.FindGameObjectWithTag(playerTagName);
-        //chaser = GameObject.FindGameObjectWithTag(chaserTagName);
+        chaser = GameObject.FindGameObjectWithTag(chaserTagName);
         playerCnt = player.GetComponent<PlayerController>();
         playerTransform = player.GetComponent<Transform>();
-        //chaserCnt = chaser.GetComponent<ChaserController>();
+        chaserCnt = chaser.GetComponent<ChaserController>();
+        chaserTransform = chaser.transform;
         poleCnt = player.GetComponentInChildren<PoleController>();
 
         defaultPosY = moveTransform.position.y;
@@ -97,7 +99,7 @@ public class PoleScaffoldController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(state);
+
         switch (state)
         {
             case PoleScaffoldState.Neutral:
@@ -117,12 +119,12 @@ public class PoleScaffoldController : MonoBehaviour
                 moveRigid.velocity = Vector2.zero;
 
                 break;
-
+                // 上に上がる
             case PoleScaffoldState.up:
 
-                if (moveTransform.position.y > maxTransform.position.y - margin)
+                if (moveTransform.position.y > defaultPosY + higherMove - margin)
                 {
-                    moveTransform.position = new Vector2(moveTransform.position.x, maxTransform.position.y);
+                    moveTransform.position = new Vector2(moveTransform.position.x, defaultPosY + higherMove);
 
                     moveRigid.velocity = Vector2.zero;
                     break;
@@ -130,11 +132,12 @@ public class PoleScaffoldController : MonoBehaviour
                 moveRigid.velocity = Vector2.up * speed;
 
                 break;
+                // 下に下がる
             case PoleScaffoldState.down:
 
-                if (moveTransform.position.y < minTransform.position.y + margin)
+                if (moveTransform.position.y < defaultPosY-lowerMove + margin)
                 {
-                    moveTransform.position = new Vector2(moveTransform.position.x, minTransform.position.y);
+                    moveTransform.position = new Vector2(moveTransform.position.x, defaultPosY - lowerMove);
                     moveRigid.velocity = Vector2.zero;
                     break;
 
@@ -144,6 +147,8 @@ public class PoleScaffoldController : MonoBehaviour
                 break;
 
         }
+
+        Debug.Log(state);
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -158,6 +163,7 @@ public class PoleScaffoldController : MonoBehaviour
         if (collision.gameObject == chaser)
         {
             isChaserInArea = true;
+            SetState();
         }
 
     }
@@ -174,15 +180,22 @@ public class PoleScaffoldController : MonoBehaviour
         if (collision.gameObject == chaser)
         {
             isChaserInArea = false;
+            SetState();
         }
     }
 
     // 状態をセット
     private void SetState()
     {
+        // 常にチェイサーが優先される
+        if (isChaserInArea)
+        {
+            state = GetStateForChaser();
+            return;
+        }
         if (isPlayerInArea)
         {
-            state = GetScaffoldState();
+            state = GetStateForPlayer();
             return;
         }
 
@@ -190,14 +203,43 @@ public class PoleScaffoldController : MonoBehaviour
 
     }
 
+    private PoleScaffoldState GetStateForChaser()
+    {
+        // チェイサーと床の相対座標を求める
+        float relPosY = chaserTransform.position.y - moveTransform.position.y;
+        // チェイサーが床より上にいるとき
+        if (relPosY >= 0)
+        {
+            if (chaserCnt.wantToJump)
+            {
+                return PoleScaffoldState.up;
+            }
+            if (chaserCnt.wantToDown)
+            {
+                return PoleScaffoldState.down;
+            }
+
+        }
+        else
+        {
+            // 下にいるとき
+            if (chaserCnt.wantToJump)
+            {
+                return PoleScaffoldState.down;
+            }
+
+        }
+        return PoleScaffoldState.Neutral;
+    }
+
     // 自身の極の向き(タグ)とプレイヤの位置から
     // 状態を取得
-    private PoleScaffoldState GetScaffoldState()
+    private PoleScaffoldState GetStateForPlayer()
     {
         // プレイヤーと床の相対座標を求める
         float relPosY = playerTransform.position.y - moveTransform.position.y;
         // プレイヤーが床より上にいるとき
-        if (relPosY <= 0)
+        if (relPosY >= 0)
         {
             if (tag == southTagName)
             {

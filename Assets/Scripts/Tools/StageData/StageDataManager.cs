@@ -16,6 +16,7 @@ public enum StagePartsCategory
     Wall,
     NormalWall,
     ItemBox,
+    PoleScaffold
 
 }
 
@@ -139,7 +140,7 @@ public class StageDataManager : EditorWindow
 
 
 
-
+    // シーン内のオブジェクトからステージデータへ流し込む
     private void SceneToData()
     {
 
@@ -192,6 +193,7 @@ public class StageDataManager : EditorWindow
 
     }
 
+    // jsonファイルとして出力
     private void SaveToJson(string path)
     {
         if (path == string.Empty)
@@ -207,6 +209,7 @@ public class StageDataManager : EditorWindow
         writer.Close();
     }
 
+    // jsonファイルから読み込み
     private void LoadFromJson()
     {
         if (filePath == string.Empty)
@@ -222,9 +225,9 @@ public class StageDataManager : EditorWindow
         JsonUtility.FromJsonOverwrite(datastr, stageData);
     }
 
+    // ステージデータからシーン上へ生成する
     private void GenerateStage()
     {
-        // とりあえずオブジェクトの配置だけ
 
         foreach (var part in stageData.stageParts)
         {
@@ -296,16 +299,21 @@ public class StageDataManager : EditorWindow
                 path = PrefabPath.itemBox;
 
                 break;
+            case StagePartsCategory.PoleScaffold:
+                path = PrefabPath.itemBox;
 
+                break;
         }
         return AssetDatabase.LoadAssetAtPath<GameObject>(path);
-        
+
     }
 
-    // 磁力の向きを設定するかどうか
+    // 磁力の向きを設定するパーツかどうか
     private bool IsSetTag(StagePartsCategory categry)
     {
-        return categry == StagePartsCategory.JumpRamp || categry == StagePartsCategory.Wall;
+        return categry == StagePartsCategory.JumpRamp 
+            || categry == StagePartsCategory.Wall
+            || categry == StagePartsCategory.PoleScaffold;
     }
 
     // スケールから倍率へ

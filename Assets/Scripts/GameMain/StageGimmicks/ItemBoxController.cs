@@ -93,6 +93,7 @@ public class ItemBoxController : MonoBehaviour
     // プレイヤがアイテムを取得できる位置に入る
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
         if (collision.gameObject == player)
         {
             playerGetItem = true;

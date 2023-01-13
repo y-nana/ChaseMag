@@ -47,7 +47,8 @@ public class ChaserController : MonoBehaviour
     new Vector2(0.5f, 2.0f);                // 震え防止の余白
 
     private bool isUseRoute;    // ルートを使っていたらtrue
-    private bool wantToJump;    // ジャンプが必要かどうか
+    public bool wantToJump { get; private set; }   // ジャンプが必要かどうか
+    public bool wantToDown { get; private set; }   // 下に行きたいかどうか
 
 
     [SerializeField]
@@ -119,7 +120,7 @@ public class ChaserController : MonoBehaviour
 
         // 目標がジャンプしないと届かない位置ならジャンプを行う
         wantToJump = goalDir.y > margin.y;
-
+        wantToDown = goalDir.y < -margin.y;
         // 速度に代入
         Vector2 vel = this.rigid2D.velocity;
         this.rigid2D.velocity = new Vector2(key * this.walkForce, vel.y);
@@ -297,7 +298,7 @@ public class ChaserController : MonoBehaviour
     // デバッグ用 鬼の経路または目標地点までのベクトルをレイで表示
     private void OnDrawGizmos()
     {
-        if (Application.isPlaying)
+        if (Application.isPlaying && this.enabled)
         {
             if (isUseRoute)
             {
