@@ -12,6 +12,10 @@ public enum StageLevelState
     normal,
     hard,
     extra,
+    W2_Easy,
+    W2_Normal,
+    W2_Hard,
+    W2_Extra,
     tutorial
 }
 
@@ -28,6 +32,9 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     private readonly string easyGameScene = "EasyGameScene";        // かんたんゲームシーン名
     private readonly string normalGameScene = "normalGameScene";    // ふつうゲームシーン名
     private readonly string hardGameScene = "hardGameScene";        // むずかしいゲームシーン名
+
+    private readonly string jumpEasyScene = "JumpEasyScene";        // かんたんゲームシーン名
+
 
     [SerializeField]
     private StageLevelState thisStageLevel;     // unityエディター上で設定するこのシーンはどのステージなのか
@@ -104,6 +111,15 @@ public class SceneDirector : MonoBehaviour, SceneCaller
                 break;
             case StageLevelState.tutorial:
                 SceneManager.LoadScene(tutorialScene);
+                break;
+            case StageLevelState.W2_Easy:
+                SceneManager.LoadScene(jumpEasyScene);
+                break;
+            case StageLevelState.W2_Normal:
+                break;
+            case StageLevelState.W2_Hard:
+                break;
+            case StageLevelState.W2_Extra:
                 break;
         }
     }
@@ -185,21 +201,4 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         SceneManager.LoadScene(tutorialScene);
     }
 
-    // 遷移時のイベント登録で変数を渡したいけどうまくいかないので没
-    /*
-    private void SendToNextScene(Scene next, LoadSceneMode mode)
-    {
-        Debug.Log(thisStageLevel);
-
-        var nextSceneDirector =
-            GameObject.FindWithTag(sceneDirectorTag)
-            .GetComponent<SceneDirector>();
-
-        nextSceneDirector.NextStageLevel = thisStageLevel;
-        nextSceneDirector.test = testInt;
-        Debug.Log(nextSceneDirector.NextStageLevel);
-
-        SceneManager.sceneLoaded -= SendToNextScene;
-    }
-    */
 }

@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameMain/HardGameScene.unity
     guid: 836fea1b10ccb9a4bb3b0410d979bdd8
+  - enabled: 1
+    path: Assets/Scenes/GameMain/World_01/JumpEasyScene.unity
+    guid: 981d606c28def1e4bba044a3a7b732e3
   m_configObjects: {}
