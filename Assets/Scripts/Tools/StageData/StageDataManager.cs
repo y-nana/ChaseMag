@@ -8,45 +8,6 @@ using System.IO;
 using UnityEditor;
 
 using Path;
-
-public enum StagePartsCategory
-{
-    Scaffold,
-    JumpRamp,
-    Wall,
-    NormalWall,
-    ItemBox,
-    PoleScaffold
-
-}
-
-// ステージ内のオブジェクトのデータ
-[System.Serializable]
-public class StagePart
-{
-    [SerializeField]
-    public StagePartsCategory category;
-    [SerializeField]
-    public Vector2 position;
-    [SerializeField]
-    public Vector2 sizeMagnification = Vector2.one;
-    [SerializeField]
-    public bool isNorth;
-}
-
-// 一つのステージのデータ
-[System.Serializable]
-public class StageData
-{
-    [SerializeField]
-    public List<StagePart> stageParts;
-    [SerializeField]
-    public float width;
-    [SerializeField]
-    public float height;
-}
-
-
 public class StageDataManager : EditorWindow
 {
     [SerializeField]
@@ -145,6 +106,7 @@ public class StageDataManager : EditorWindow
     {
 
         var allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        stageData = new StageData();
         stageData.stageParts.Clear();
 
         // すべてのオブジェクトをチェック
@@ -164,10 +126,14 @@ public class StageDataManager : EditorWindow
                         break;
                     }
                     // 階層のあるprefabで重複するのを防ぐ
-                    if (PrefabManager.isEqualBasePrefab(obj.transform.parent.gameObject, obj))
+                    if (obj.transform.parent)
                     {
-                        break;
+                        if (PrefabManager.isEqualBasePrefab(obj.transform.parent.gameObject, obj))
+                        {
+                            break;
+                        }
                     }
+
 
                     StagePart part = new StagePart();
                     part.category = value;
@@ -190,6 +156,7 @@ public class StageDataManager : EditorWindow
             stageData.width = rightWall.position.x + Mathf.Abs(leftWall.position.x);
         }
 
+        OnGUI();
 
     }
 
@@ -300,7 +267,7 @@ public class StageDataManager : EditorWindow
 
                 break;
             case StagePartsCategory.PoleScaffold:
-                path = PrefabPath.itemBox;
+                path = PrefabPath.poleScaffold;
 
                 break;
         }

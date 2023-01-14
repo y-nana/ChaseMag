@@ -43,7 +43,7 @@ PrefabInstance:
     - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
       propertyPath: m_Name
-      value: NormalWall
+      value: RightWall
       objectReference: {fileID: 0}
     - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
@@ -133,7 +133,7 @@ PrefabInstance:
     - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
       propertyPath: m_Name
-      value: NormalWall (1)
+      value: LeftWall
       objectReference: {fileID: 0}
     - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
@@ -223,7 +223,7 @@ PrefabInstance:
     - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
       propertyPath: m_Name
-      value: NormalWall (2)
+      value: Celling
       objectReference: {fileID: 0}
     - target: {fileID: 1396609161648723554, guid: 7ba93d4927918d947b94cb85472e2776,
         type: 3}
