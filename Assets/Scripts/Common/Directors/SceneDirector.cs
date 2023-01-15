@@ -24,21 +24,28 @@ public class SceneDirector : MonoBehaviour, SceneCaller
 {
     private readonly string gameOver = "GameOverScene";     // ゲームオーバーシーン名
     private readonly string gameClear = "GameClearScene";   // ゲームクリアシーン名
-    private readonly string gameScene = "GameScene";                // ゲームメインシーン名
     private readonly string stageSelectScene = "StageSelectScene";  // ステージセレクトシーン名
     private readonly string titleScene = "GameStartScene";          // タイトルシーン名
     private readonly string tutorialScene = "GameTutorialScene";    // チュートリアルシーン名
-    
+
+    // World_1
+    private readonly string jumpEasyScene = "JumpEasyScene";        // かんたんゲームシーン名
+    private readonly string jumpNormalScene = "JumpNormalScene";    // 普通ゲームシーン名
+
+
+    // World_2
     private readonly string easyGameScene = "EasyGameScene";        // かんたんゲームシーン名
     private readonly string normalGameScene = "normalGameScene";    // ふつうゲームシーン名
     private readonly string hardGameScene = "hardGameScene";        // むずかしいゲームシーン名
+    private readonly string gameScene = "GameScene";                // ゲームメインシーン名
 
-    private readonly string jumpEasyScene = "JumpEasyScene";        // かんたんゲームシーン名
 
 
     [SerializeField]
     private StageLevelState thisStageLevel;     // unityエディター上で設定するこのシーンはどのステージなのか
 
+    [SerializeField]
+    private SaveData saveData;                  // セーブデータセット用
     public static StageLevelState NextStageLevel { get; set; }      // 遷移時にセットする（ボタン選択用）
 
     // チュートリアルのときはシーン遷移するタイミングで遷移せずに指定の処理を行う
@@ -95,31 +102,38 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         switch (stageLevel)
         {
             case StageLevelState.easy:
-                SceneManager.LoadScene(easyGameScene);
+                SceneManager.LoadScene(jumpEasyScene);
 
                 break;
             case StageLevelState.normal:
-                SceneManager.LoadScene(normalGameScene);
+                SceneManager.LoadScene(jumpNormalScene);
 
                 break;
             case StageLevelState.hard:
-                SceneManager.LoadScene(hardGameScene);
 
                 break;
             case StageLevelState.extra:
-                SceneManager.LoadScene(gameScene);
                 break;
+
             case StageLevelState.tutorial:
                 SceneManager.LoadScene(tutorialScene);
                 break;
+
             case StageLevelState.W2_Easy:
-                SceneManager.LoadScene(jumpEasyScene);
+                SceneManager.LoadScene(easyGameScene);
+
                 break;
             case StageLevelState.W2_Normal:
+                SceneManager.LoadScene(normalGameScene);
+
                 break;
             case StageLevelState.W2_Hard:
+                SceneManager.LoadScene(hardGameScene);
+
                 break;
             case StageLevelState.W2_Extra:
+                SceneManager.LoadScene(gameScene);
+
                 break;
         }
     }
@@ -178,12 +192,21 @@ public class SceneDirector : MonoBehaviour, SceneCaller
 
 
     }
+
     // ゲームクリアシーンへ
     public void ToGameClear()
     {
         Time.timeScale = 1f;
         //SceneManager.sceneLoaded += SendToNextScene;
         NextStageLevel = thisStageLevel;
+
+        // クリアしたことを記録
+        if (saveData != null)
+        {
+            saveData.ClearStage(thisStageLevel);
+
+        }
+
         // チュートリアルのときは遷移せず指定の処理を行う
         if (thisStageLevel == StageLevelState.tutorial)
         {

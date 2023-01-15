@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
+// ステージセレクトのボタンをグループごとに移動させるクラス
 public class WorldChangeManager : MonoBehaviour
 {
 
     private RectTransform rectTransform;
 
-    private int nowWorld;
+    private int nowWorld = 0;
 
     private bool isScroll;
     
@@ -49,14 +49,20 @@ public class WorldChangeManager : MonoBehaviour
         }
     }
 
+    //選択が変わるごとに呼び出す
+    //ワールドは0から
     public void ChangeSelectedButtom(int world)
     {
-        Debug.Log(nowWorld +"から"+world);
+
         if (world == nowWorld)
         {
             return;
         }
         nowWorld = world;
+        if (rectTransform == null)
+        {
+            rectTransform = GetComponent<RectTransform>();
+        }
         startPosition = rectTransform.localPosition.x;
         goalPosition =  -rectTransform.sizeDelta.x * world;
         isScroll = true;

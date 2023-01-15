@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisStageLevel: 0
+  saveData: {fileID: 11400000, guid: c36eed84b54b0774493d50fb4b3ce427, type: 2}
   isTest: 0
 --- !u!114 &4874097576643884690
 MonoBehaviour:

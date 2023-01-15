@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/GameStartScene.unity
     guid: d1c0729aafc475e48bf754019a674b1a
   - enabled: 1
-    path: Assets/Scenes/GameMain/GameScene.unity
+    path: Assets/Scenes/GameMain/World_02/GameScene.unity
     guid: b984292b870827445a7aa6e6ac18acda
   - enabled: 1
     path: Assets/Scenes/GameOverScene.unity
@@ -24,13 +24,13 @@ EditorBuildSettings:
     path: Assets/Scenes/StageSelectScene.unity
     guid: 474ec5142130c984aaecdf6ad0d843e2
   - enabled: 1
-    path: Assets/Scenes/GameMain/EasyGameScene.unity
+    path: Assets/Scenes/GameMain/World_02/EasyGameScene.unity
     guid: 8b32661c61c7f9e43b3a3ff95c99acfe
   - enabled: 1
-    path: Assets/Scenes/GameMain/NormalGameScene.unity
+    path: Assets/Scenes/GameMain/World_02/NormalGameScene.unity
     guid: 01f91e7e92883174b8d989a781e8b62c
   - enabled: 1
-    path: Assets/Scenes/GameMain/HardGameScene.unity
+    path: Assets/Scenes/GameMain/World_02/HardGameScene.unity
     guid: 836fea1b10ccb9a4bb3b0410d979bdd8
   - enabled: 1
     path: Assets/Scenes/GameMain/World_01/JumpEasyScene.unity

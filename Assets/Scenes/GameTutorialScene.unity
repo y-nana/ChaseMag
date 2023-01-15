@@ -644,6 +644,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d1a4dc1bfdb45346ad64932e886d762, type: 3}
+--- !u!114 &91284199 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 837246205113853769, guid: 080dd22c9af29af4d939fcb856fa38e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1526019618}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &102182091
 GameObject:
   m_ObjectHideFlags: 0
@@ -861,6 +873,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4976475770833862689, guid: 7b8c4f300b611ad4b9fe848d0910e75a,
     type: 3}
   m_PrefabInstance: {fileID: 142885012}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &161219734 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4516462036569841858, guid: 4f81780cdc8c4ac41bb5a188f3e9a252,
+    type: 3}
+  m_PrefabInstance: {fileID: 403661195}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &171546079
 PrefabInstance:
@@ -1676,9 +1694,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   marginY: -1
-  limitDown: 0
-  limitWidth: 35
-  limitHigh: 14
+  limitWidthMargin: 0
+  limitHeightMargin: 0
+  limitFloorMargin: 0
+  floor: {fileID: 1344192227}
+  rightWall: {fileID: 572887104}
+  leftWall: {fileID: 161219734}
+  ceiling: {fileID: 1722760307}
   playerTransform: {fileID: 1641404842}
 --- !u!20 &519420031
 Camera:
@@ -1737,6 +1759,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &572887104 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3948826610844575128, guid: 4f81780cdc8c4ac41bb5a188f3e9a252,
+    type: 3}
+  m_PrefabInstance: {fileID: 403661195}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &581155561
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2285,6 +2313,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 699797800}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &701005461 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2197600801585273474, guid: 080dd22c9af29af4d939fcb856fa38e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1526019618}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &713434689
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3226,8 +3266,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u30B9\u30BF\u30FC\u30C8\u307E\u3067"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 27675ae1488fd1a49ad5b8a710f0308d, type: 2}
+  m_sharedMaterial: {fileID: 2268386384330949992, guid: 27675ae1488fd1a49ad5b8a710f0308d,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4006,8 +4047,9 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3067\u3059"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 27675ae1488fd1a49ad5b8a710f0308d, type: 2}
+  m_sharedMaterial: {fileID: 2268386384330949992, guid: 27675ae1488fd1a49ad5b8a710f0308d,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4213,7 +4255,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8b53f0b42759864cb44f52f401f84d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thisStageLevel: 4
+  thisStageLevel: 8
+  saveData: {fileID: 11400000, guid: c36eed84b54b0774493d50fb4b3ce427, type: 2}
   isTest: 0
 --- !u!4 &1115747275
 Transform:
@@ -5053,6 +5096,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 946861666}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &1344192227 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1748990021453060542, guid: 94d64d3eaf8eb194a94f6d655cbc4374,
+    type: 3}
+  m_PrefabInstance: {fileID: 800899017}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1375049064
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5741,6 +5790,18 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2674429687159325673, guid: 080dd22c9af29af4d939fcb856fa38e7,
+        type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 27675ae1488fd1a49ad5b8a710f0308d,
+        type: 2}
+    - target: {fileID: 2674429687159325673, guid: 080dd22c9af29af4d939fcb856fa38e7,
+        type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2268386384330949992, guid: 27675ae1488fd1a49ad5b8a710f0308d,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 080dd22c9af29af4d939fcb856fa38e7, type: 3}
 --- !u!224 &1526019619 stripped
@@ -6463,8 +6524,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7348567304169157811, guid: 2d2d207f379d6a24ca2a0ddbe770c5ca,
+        type: 3}
+      propertyPath: icon
+      value: 
+      objectReference: {fileID: 701005461}
+    - target: {fileID: 7348567304169157811, guid: 2d2d207f379d6a24ca2a0ddbe770c5ca,
+        type: 3}
+      propertyPath: YButtonIcon
+      value: 
+      objectReference: {fileID: 91284199}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d2d207f379d6a24ca2a0ddbe770c5ca, type: 3}
+--- !u!4 &1722760307 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6450401126940155411, guid: 4f81780cdc8c4ac41bb5a188f3e9a252,
+    type: 3}
+  m_PrefabInstance: {fileID: 403661195}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1776451552
 GameObject:
   m_ObjectHideFlags: 0
@@ -6630,6 +6707,7 @@ MonoBehaviour:
   itemTextList:
   - {fileID: 1160243384}
   - {fileID: 403676316}
+  stopperManager: {fileID: 0}
   tutorialItemList:
   - {fileID: 11400000, guid: 6eb5c7c633b44c2409320e4dd09dde1b, type: 2}
   - {fileID: 11400000, guid: 6eb5c7c633b44c2409320e4dd09dde1b, type: 2}
