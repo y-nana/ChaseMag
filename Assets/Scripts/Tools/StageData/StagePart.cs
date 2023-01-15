@@ -9,7 +9,8 @@ public enum StagePartsCategory
     Wall,
     NormalWall,
     ItemBox,
-    PoleScaffold
+    PoleScaffold,
+    Clip
 
 }
 

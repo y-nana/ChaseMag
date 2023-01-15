@@ -226,6 +226,15 @@ public class SetWaiPoint : EditorWindow
             // シーン内のオブジェクトじゃなかったら対象を次へ
             if (!IsObjInScene(obj)) continue;
 
+            // 階層のあるprefabで重複するのを防ぐ
+            if (obj.transform.parent)
+            {
+                if (PrefabManager.isEqualBasePrefab(obj.transform.parent.gameObject, obj))
+                {
+                    continue;
+                }
+            }
+
             for (int i = 0; i < settingDatas.Count; i++)
             {
                 // ポイント生成データで指定されているオブジェクトだったら生成

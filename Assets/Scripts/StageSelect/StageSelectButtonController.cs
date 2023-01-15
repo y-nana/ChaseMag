@@ -11,12 +11,12 @@ public class StageSelectButtonController : MonoBehaviour
 
     [SerializeField]
     private SceneDirector sceneDirector;    // シーン遷移する用
-    [SerializeField]
-    private SaveData saveData;              // クリア状況取得用
 
     [SerializeField]
     private Image clearIcon;                // クリアアイコン
 
+    [SerializeField]
+    private Text text;
     private void Start()
     {
         // 直前やってたステージへのボタンを選択する
@@ -28,17 +28,11 @@ public class StageSelectButtonController : MonoBehaviour
         // クリア状況の表示
         if (clearIcon != null)
         {
-            if (saveData != null)
+            if (text)
             {
-                clearIcon.enabled = saveData.IsClear(thisStageLevel);
-                return;
-
+                text.text = SaveData.instance.IsClear(thisStageLevel).ToString();
             }
-            else
-            {
-                clearIcon.enabled = false;
-            }
-
+            clearIcon.enabled = SaveData.instance.IsClear(thisStageLevel);
         }
     }
 

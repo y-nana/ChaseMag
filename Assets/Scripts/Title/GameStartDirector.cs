@@ -10,8 +10,6 @@ public class GameStartDirector : MonoBehaviour
     private readonly string stageSelectScene = "StageSelectScene";  // ステージセレクトシーン名
     private readonly string titleScene = "GameStartScene";          // タイトルシーン名
 
-
-
     void Update()
     {
 

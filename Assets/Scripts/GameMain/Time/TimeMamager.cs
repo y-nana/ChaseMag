@@ -7,13 +7,12 @@ using UnityEngine.EventSystems;
 // ゲーム内の残り時間を管理するクラス
 public class TimeMamager : MonoBehaviour
 {
-    [SerializeField] GameObject sceneDirector;          // シーン遷移用
+    [SerializeField] SceneDirector sceneDirector;          // シーン遷移用
     [SerializeField] GameObject timeBack;               // ゲージ操作用
 
     [SerializeField] float limitTime = 45.0f;           // 制限時間
     [SerializeField] float changeOrangeTime = 20.0f;    // 文字色変更オレンジ
     [SerializeField] float changeRedTime = 10.0f;       // 文字色変更赤
-
 
     private Image timeGage; // 残り時間に応じて減らすゲージ
 
@@ -51,12 +50,7 @@ public class TimeMamager : MonoBehaviour
             if (timer <= 0)
             {
                 playing = false;
-                ExecuteEvents.Execute<SceneCaller>(
-                    target: sceneDirector,
-                    eventData: null,
-                    functor: (reciever, eventData) => reciever.ToGameClear()
-                    );
-
+                sceneDirector.ToGameClear();
                 
             }
             
@@ -77,7 +71,7 @@ public class TimeMamager : MonoBehaviour
         }
     }
 
-    // プロパティにしたほうがいい？
+    
     public void SetPlaying(bool now)
     {
         playing = now;

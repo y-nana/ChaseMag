@@ -2,19 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// アイテムのデータを管理
-[System.Serializable]
-[CreateAssetMenu(fileName = "SaveData", menuName = "CreateSaveData")]
-public class SaveData: ScriptableObject
+// ゲームのセーブデータを管理するクラス
+// シングルトンでDontDestroyOnLoad
+public class SaveData : MonoBehaviour
 {
-    [field:SerializeField]
-    public List<StageClearData> stageClearDatas { get; set; }
 
-    private void OnEnable()
+    public static SaveData instance;    // このクラスのインスタンス
+
+    public List<StageClearData> stageClearDatas { get; private set; }
+
+    private void Awake()
     {
-        //ResetData();
+        // シングルトンにする
+        if (instance == null)
+        {
+            instance = this;
+            ResetData();
+            DontDestroyOnLoad(gameObject);
+
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
-    
+
     public void ResetData()
     {
 

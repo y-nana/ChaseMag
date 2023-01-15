@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 3807783974389290068}
   - component: {fileID: 3807783974389290071}
   - component: {fileID: 3807783974389290070}
-  - component: {fileID: 3807783974389290069}
+  - component: {fileID: 1087646069213003219}
   m_Layer: 0
-  m_Name: GetClipPrefab
-  m_TagString: Untagged
+  m_Name: Clip
+  m_TagString: Clip
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.6, y: 1.6}
+  m_Size: {x: 2.56, y: 2.56}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -101,8 +101,8 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.5
---- !u!114 &3807783974389290069
+  m_Radius: 1.4
+--- !u!114 &1087646069213003219
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -20,7 +20,7 @@ public enum StageLevelState
 }
 
 
-public class SceneDirector : MonoBehaviour, SceneCaller
+public class SceneDirector : MonoBehaviour
 {
     private readonly string gameOver = "GameOverScene";     // ゲームオーバーシーン名
     private readonly string gameClear = "GameClearScene";   // ゲームクリアシーン名
@@ -44,8 +44,6 @@ public class SceneDirector : MonoBehaviour, SceneCaller
     [SerializeField]
     private StageLevelState thisStageLevel;     // unityエディター上で設定するこのシーンはどのステージなのか
 
-    [SerializeField]
-    private SaveData saveData;                  // セーブデータセット用
     public static StageLevelState NextStageLevel { get; set; }      // 遷移時にセットする（ボタン選択用）
 
     // チュートリアルのときはシーン遷移するタイミングで遷移せずに指定の処理を行う
@@ -201,11 +199,7 @@ public class SceneDirector : MonoBehaviour, SceneCaller
         NextStageLevel = thisStageLevel;
 
         // クリアしたことを記録
-        if (saveData != null)
-        {
-            saveData.ClearStage(thisStageLevel);
-
-        }
+        SaveData.instance.ClearStage(thisStageLevel);
 
         // チュートリアルのときは遷移せず指定の処理を行う
         if (thisStageLevel == StageLevelState.tutorial)
@@ -213,7 +207,6 @@ public class SceneDirector : MonoBehaviour, SceneCaller
             tutorialClearAct?.Invoke();
             return;
         }
-
         SceneManager.LoadScene(gameClear);
     }
 

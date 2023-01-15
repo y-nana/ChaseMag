@@ -25,29 +25,15 @@ public class StageDataManager : EditorWindow
     private Vector2 dataScrollPosition = Vector2.zero;
     private Vector2 buttonScrollPosition = Vector2.zero;
 
-    private Dictionary<StagePartsCategory, string> pathList;
-
     // ウィンドウ
     [MenuItem("Window/Editor extention/StageDataManager", false, 1)]
     private static void ShowSetWaiPointWindow()
     {
         StageDataManager window = GetWindow<StageDataManager>();
         window.titleContent = new GUIContent("StageDataManager Window");
-        window.Init();
-    }
-
-    private void Init()
-    {
-        pathList = new Dictionary<StagePartsCategory, string>();
-        pathList.Add(StagePartsCategory.Scaffold, PrefabPath.scaffold);
-        pathList.Add(StagePartsCategory.JumpRamp, PrefabPath.jumpRamp);
-        pathList.Add(StagePartsCategory.Wall, PrefabPath.wall);
-        pathList.Add(StagePartsCategory.NormalWall, PrefabPath.normalWall);
-        pathList.Add(StagePartsCategory.ItemBox, PrefabPath.itemBox);
-
-
 
     }
+
 
     private void OnGUI()
     {
@@ -299,6 +285,9 @@ public class StageDataManager : EditorWindow
             case StagePartsCategory.PoleScaffold:
                 path = PrefabPath.poleScaffold;
 
+                break;
+            case StagePartsCategory.Clip:
+                path = PrefabPath.clip;
                 break;
         }
         return AssetDatabase.LoadAssetAtPath<GameObject>(path);

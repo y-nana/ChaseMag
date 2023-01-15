@@ -17,7 +17,7 @@ public class TutorialTryManage : MonoBehaviour
     private List<Image> viewClipList = new List<Image>();               // 表示しているクリップ
 
     [SerializeField]
-    private List<ClipManager> getClipList = new List<ClipManager>();    // ステージ上に存在するクリップのリスト
+    private List<ClipController> getClipList = new List<ClipController>();    // ステージ上に存在するクリップのリスト
     private List<bool> isGetClip = new List<bool>();                    // クリップの獲得状況
 
     // チュートリアルに使うオブジェクト
@@ -91,7 +91,7 @@ public class TutorialTryManage : MonoBehaviour
 
 
     // クリップ取得時に呼び出される関数
-    public void GetClip(ClipManager clip)
+    public void GetClip(ClipController clip)
     {
         // クリップリストから獲得したクリップを探す
         for (int i = 0; i < getClipList.Count; i++)

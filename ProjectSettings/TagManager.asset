@@ -12,6 +12,7 @@ TagManager:
   - SceneDirector
   - GoStop
   - ItemBox
+  - Clip
   layers:
   - Default
   - TransparentFX
