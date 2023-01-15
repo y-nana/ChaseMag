@@ -123,51 +123,14 @@ public class SetWaiPoint : EditorWindow
         so.ApplyModifiedProperties();
 
 
-       
-
         //スクロール箇所終了
         EditorGUILayout.EndScrollView();
 
         EditorGUILayout.BeginHorizontal();
         // ボタンを押されたら
-        if (GUILayout.Button("WaiPoint設置！", GUILayout.Height(64)))
+        if (GUILayout.Button("ルート生成", GUILayout.Height(40)))
         {
-
-            count = 1;
-            if (!IsObjInScene(parent))
-            {
-                // 親オブジェクトのルートの生成
-                parent = PrefabUtility.InstantiatePrefab(parent) as GameObject;
-            }
-            else
-            {
-                // 子オブジェクトの削除
-                
-                for (int i = parent.transform.childCount-1; i >= 0; i--)
-                {
-
-                    DestroyImmediate(parent.transform.GetChild(i).gameObject);
-                }
-
-
-            }
-
-
-            // Ctr+Zで戻せるようにundoに追加
-            Undo.RegisterCreatedObjectUndo(parent, "Create Route");
-
-            Selection.activeObject = parent;
-
-            // 子オブジェクトのウェイポイントの生成
-
-            SettingWaiPoints();
-            AddSetWeiPoint();
-            foreach (Transform child in parent.transform)
-            {
-                connector.Connect(child.GetComponent<Point>(), parent);
-                Debug.Log(child.name);
-            }
-
+            RouteGenerate();
         }
 
 
@@ -175,7 +138,7 @@ public class SetWaiPoint : EditorWindow
 
 
     }
-    
+
     // 生成に必要な情報が入っていなければデフォルトを入れる
     private void EmptyCheck()
     {
@@ -197,6 +160,57 @@ public class SetWaiPoint : EditorWindow
 
     }
 
+    // 経路生成
+    private void RouteGenerate()
+    {
+        // nullチェック
+        if (connector == null)
+        {
+            connector = new ConnectWaiPoint();
+            connector.maxDistance = defaultMaxDistance;
+        }
+
+        count = 0;
+        // 親オブジェクトの準備
+        CheckParent();
+
+        // 子オブジェクトのウェイポイントの生成
+        SettingWaiPoints();
+        AddSetWeiPoint();
+        // ポイント間をつなげる
+        foreach (Transform child in parent.transform)
+        {
+            connector.Connect(child.GetComponent<Point>(), parent);
+            Debug.Log(child.name);
+        }
+    }
+
+
+    // 親オブジェクトの生成または子要素の削除
+    private void CheckParent()
+    {
+        if (!IsObjInScene(parent))
+        {
+            // 親オブジェクトのルートの生成
+            parent = PrefabUtility.InstantiatePrefab(parent) as GameObject;
+        }
+        else
+        {
+            // 子オブジェクトの削除
+            for (int i = parent.transform.childCount - 1; i >= 0; i--)
+            {
+                DestroyImmediate(parent.transform.GetChild(i).gameObject);
+            }
+
+        }
+
+        // Ctr+Zで戻せるようにundoに追加
+        Undo.RegisterCreatedObjectUndo(parent, "Create Route");
+        Selection.activeObject = parent;
+    }
+
+
+
     // ポイントの生成
     private void SettingWaiPoints()
     {
@@ -212,15 +226,12 @@ public class SetWaiPoint : EditorWindow
             // シーン内のオブジェクトじゃなかったら対象を次へ
             if (!IsObjInScene(obj)) continue;
 
-
             for (int i = 0; i < settingDatas.Count; i++)
             {
+                // ポイント生成データで指定されているオブジェクトだったら生成
                 if (PrefabManager.isEqualBasePrefab(settingDatas[i].obj, obj) && obj.GetComponent<SpriteRenderer>())
                 {
-
                     PositionSetting(i, obj.GetComponent<SpriteRenderer>());
-
-
                     break;
                 }
 
@@ -285,11 +296,12 @@ public class SetWaiPoint : EditorWindow
         var pointObj = PrefabUtility.InstantiatePrefab(prefab, parent.transform) as GameObject;
         pointObj.transform.position = pos;
 
+        count++;
         pointObj.name += "_"+count;
+
         Point point = pointObj.GetComponent<Point>();
         point.category = category;
         pointList.Add(point);
-        count++;
 
         // 足場と関連付け
         RecordScaffold(pos);

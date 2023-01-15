@@ -17,10 +17,13 @@ public class StageDataManager : EditorWindow
     private Transform rightWall;
     private Transform leftWall;
 
+    private int partsCount;
+
     string filePath;
 
     //スクロール位置
-    private Vector2 _scrollPosition = Vector2.zero;
+    private Vector2 dataScrollPosition = Vector2.zero;
+    private Vector2 buttonScrollPosition = Vector2.zero;
 
     private Dictionary<StagePartsCategory, string> pathList;
 
@@ -48,13 +51,13 @@ public class StageDataManager : EditorWindow
 
     private void OnGUI()
     {
-
+        //描画範囲が足りなければスクロール出来るように
+        dataScrollPosition = EditorGUILayout.BeginScrollView(dataScrollPosition);
         parent = EditorGUILayout.ObjectField("Parent", parent, typeof(Transform), true) as Transform;
         celling = EditorGUILayout.ObjectField("celling", celling, typeof(Transform), true) as Transform;
         rightWall = EditorGUILayout.ObjectField("rightWall", rightWall, typeof(Transform), true) as Transform;
         leftWall = EditorGUILayout.ObjectField("leftWall", leftWall, typeof(Transform), true) as Transform;
-        //描画範囲が足りなければスクロール出来るように
-        _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition);
+
 
         SerializedObject so = new SerializedObject(this);
 
@@ -71,32 +74,37 @@ public class StageDataManager : EditorWindow
         //スクロール箇所終了
         EditorGUILayout.EndScrollView();
 
-        if (GUILayout.Button("ステージ生成", GUILayout.Height(64)))
+        buttonScrollPosition = EditorGUILayout.BeginScrollView(buttonScrollPosition);
+
+        if (GUILayout.Button("ステージ生成", GUILayout.Height(40)))
         {
+            CheckParent();
             GenerateStage();
             if (parent)
             {
                 Selection.activeObject = parent;
             }
         }
-        if (GUILayout.Button("読み込みファイル選択", GUILayout.Height(64)))
+        if (GUILayout.Button("読み込みファイル選択", GUILayout.Height(40)))
         {
 
             filePath = EditorUtility.OpenFilePanel("select ", "Assets", "json");
             LoadFromJson();
         }
-        if (GUILayout.Button("保存フォルダ選択", GUILayout.Height(64)))
+        if (GUILayout.Button("保存フォルダ選択", GUILayout.Height(40)))
         {
 
             SaveToJson(EditorUtility.SaveFilePanel("select ", "Assets", "StageData.json", "json"));
         }
 
-        if (GUILayout.Button("シーン内からデータにセット", GUILayout.Height(64)))
+        if (GUILayout.Button("シーン内からデータにセット", GUILayout.Height(40)))
         {
 
             SceneToData();
         }
-    
+        //スクロール箇所終了
+        EditorGUILayout.EndScrollView();
+
     }
 
 
@@ -192,10 +200,30 @@ public class StageDataManager : EditorWindow
         JsonUtility.FromJsonOverwrite(datastr, stageData);
     }
 
+    // 親オブジェクトの生成または子要素の削除
+    private void CheckParent()
+    {
+        if (parent)
+        {
+            // 子オブジェクトの削除
+            for (int i = parent.transform.childCount - 1; i >= 0; i--)
+            {
+
+                DestroyImmediate(parent.transform.GetChild(i).gameObject);
+            }
+
+        }
+        else
+        {
+            // 親オブジェクトのルートの生成
+            parent = new GameObject("StageGimmicks").transform;
+        }
+    }
+
     // ステージデータからシーン上へ生成する
     private void GenerateStage()
     {
-
+        partsCount = 0;
         foreach (var part in stageData.stageParts)
         {
 
@@ -235,6 +263,8 @@ public class StageDataManager : EditorWindow
             }
         }
 
+        partsCount++;
+        gameObject.name += "_" + partsCount;
 
         Undo.RegisterCreatedObjectUndo(gameObject, "Create stageObject");
 
@@ -289,9 +319,6 @@ public class StageDataManager : EditorWindow
 
         return new Vector2(scale.x / baseScale.x, scale.y / baseScale.y);
     }
-
-
-
 
 
 }
