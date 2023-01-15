@@ -14,6 +14,7 @@ public class ConnectWaiPoint
     // ポイント同士をつなげるかチェックするときに使う
     private readonly float upMargin = 1.0f;
     private readonly float downMargin = 2.0f;
+    private readonly float sideMargin = 1.0f;
 
     public Vector2 maxDistance { get; set; }
 
@@ -142,13 +143,13 @@ public class ConnectWaiPoint
             return false;
         }
 
-        if (waiPoint.category == PointCategory.Floating && (Mathf.Abs(dis.x) > 1.0f || dis.y > 0.0f))
+        if (waiPoint.category == PointCategory.Floating && (Mathf.Abs(dis.x) > sideMargin || dis.y > 0.0f))
         {
             Debug.Log(waiPoint.name + "から" + toPoint.name + "は落下時たどり着けません");
             return false;
         }
 
-        if (waiPoint.category == PointCategory.Normal && dis.y > 1.0f)
+        if (waiPoint.category == PointCategory.Normal && dis.y > upMargin)
         {
             Debug.Log(waiPoint.name + "から" + toPoint.name + "はジャンプできないので届きませんでした");
             return false;

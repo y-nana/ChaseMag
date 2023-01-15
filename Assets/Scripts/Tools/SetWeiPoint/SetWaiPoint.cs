@@ -167,8 +167,8 @@ public class SetWaiPoint : EditorWindow
         if (connector == null)
         {
             connector = new ConnectWaiPoint();
-            connector.maxDistance = defaultMaxDistance;
         }
+        connector.maxDistance = maxDistance;
 
         count = 0;
         // 親オブジェクトの準備
