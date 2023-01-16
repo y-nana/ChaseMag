@@ -26,6 +26,7 @@ public class ClipManager : MonoBehaviour
     void Start()
     {
         count = 0;
+        countText.text = 0.ToString();
         clips = GameObject.FindGameObjectsWithTag(clipTag);
         foreach (var clip in clips)
         {

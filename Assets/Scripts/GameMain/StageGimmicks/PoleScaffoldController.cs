@@ -4,7 +4,7 @@ using UnityEngine;
 
 using Pole;
 
-
+// 状態
 public enum PoleScaffoldState
 {
     Neutral,
@@ -23,8 +23,6 @@ public class PoleScaffoldController : MonoBehaviour
     private float speed;            // 動くスピード
     [SerializeField, Min(0.0f)]
     private float chaserSpeed;      // チェイサーが近づいた時のスピード
-    [SerializeField, Min(0.0f)]
-    private float playerSpeed;      // プレイヤーが近づいた時のスピード
     [SerializeField, Min(0.0f)]
     private float margin;           // 遊び
 
@@ -121,7 +119,7 @@ public class PoleScaffoldController : MonoBehaviour
                     break;
                 }
                 moveRigid.velocity = Vector2.zero;
-
+                moveTransform.position = new Vector2(moveTransform.position.x, defaultPosY);
                 break;
                 // 上に上がる
             case PoleScaffoldState.up:
@@ -155,6 +153,7 @@ public class PoleScaffoldController : MonoBehaviour
 
 
     }
+
     private void OnTriggerStay2D(Collider2D collision)
     {
 
