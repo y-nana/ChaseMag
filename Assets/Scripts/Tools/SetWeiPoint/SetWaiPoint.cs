@@ -42,6 +42,7 @@ public class SetWaiPoint : EditorWindow
     private readonly Vector2 defaultWallBottomPosition = new Vector2(1.0f, 0.5f);
     private readonly Vector2 defaultWallMiddlePosition = new Vector2(1.0f, 0);
     private readonly Vector2 defaultPoleScaffoldPosition = new Vector2(0, 1.0f);
+    private readonly Vector2 defaultScaffoldPosition = new Vector2(0, 0.4f);
 
 
 
@@ -76,10 +77,10 @@ public class SetWaiPoint : EditorWindow
             wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopLeft, PointCategory.Normal));
             wallData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.TopRight, PointCategory.Normal));
             wallData.pointPosition.Add(new PointPosition(defaultWallBottomPosition, BasePoint.BottomRight, PointCategory.Normal));
-            wallData.pointPosition.Add(new PointPosition(-defaultWallBottomPosition, BasePoint.BottomLeft, PointCategory.Normal));
+            wallData.pointPosition.Add(new PointPosition(new Vector2( -defaultWallBottomPosition.x, defaultWallBottomPosition.y), BasePoint.BottomLeft, PointCategory.Normal));
 
-            wallData.pointPosition.Add(new PointPosition(defaultWallMiddlePosition, BasePoint.Center, PointCategory.Floating));
-            wallData.pointPosition.Add(new PointPosition(-defaultWallMiddlePosition, BasePoint.Center, PointCategory.Floating));
+            //wallData.pointPosition.Add(new PointPosition(defaultWallMiddlePosition, BasePoint.Center, PointCategory.Floating));
+            //wallData.pointPosition.Add(new PointPosition(-defaultWallMiddlePosition, BasePoint.Center, PointCategory.Floating));
 
             settingDatas.Add(wallData);
 
@@ -95,6 +96,13 @@ public class SetWaiPoint : EditorWindow
             itemBoxData.pointPosition = new List<PointPosition>();
             itemBoxData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.Center, PointCategory.Normal));
             settingDatas.Add(itemBoxData);
+
+
+            PointSettingData scaffoldData = new PointSettingData();
+            scaffoldData.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.scaffold);
+            scaffoldData.pointPosition = new List<PointPosition>();
+            scaffoldData.pointPosition.Add(new PointPosition(defaultScaffoldPosition, BasePoint.Top, PointCategory.Normal));
+            settingDatas.Add(scaffoldData);
 
         }
 
@@ -233,6 +241,8 @@ public class SetWaiPoint : EditorWindow
         pointList = new List<Point>();
         objectOnPoints = new Dictionary<GameObject, List<float>>();
 
+
+
         // すべてのオブジェクトをチェック
         foreach (var obj in objects)
         {
@@ -249,6 +259,8 @@ public class SetWaiPoint : EditorWindow
                 }
             }
 
+            
+
             for (int i = 0; i < settingDatas.Count; i++)
             {
                 // ポイント生成データで指定されているオブジェクトだったら生成
@@ -261,7 +273,6 @@ public class SetWaiPoint : EditorWindow
             }
         }
     }
-
 
     // 一つのオブジェクトに対して、データから複数のポイントを生成
     private void PositionSetting(int index, SpriteRenderer spriteRenderer)
@@ -289,6 +300,10 @@ public class SetWaiPoint : EditorWindow
                     break;
                 case BasePoint.BottomLeft:
                     move = spriteRenderer.bounds.min;
+                    break;
+
+                case BasePoint.Top:
+                    move.y = spriteRenderer.bounds.max.y;
                     break;
             }
 

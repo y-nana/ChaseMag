@@ -9,7 +9,8 @@ public enum BasePoint
     TopRight,
     TopLeft,
     BottomRight,
-    BottomLeft
+    BottomLeft,
+    Top
 }
 
 
