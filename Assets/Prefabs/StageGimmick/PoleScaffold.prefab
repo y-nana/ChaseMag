@@ -226,6 +226,6 @@ MonoBehaviour:
   lowerMove: 3.5
   speed: 7
   chaserSpeed: 15
-  playerSpeed: 0
+  playerSpeed: 7.86
   margin: 0.1
   moveTransform: {fileID: 6266121997514008043}

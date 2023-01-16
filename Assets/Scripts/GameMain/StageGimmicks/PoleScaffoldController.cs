@@ -258,6 +258,18 @@ public class PoleScaffoldController : MonoBehaviour
 
                 }
             }
+            else
+            {
+                if (poleCnt.PoleCheck((int)PoleOrientation.Down))
+                {
+                    return PoleScaffoldState.up;
+                }
+                else if (poleCnt.PoleCheck((int)PoleOrientation.Up))
+                {
+                    return PoleScaffoldState.down;
+
+                }
+            }
         }
         else
         {
@@ -269,6 +281,18 @@ public class PoleScaffoldController : MonoBehaviour
                     return PoleScaffoldState.down;
                 }
                 else if (poleCnt.PoleCheck((int)PoleOrientation.Up))
+                {
+                    return PoleScaffoldState.up;
+
+                }
+            }
+            else
+            {
+                if (poleCnt.PoleCheck((int)PoleOrientation.Up))
+                {
+                    return PoleScaffoldState.down;
+                }
+                else if (poleCnt.PoleCheck((int)PoleOrientation.Down))
                 {
                     return PoleScaffoldState.up;
 
@@ -288,7 +312,7 @@ public class PoleScaffoldController : MonoBehaviour
         }
         if (isPlayerInArea)
         {
-            return speed * poleCnt.PoleStrong;
+            return speed * poleCnt.PoleStrong * poleCnt.PoleStrong;
         }
 
         return speed;

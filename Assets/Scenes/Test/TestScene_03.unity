@@ -3388,6 +3388,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PoleScaffoldSet
       objectReference: {fileID: 0}
+    - target: {fileID: 6266121997910234592, guid: 12552d01a06465844ad4f01a7d0f086c,
+        type: 3}
+      propertyPath: m_TagString
+      value: North
+      objectReference: {fileID: 0}
     - target: {fileID: 6266121997910234593, guid: 12552d01a06465844ad4f01a7d0f086c,
         type: 3}
       propertyPath: m_RootOrder
