@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6266121997514008042}
   - component: {fileID: 6266121997514008045}
   - component: {fileID: 6266121997514008047}
+  - component: {fileID: 3433027073503386895}
   m_Layer: 0
   m_Name: PoleScaffold
   m_TagString: South
@@ -95,7 +96,7 @@ BoxCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0.16}
   m_SpriteTilingProperty:
@@ -131,6 +132,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!251 &3433027073503386895
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6266121997514008046}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 1591
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &6266121997910234592
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,5 +226,6 @@ MonoBehaviour:
   lowerMove: 3.5
   speed: 7
   chaserSpeed: 15
+  playerSpeed: 0
   margin: 0.1
   moveTransform: {fileID: 6266121997514008043}

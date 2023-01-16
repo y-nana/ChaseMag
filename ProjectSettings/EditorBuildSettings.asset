@@ -24,6 +24,18 @@ EditorBuildSettings:
     path: Assets/Scenes/GameTutorialScene.unity
     guid: 20d9da32cfdf36f49bd90806566c2393
   - enabled: 1
+    path: Assets/Scenes/GameMain/World_01/JumpEasyScene.unity
+    guid: 981d606c28def1e4bba044a3a7b732e3
+  - enabled: 1
+    path: Assets/Scenes/GameMain/World_01/JumpNormalScene.unity
+    guid: c332736c0a5082e4f8502d52ee788920
+  - enabled: 1
+    path: Assets/Scenes/GameMain/World_01/JumpHardScene.unity
+    guid: eed5edf1e75413f46b340f6ab4161590
+  - enabled: 1
+    path: Assets/Scenes/GameMain/World_01/JumpExtraScene.unity
+    guid: 663610c8d51c67c46a4158ae9cca1ac7
+  - enabled: 1
     path: Assets/Scenes/GameMain/World_02/EasyGameScene.unity
     guid: 8b32661c61c7f9e43b3a3ff95c99acfe
   - enabled: 1
@@ -33,9 +45,15 @@ EditorBuildSettings:
     path: Assets/Scenes/GameMain/World_02/HardGameScene.unity
     guid: 836fea1b10ccb9a4bb3b0410d979bdd8
   - enabled: 1
-    path: Assets/Scenes/GameMain/World_01/JumpEasyScene.unity
-    guid: 981d606c28def1e4bba044a3a7b732e3
-  - enabled: 1
     path: Assets/Scenes/GameMain/World_03/W3_EasyScene.unity
     guid: 2b96b2362cbb8074bb01169af4214866
+  - enabled: 1
+    path: Assets/Scenes/GameMain/World_03/W3_NormalScene.unity
+    guid: 9961bd921ac657b41b6281a1f4f77557
+  - enabled: 1
+    path: Assets/Scenes/GameMain/World_03/W3_HardScene.unity
+    guid: b09598887125e6f4aaa06f33e3aff877
+  - enabled: 1
+    path: Assets/Scenes/GameMain/World_03/W3_ExtraScene.unity
+    guid: cc3f9e14637678f46ae5434478d064e2
   m_configObjects: {}

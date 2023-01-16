@@ -1915,6 +1915,11 @@ PrefabInstance:
       propertyPath: sceneDirector
       value: 
       objectReference: {fileID: 1020909039}
+    - target: {fileID: 5080535839279588845, guid: a1d9e48e46aa1c245bc73d620a15371b,
+        type: 3}
+      propertyPath: thisStageLevel
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 5080535839455993425, guid: a1d9e48e46aa1c245bc73d620a15371b,
         type: 3}
       propertyPath: m_Name
@@ -2060,11 +2065,21 @@ PrefabInstance:
       propertyPath: sceneDirector
       value: 
       objectReference: {fileID: 1020909039}
+    - target: {fileID: 5080535839543456310, guid: a1d9e48e46aa1c245bc73d620a15371b,
+        type: 3}
+      propertyPath: thisStageLevel
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 5080535839800368760, guid: a1d9e48e46aa1c245bc73d620a15371b,
         type: 3}
       propertyPath: sceneDirector
       value: 
       objectReference: {fileID: 1020909039}
+    - target: {fileID: 5080535839800368760, guid: a1d9e48e46aa1c245bc73d620a15371b,
+        type: 3}
+      propertyPath: thisStageLevel
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5080535839800368771, guid: a1d9e48e46aa1c245bc73d620a15371b,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2130,6 +2145,11 @@ PrefabInstance:
       propertyPath: sceneDirector
       value: 
       objectReference: {fileID: 1020909039}
+    - target: {fileID: 5080535840681468729, guid: a1d9e48e46aa1c245bc73d620a15371b,
+        type: 3}
+      propertyPath: thisStageLevel
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 5080535840982330354, guid: a1d9e48e46aa1c245bc73d620a15371b,
         type: 3}
       propertyPath: m_Text

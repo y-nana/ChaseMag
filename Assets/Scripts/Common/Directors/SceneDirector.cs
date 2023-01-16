@@ -35,15 +35,20 @@ public class SceneDirector : MonoBehaviour
     // World_1
     private readonly string jumpEasyScene = "JumpEasyScene";        // かんたんゲームシーン名
     private readonly string jumpNormalScene = "JumpNormalScene";    // 普通ゲームシーン名
-
+    private readonly string jumpHardScene = "JumpHardScene";        // むずかしいゲームシーン名
+    private readonly string jumpExtraScene = "JumpExtraScene";      // エクストラゲームシーン名
 
     // World_2
     private readonly string easyGameScene = "EasyGameScene";        // かんたんゲームシーン名
     private readonly string normalGameScene = "normalGameScene";    // ふつうゲームシーン名
     private readonly string hardGameScene = "hardGameScene";        // むずかしいゲームシーン名
-    private readonly string gameScene = "GameScene";                // ゲームメインシーン名
+    private readonly string gameScene = "GameScene";                // エクストラゲームメインシーン名
 
-
+    // World_2
+    private readonly string w3_easyScene = "W3_EasyScene";        // かんたんゲームシーン名
+    private readonly string w3_normalScene = "W3_NormalScene";    // ふつうゲームシーン名
+    private readonly string w3_hardScene = "W3_HardScene";        // むずかしいゲームシーン名
+    private readonly string w3_extraScene = "W3_ExtraScene";            // エクストラゲームメインシーン名
 
     [SerializeField]
     private StageLevelState thisStageLevel;     // unityエディター上で設定するこのシーンはどのステージなのか
@@ -112,9 +117,10 @@ public class SceneDirector : MonoBehaviour
 
                 break;
             case StageLevelState.hard:
-
+                SceneManager.LoadScene(jumpHardScene);
                 break;
             case StageLevelState.extra:
+                SceneManager.LoadScene(jumpExtraScene);
                 break;
 
             case StageLevelState.tutorial:
@@ -136,6 +142,18 @@ public class SceneDirector : MonoBehaviour
             case StageLevelState.W2_Extra:
                 SceneManager.LoadScene(gameScene);
 
+                break;
+            case StageLevelState.W3_Easy:
+                SceneManager.LoadScene(w3_easyScene);
+                break;
+            case StageLevelState.W3_Normal:
+                SceneManager.LoadScene(w3_normalScene);
+                break;
+            case StageLevelState.W3_Hard:
+                SceneManager.LoadScene(w3_hardScene);
+                break;
+            case StageLevelState.W3_Extra:
+                SceneManager.LoadScene(w3_extraScene);
                 break;
         }
     }

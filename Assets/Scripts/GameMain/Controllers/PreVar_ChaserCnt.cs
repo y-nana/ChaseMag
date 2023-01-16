@@ -17,7 +17,7 @@ public class PreVar_ChaserCnt : MonoBehaviour
     private Rigidbody2D rigid2D;            // 移動
     private SpriteRenderer spriteRenderer;  // 身体の向き変更
     private Animator animator;              // アニメーション
-    [SerializeField] private GameObject sceneDirector;        // シーン遷移用
+    [SerializeField] private SceneDirector sceneDirector;        // シーン遷移用
     private AudioSource audioSource;        // サウンド
 
 
@@ -220,11 +220,7 @@ public class PreVar_ChaserCnt : MonoBehaviour
         // プレイヤーに接触したらゲームオーバーへ遷移
         if (collision.gameObject == player || collision.gameObject == playerPole)
         {
-            ExecuteEvents.Execute<SceneCaller>(
-                target: sceneDirector,
-                eventData: null,
-                functor: (reciever, eventData) => reciever.ToGameOver()
-                );
+            sceneDirector.ToGameOver();
         }
 
     }
