@@ -16,7 +16,11 @@ public enum StageLevelState
     W2_Normal,
     W2_Hard,
     W2_Extra,
-    tutorial
+    tutorial,
+    W3_Easy,
+    W3_Normal,
+    W3_Hard,
+    W3_Extra
 }
 
 

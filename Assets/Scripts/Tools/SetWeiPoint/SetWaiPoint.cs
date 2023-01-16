@@ -41,6 +41,7 @@ public class SetWaiPoint : EditorWindow
     private readonly Vector2 defaultMaxDistance = new Vector2(10.0f, 5.0f);
     private readonly Vector2 defaultWallBottomPosition = new Vector2(1.0f, 0.5f);
     private readonly Vector2 defaultWallMiddlePosition = new Vector2(1.0f, 0);
+    private readonly Vector2 defaultPoleScaffoldPosition = new Vector2(0, 1.0f);
 
 
 
@@ -63,11 +64,11 @@ public class SetWaiPoint : EditorWindow
         {
             // デフォルトの生成位置の情報を入れる
 
-            PointSettingData data = new PointSettingData();
-            data.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.jumpRamp);
-            data.pointPosition = new List<PointPosition>();
-            data.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.Center,PointCategory.CanJump));
-            settingDatas.Add(data);
+            PointSettingData jumpRampData = new PointSettingData();
+            jumpRampData.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.jumpRamp);
+            jumpRampData.pointPosition = new List<PointPosition>();
+            jumpRampData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.Center,PointCategory.CanJump));
+            settingDatas.Add(jumpRampData);
 
             PointSettingData wallData = new PointSettingData();
             wallData.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.wall);
@@ -81,6 +82,19 @@ public class SetWaiPoint : EditorWindow
             wallData.pointPosition.Add(new PointPosition(-defaultWallMiddlePosition, BasePoint.Center, PointCategory.Floating));
 
             settingDatas.Add(wallData);
+
+            PointSettingData poleScaffoldData = new PointSettingData();
+            poleScaffoldData.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.poleScaffold);
+            poleScaffoldData.pointPosition = new List<PointPosition>();
+            poleScaffoldData.pointPosition.Add(new PointPosition(defaultPoleScaffoldPosition, BasePoint.Center, PointCategory.Normal));
+            settingDatas.Add(poleScaffoldData);
+
+
+            PointSettingData itemBoxData = new PointSettingData();
+            itemBoxData.obj = AssetDatabase.LoadAssetAtPath<GameObject>(PrefabPath.itemBox);
+            itemBoxData.pointPosition = new List<PointPosition>();
+            itemBoxData.pointPosition.Add(new PointPosition(Vector2.zero, BasePoint.Center, PointCategory.Normal));
+            settingDatas.Add(itemBoxData);
 
         }
 
@@ -383,7 +397,9 @@ public class SetWaiPoint : EditorWindow
     // 隙間にウェイポイントを追加する
     private void AddSetWeiPoint()
     {
-        float downMargin = 0.5f;
+        // ポイント生成位置
+        float downMargin = 0.4f;
+        // 端からの位置
         float sideMargin = 1.0f;
 
         float distanceRatio = 0.7f;

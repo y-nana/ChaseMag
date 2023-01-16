@@ -22,6 +22,10 @@ public class PoleScaffoldController : MonoBehaviour
     [SerializeField, Min(0.0f)]
     private float speed;            // 動くスピード
     [SerializeField, Min(0.0f)]
+    private float chaserSpeed;      // チェイサーが近づいた時のスピード
+    [SerializeField, Min(0.0f)]
+    private float playerSpeed;      // プレイヤーが近づいた時のスピード
+    [SerializeField, Min(0.0f)]
     private float margin;           // 遊び
 
     private float defaultPosY;      // 初期位置
@@ -129,7 +133,8 @@ public class PoleScaffoldController : MonoBehaviour
                     moveRigid.velocity = Vector2.zero;
                     break;
                 }
-                moveRigid.velocity = Vector2.up * speed;
+
+                moveRigid.velocity = Vector2.up * GetVelocity();
 
                 break;
                 // 下に下がる
@@ -142,13 +147,13 @@ public class PoleScaffoldController : MonoBehaviour
                     break;
 
                 }
-                moveRigid.velocity = Vector2.down * speed;
+                moveRigid.velocity = Vector2.down * GetVelocity();
 
                 break;
 
         }
 
-        Debug.Log(state);
+
     }
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -272,6 +277,21 @@ public class PoleScaffoldController : MonoBehaviour
         }
         return PoleScaffoldState.Neutral;
 
+    }
+
+    // 近くの状況によって返す値を変える
+    private float GetVelocity()
+    {
+        if (isChaserInArea)
+        {
+            return chaserSpeed;
+        }
+        if (isPlayerInArea)
+        {
+            return speed * poleCnt.PoleStrong;
+        }
+
+        return speed;
     }
 
 }

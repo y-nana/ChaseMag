@@ -17,7 +17,7 @@ public class Point:MonoBehaviour
 {
     // ポイント
     public Transform myTransform { get; private set; }    // からのオブジェクトをそのまま入れれるようにトランスフォーム
-
+    [field: SerializeField]
     public PointCategory category { get; set; }             // ポイントの種類
 
     // ベクトルとして扱う

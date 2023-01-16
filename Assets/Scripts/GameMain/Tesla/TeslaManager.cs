@@ -10,6 +10,9 @@ public class TeslaManager : MonoBehaviour
     // テスラ計算用
     [SerializeField] GameObject player;
     [SerializeField] GameObject chaser;
+    private Transform playerTransform;
+    private Transform chaserTransform;
+
 
     [SerializeField] float maxDistance = 80;    // 距離の最大値
     [SerializeField] float maxTesla = 50;       // テスラの最大値
@@ -26,13 +29,15 @@ public class TeslaManager : MonoBehaviour
     void Start()
     {
         text = GetComponent<Text>();
+        playerTransform = player.transform;
+        chaserTransform = chaser.transform;
     }
 
     void Update()
     {
         // チェイサーとプレイヤの距離を取得
-        Vector2 pPos = player.transform.position;
-        Vector2 cPos = chaser.transform.position;
+        Vector2 pPos = playerTransform.position;
+        Vector2 cPos = chaserTransform.position;
         distance = Vector2.Distance(pPos, cPos);
         // テスラを求めるための計算 要検討
         tesla = maxTesla - distance / maxDistance * maxTesla;

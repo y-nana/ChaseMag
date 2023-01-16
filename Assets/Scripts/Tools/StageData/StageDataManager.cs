@@ -11,13 +11,18 @@ using Path;
 public class StageDataManager : EditorWindow
 {
     [SerializeField]
-    private StageData stageData;
-    private Transform parent;
-    private Transform celling;
-    private Transform rightWall;
-    private Transform leftWall;
+    private StageData stageData;    // 保持しているステージデータ
+    private Transform parent;       // 生成時に親にするオブジェクト
+    private Transform celling;      // 天井オブジェクト
+    private Transform rightWall;    // 右壁オブジェクト
+    private Transform leftWall;     // 左壁オブジェクト
 
-    private int partsCount;
+    // 初期値セット用
+    private readonly string cellingName = "Celling";
+    private readonly string rightWallName = "RightWall";
+    private readonly string leftWallName = "LeftWall";
+
+    private int partsCount;         // 生成時に番号を振る
 
     string filePath;
 
@@ -31,9 +36,16 @@ public class StageDataManager : EditorWindow
     {
         StageDataManager window = GetWindow<StageDataManager>();
         window.titleContent = new GUIContent("StageDataManager Window");
-
+        window.SearchWallObject();
     }
 
+    private void SearchWallObject()
+    {
+        // オブジェクトの取得
+        celling = GameObject.Find(cellingName).transform;
+        rightWall = GameObject.Find(rightWallName).transform;
+        leftWall = GameObject.Find(leftWallName).transform;
+    }
 
     private void OnGUI()
     {
@@ -61,6 +73,12 @@ public class StageDataManager : EditorWindow
         EditorGUILayout.EndScrollView();
 
         buttonScrollPosition = EditorGUILayout.BeginScrollView(buttonScrollPosition);
+
+        if (GUILayout.Button("壁オブジェクト検索", GUILayout.Height(40)))
+        {
+
+            SearchWallObject();
+        }
 
         if (GUILayout.Button("ステージ生成", GUILayout.Height(40)))
         {

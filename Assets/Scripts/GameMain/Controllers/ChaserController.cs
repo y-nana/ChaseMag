@@ -18,7 +18,7 @@ public class ChaserController : MonoBehaviour
     private SpriteRenderer spriteRenderer;  // 身体の向き変更
     private Animator animator;              // アニメーション
     [SerializeField] 
-    private GameObject sceneDirector;        // シーン遷移用
+    private SceneDirector sceneDirector;        // シーン遷移用
     private AudioSource audioSource;        // サウンド
     private Transform myTransform;          // トランスフォーム
 
@@ -246,11 +246,8 @@ public class ChaserController : MonoBehaviour
         // プレイヤーに接触したらゲームオーバーへ遷移
         if (collision.gameObject == player || collision.gameObject == playerPole)
         {
-            ExecuteEvents.Execute<SceneCaller>(
-                target: sceneDirector,
-                eventData: null,
-                functor: (reciever, eventData) => reciever.ToGameOver()
-                );
+            sceneDirector.ToGameOver();
+           
         }
 
     }

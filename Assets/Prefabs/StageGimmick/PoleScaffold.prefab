@@ -204,6 +204,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   higherMove: 3.5
   lowerMove: 3.5
-  speed: 10
+  speed: 7
+  chaserSpeed: 15
   margin: 0.1
   moveTransform: {fileID: 6266121997514008043}
