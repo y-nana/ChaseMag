@@ -190,6 +190,8 @@ public class TutorialTryManage : MonoBehaviour
     // チュートリアルの終了
     public void TutorialFinish()
     {
+        // クリアしたことを記録
+        SaveData.instance.ClearStage(StageLevelState.tutorial);
         // ステージセレクトシーンへ遷移
         sceneDirector.ToStageSelect();
     }
