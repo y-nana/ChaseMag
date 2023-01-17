@@ -41,7 +41,9 @@ public class ChaserController : MonoBehaviour
     private int routeIndex;                     // 現在向かっているポイントを示す添え字
 
     [SerializeField] private float waitTime;     // 自身が停止しているのを待つ時間
-    private float waitTimer;        
+    private float waitTimer;
+
+    private float goalDis;
 
     [SerializeField] private Vector2 margin = 
     new Vector2(0.5f, 2.0f);                // 震え防止の余白
@@ -225,11 +227,16 @@ public class ChaserController : MonoBehaviour
     // ジャンプする
     public void Jump()
     {
-        if (this.rigid2D.velocity.y <= 0 && wantToJump)
+        //if (this.rigid2D.velocity.y <= 0 && wantToJump)
+        if (wantToJump)
         {
             this.rigid2D.velocity = new Vector2(this.rigid2D.velocity.x, 0f);
             this.rigid2D.AddForce(myTransform.up * this.jumpForce);
-            audioSource.PlayOneShot(jumpSE);
+            if (!audioSource.isPlaying)
+            {
+                audioSource.PlayOneShot(jumpSE);
+
+            }
 
         }
     }

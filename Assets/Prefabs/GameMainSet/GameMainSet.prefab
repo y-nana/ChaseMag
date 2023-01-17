@@ -1271,6 +1271,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2368430385992996404, guid: 2d2d207f379d6a24ca2a0ddbe770c5ca,
+        type: 3}
+      propertyPath: jumpForce
+      value: 900
+      objectReference: {fileID: 0}
+    - target: {fileID: 2368430385992996404, guid: 2d2d207f379d6a24ca2a0ddbe770c5ca,
+        type: 3}
+      propertyPath: walkForce
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7348567304169157811, guid: 2d2d207f379d6a24ca2a0ddbe770c5ca,
         type: 3}
       propertyPath: icon
