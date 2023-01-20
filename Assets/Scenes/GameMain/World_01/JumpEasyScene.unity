@@ -8577,6 +8577,11 @@ PrefabInstance:
       propertyPath: thisStageLevel
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4874097577291038742, guid: 412018cd82ee59f4f87e9ff3acbcf553,
+        type: 3}
+      propertyPath: limitTime
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4874097577417222529, guid: 412018cd82ee59f4f87e9ff3acbcf553,
         type: 3}
       propertyPath: m_Name

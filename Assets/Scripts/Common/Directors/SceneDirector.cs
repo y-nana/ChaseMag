@@ -221,7 +221,7 @@ public class SceneDirector : MonoBehaviour
         NextStageLevel = thisStageLevel;
 
         // クリアしたことを記録
-        SaveData.instance.ClearStage(thisStageLevel);
+        SaveDataManager.instance.ClearStage(thisStageLevel);
 
         // チュートリアルのときは遷移せず指定の処理を行う
         if (thisStageLevel == StageLevelState.tutorial)

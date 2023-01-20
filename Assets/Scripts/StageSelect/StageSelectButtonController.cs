@@ -26,7 +26,7 @@ public class StageSelectButtonController : MonoBehaviour
         // クリア状況の表示
         if (clearIcon != null)
         {
-            clearIcon.enabled = SaveData.instance.IsClear(thisStageLevel);
+            clearIcon.enabled = SaveDataManager.instance.IsClear(thisStageLevel);
         }
     }
 
