@@ -5,10 +5,14 @@ using UnityEngine;
 [System.Serializable]
 public class StageClearData
 {
-    [field:SerializeField]
-    public StageLevelState stageLevel { get; set; }
-    [field:SerializeField]
-    public bool isClear { get; set; }
-    
+    public StageLevelState level;
+    public int score;
+
+    public StageClearData()
+    {
+        level = StageLevelState.easy;
+        score = 0;
+    }
+      
 
 }

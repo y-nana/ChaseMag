@@ -17,7 +17,11 @@ public class ScoreManager : MonoBehaviour
     [SerializeField]
     private Text rankText;              // ランクを表示するテキスト
     [SerializeField]
-    private List<RankData> rankDatas;   //  ランクデータ
+    private Image rankImage;            // ランクを表示するイメージ
+    [SerializeField]
+    private Image SSSEfect;             // SSSの時のみ表示するエフェクト
+    [SerializeField]
+    private RankDataBase rankDataBase;   //  ランクデータ
 
     [SerializeField]
     private int baseScore;
@@ -29,12 +33,10 @@ public class ScoreManager : MonoBehaviour
 
     void Start()
     {
+
         ViewResult();
 
     }
-
-
-
 
 
     private void ViewResult()
@@ -50,8 +52,20 @@ public class ScoreManager : MonoBehaviour
         scoreText.text = score.ToString();
 
         // ランクの表示
-        RankData rankData = GetRank(score);
-        rankText.text = rankData.rank.ToString();
+        RankData rankData = rankDataBase.GetRank(score);
+        rankImage.sprite = rankData.sprite;
+        //rankText.text = rankData.rank.ToString();
+        if (rankData.rank == Rank.SSS)
+        {
+            SSSEfect.enabled = true;
+        }
+        else
+        {
+            SSSEfect.enabled = false;
+        }
+
+        // スコアを記録
+        SaveScore(score);
     }
 
     // ベーススコアからテスラの分だけ減点、クリップの分だけ加算
@@ -68,18 +82,10 @@ public class ScoreManager : MonoBehaviour
         return score;
     }
 
-    private RankData GetRank(int score)
+    private void SaveScore(int score)
     {
-        foreach (RankData data in rankDatas)
-        {
-            // スコアが上回っていたらそのランクを返す
-            if (score > data.lowerScore)
-            {
-                return data;
-            }
-        }
-        // 一番下のランクを返す
-        return rankDatas[rankDatas.Count - 1];
+        // ランク、スコアを記録
+        StageLevelState level = SceneDirector.NextStageLevel;
+        SaveDataManager.instance.SetClearData(level, score);
     }
-
 }

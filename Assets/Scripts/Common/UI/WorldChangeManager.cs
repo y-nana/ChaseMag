@@ -1,6 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+
+// ワールド
+public enum World
+{
+    first,
+    second,
+    third
+}
+
 
 
 // ステージセレクトのボタンをグループごとに移動させるクラス
@@ -9,17 +19,17 @@ public class WorldChangeManager : MonoBehaviour
 
     private RectTransform rectTransform;
 
-    private int nowWorld = 0;
+    private World nowWorld;         // 現在選択中のワールド
 
-    private bool isScroll;
+    private bool isScroll;          // 今スクロール中か
     
-    private float timer;
+    private float timer;            // スクロールタイマー
 
     private float startPosition;
     private float goalPosition;
 
     [SerializeField,Min(0.1f)]
-    private float scrollTime;
+    private float scrollTime;       // 何秒でスクロール完了するか
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +37,7 @@ public class WorldChangeManager : MonoBehaviour
         rectTransform = GetComponent<RectTransform>();
         isScroll = false;
         goalPosition = 0.0f;
-        nowWorld = 0;
+        nowWorld = World.first;
         timer = 0.0f;
     }
 
@@ -50,25 +60,22 @@ public class WorldChangeManager : MonoBehaviour
     }
 
     //選択が変わるごとに呼び出す
-    //ワールドは0から
-    public void ChangeSelectedButtom(int world)
+    public void ChangeSelectedButtom(StageSelectButtonController button)
     {
 
-        if (world == nowWorld)
+        if (button.thisWorld == nowWorld)
         {
             return;
         }
-        nowWorld = world;
+        nowWorld = button.thisWorld;
         if (rectTransform == null)
         {
             rectTransform = GetComponent<RectTransform>();
         }
         startPosition = rectTransform.localPosition.x;
-        goalPosition =  -rectTransform.sizeDelta.x * world;
+        goalPosition = -rectTransform.sizeDelta.x * (int)nowWorld;
         isScroll = true;
         timer = 0.0f;
     }
-
-    
 
 }

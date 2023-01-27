@@ -13,7 +13,7 @@ public class SaveDataManager : MonoBehaviour
 
     private string path;
 
-    public SaveData saveData { get; private set; }
+    private SaveData saveData;
 
     private void Awake()
     {
@@ -23,8 +23,9 @@ public class SaveDataManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            // buildしたときどうなる
+            
             path = Application.dataPath;
+
             ImportSaveData();
 
         }
@@ -39,14 +40,14 @@ public class SaveDataManager : MonoBehaviour
     {
         string datastr = "";
         StreamReader reader;
-        reader = new StreamReader(path + fileName);
-        if (reader == null)
+        if (!File.Exists(path + fileName))
         {
             Debug.Log("ファイルがない");
 
             ResetData();
             return;
         }
+        reader = new StreamReader(path + fileName);
         datastr = reader.ReadToEnd();
         reader.Close();
         Debug.Log("よみこみました");
@@ -58,9 +59,7 @@ public class SaveDataManager : MonoBehaviour
         StreamWriter writer;
 
         string jsonstr = JsonUtility.ToJson(saveData);
-        Debug.Log(saveData.stageClearDatas[0].isClear.ToString());
-        Debug.Log(jsonstr);
-
+        //Debug.Log(jsonstr);
         writer = new StreamWriter(path + fileName, false);
         writer.Write(jsonstr);
         writer.Flush();
@@ -72,13 +71,6 @@ public class SaveDataManager : MonoBehaviour
 
         saveData = new SaveData();
 
-        for (int i = 0; i < System.Enum.GetValues(typeof(StageLevelState)).Length; i++)
-        {
-            StageClearData clearData = new StageClearData();
-            clearData.stageLevel = (StageLevelState)System.Enum.ToObject(typeof(StageLevelState), i);
-            clearData.isClear = false;
-            saveData.stageClearDatas.Add(clearData);
-        }
         ExportSaveData();
     }
 
@@ -89,22 +81,22 @@ public class SaveDataManager : MonoBehaviour
         {
             ResetData();
         }
-        for (int i = 0; i < saveData.stageClearDatas.Count; i++)
-        {
-            if (saveData.stageClearDatas[i].stageLevel == level)
-            {
-                saveData.stageClearDatas[i].isClear = true;
-                return;
-            }
-        }
-
-        StageClearData data = new StageClearData();
-        data.stageLevel = level;
-        data.isClear = true;
-        saveData.stageClearDatas.Add(data);
+        saveData.ClearStage(level);
         ExportSaveData();
 
     }
+
+    public void SetClearData(StageLevelState level, int score)
+    {
+        if (saveData == null)
+        {
+            ResetData();
+        }
+        saveData.SetClearData(level, score);
+        ExportSaveData();
+
+    }
+
 
     // クリアしたかどうか
     public bool IsClear(StageLevelState level)
@@ -112,15 +104,15 @@ public class SaveDataManager : MonoBehaviour
         if (saveData == null)
         {
             ResetData();
-        }
-        for (int i = 0; i < saveData.stageClearDatas.Count; i++)
-        {
-            if (saveData.stageClearDatas[i].stageLevel == level)
-            {
-                return saveData.stageClearDatas[i].isClear;
-            }
+            return false;
         }
 
-        return false;
+        return saveData.IsClear(level) ;
+    }
+
+    public int GetMaxScore(StageLevelState level)
+    {
+
+        return saveData.GetMaxScore(level);
     }
 }

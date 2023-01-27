@@ -105,17 +105,14 @@ MonoBehaviour:
   walkForce: 4
   upForce: 8
   sceneDirector: {fileID: 0}
-  routeManager: {fileID: 0}
   player: {fileID: 0}
   playerPole: {fileID: 0}
-  getPosTime: 2
+  routeManager: {fileID: 0}
   waitTime: 1.5
-  stopDistance: 0.05
   margin: {x: 4.5, y: 1}
   toPlayerTime: 0
   pMoveValue: 0
   jumpSE: {fileID: 8300000, guid: f00b0cc664281444abcf72403bf389de, type: 3}
-  upSE: {fileID: 0}
 --- !u!61 &3485505060607321203
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -217,7 +214,8 @@ AudioSource:
   m_GameObject: {fileID: 3485505060607321199}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -2024826579136577696, guid: dd0abc22f80799d4193d8b88415ef1fc,
+    type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.6

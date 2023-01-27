@@ -1061,6 +1061,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisStageLevel: 0
+  isTest: 0
 --- !u!114 &1762563350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1083,7 +1084,8 @@ AudioSource:
   m_GameObject: {fileID: 1762563347}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 8194385944950271335, guid: dd0abc22f80799d4193d8b88415ef1fc,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: 084151c0d688a0c438281601510c37b2, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.4
