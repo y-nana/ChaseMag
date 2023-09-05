@@ -23,10 +23,13 @@ public class SaveDataManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            
-            path = Application.dataPath;
 
-            ImportSaveData();
+            ResetData();
+
+
+            //path = Application.dataPath;
+
+            //ImportSaveData();
 
         }
         else
@@ -71,7 +74,7 @@ public class SaveDataManager : MonoBehaviour
 
         saveData = new SaveData();
 
-        ExportSaveData();
+        //ExportSaveData();
     }
 
     // ÉNÉäÉAÇµÇΩ
@@ -82,7 +85,7 @@ public class SaveDataManager : MonoBehaviour
             ResetData();
         }
         saveData.ClearStage(level);
-        ExportSaveData();
+        //ExportSaveData();
 
     }
 
@@ -93,7 +96,7 @@ public class SaveDataManager : MonoBehaviour
             ResetData();
         }
         saveData.SetClearData(level, score);
-        ExportSaveData();
+        //ExportSaveData();
 
     }
 

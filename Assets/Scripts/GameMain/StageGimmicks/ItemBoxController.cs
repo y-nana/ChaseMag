@@ -57,6 +57,7 @@ public class ItemBoxController : MonoBehaviour
         {
             guideTextObj.SetActive(true);
 
+
             if ((Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Action3"))
                 && GameStateManager.instance.IsInputtable())
             {

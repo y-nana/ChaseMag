@@ -42,13 +42,13 @@ public class SliderController : MonoBehaviour
         if (selected)
         {
             // âE
-            if (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") > 1.0f)
+            if (Input.GetKey(KeyCode.D) || Input.GetAxis("Horizontal") > 0)
             {
                 AddValue(moveValue * Time.unscaledDeltaTime);
 
             }
             // ç∂
-            if (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal") < -1.0f)
+            if (Input.GetKey(KeyCode.A) || Input.GetAxis("Horizontal") < 0)
             {
                 AddValue(-moveValue * Time.unscaledDeltaTime);
 

@@ -36,7 +36,7 @@ public class CursorManager : MonoBehaviour
                 if (preSelectedObj != null)
                 {
                     // アウトラインを移動
-                    Debug.Log(selected);
+                    //Debug.Log(selected);
                     Destroy(outline);
                     outline = selected.AddComponent<Outline>();
                     OutLineInit();
