@@ -166,7 +166,7 @@ public class TutrialManager : MonoBehaviour
         while (tutorialIndex < tutorialDatas.Count)
         {
 
-            Debug.Log(tutorialIndex);
+            //Debug.Log(tutorialIndex);
             // 鬼をセッティングするフェーズのとき
             if (tutorialDatas[tutorialIndex].chaseSetting)
             {

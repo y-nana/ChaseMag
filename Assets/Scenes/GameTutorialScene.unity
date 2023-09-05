@@ -3717,6 +3717,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1609766321}
     m_Modifications:
+    - target: {fileID: 1694886996241090234, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1694886997046063706, guid: b79a175c97820ec45b07c0588ab81ef0,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -3731,6 +3736,56 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: HowToPlayManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741543747730840296, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741543747730840296, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741543747730840296, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1015.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741543747730840296, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 507.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3741543747730840296, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -375
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779215475211339472, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779215475211339472, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779215475211339472, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1015.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779215475211339472, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 507.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4779215475211339472, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -125
       objectReference: {fileID: 0}
     - target: {fileID: 6161098475265965665, guid: b79a175c97820ec45b07c0588ab81ef0,
         type: 3}
@@ -4036,6 +4091,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: ViewHowToPlay
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472759202219183377, guid: b79a175c97820ec45b07c0588ab81ef0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b79a175c97820ec45b07c0588ab81ef0, type: 3}
@@ -7106,7 +7166,7 @@ MonoBehaviour:
     <tutorialState>k__BackingField: 1
     <chaseSetting>k__BackingField: 0
     <isResult>k__BackingField: 0
-  - <viewText>k__BackingField: "Y\u3067\u30A2\u30A4\u30C6\u30E0\u3092\u7372\u5F97\u3057\u3001\u78C1\u529B\u3092\u5F37\u304F\u3059\u308B\u3053\u3068\u3067\n\u3088\u308A\u9AD8\u304F\u30B8\u30E3\u30F3\u30D7\u3067\u304D\u308B\u3088\u3046\u306B\u306A\u308A\u307E\u3059\n"
+  - <viewText>k__BackingField: "X\u3067\u30A2\u30A4\u30C6\u30E0\u3092\u7372\u5F97\u3057\u3001\u78C1\u529B\u3092\u5F37\u304F\u3059\u308B\u3053\u3068\u3067\n\u3088\u308A\u9AD8\u304F\u30B8\u30E3\u30F3\u30D7\u3067\u304D\u308B\u3088\u3046\u306B\u306A\u308A\u307E\u3059\n"
     <tutorialState>k__BackingField: 1
     <chaseSetting>k__BackingField: 0
     <isResult>k__BackingField: 0

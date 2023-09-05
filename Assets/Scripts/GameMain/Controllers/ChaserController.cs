@@ -159,25 +159,25 @@ public class ChaserController : MonoBehaviour
         // 今の目標地点についた
         if (Vector2.Distance(route[routeIndex].position, myTransform.position) < 0.75f)
         {
-            Debug.Log(route[routeIndex].gameObject.name + "着いた！");
+            //Debug.Log(route[routeIndex].gameObject.name + "着いた！");
             waitTimer = 0.0f;
 
             if (IsPlayerAlotMove())
             {
-                Debug.Log("プレイヤーが移動しているので再検索します");
+                //Debug.Log("プレイヤーが移動しているので再検索します");
                 SearchRoute();
             }
             else
             {
-                Debug.Log("次のポイントへ");
+                //Debug.Log("次のポイントへ");
                 routeIndex++;
                 // ルートの最後まで行っていたら
                 if (routeIndex >= route.Count)
                 {
-                    Debug.Log("ルートの終了プレイヤーを追います");
+                    //Debug.Log("ルートの終了プレイヤーを追います");
                     if (route[route.Count - 1] != routeManager.GetNearlyPointTransform(pTransform.position))
                     {
-                        Debug.Log("ゴールがちょっと違う");
+                        //Debug.Log("ゴールがちょっと違う");
                         SearchRoute();
                         return route[routeIndex].position - myTransform.position;
                     }
@@ -192,17 +192,17 @@ public class ChaserController : MonoBehaviour
         waitTimer += Time.deltaTime;
         if (waitTimer > waitTime)
         {
-            Debug.Log("着かなすぎるので検査");
+            //Debug.Log("着かなすぎるので検査");
             waitTimer = 0.0f;
             if (routeManager.GetNearlyPointTransform(myTransform.position) == route[routeIndex])
             {
-                Debug.Log("何かがおかしいのでそのままプレイヤーを追ってみます");
+                //Debug.Log("何かがおかしいのでそのままプレイヤーを追ってみます");
                 isUseRoute = false;
                 return ToPlayer();
 
             }
 
-            Debug.Log("スタートが違うので経路探索します");
+            //Debug.Log("スタートが違うので経路探索します");
             SearchRoute();
 
         }
@@ -276,14 +276,14 @@ public class ChaserController : MonoBehaviour
     // 経路探索をする
     public void SearchRoute()
     {
-        Debug.Log("探索開始");
+        //Debug.Log("探索開始");
         route = routeManager.GetRoute(myTransform, pTransform);
         prePlayerPos = pTransform.position;
         routeIndex = 0;
-        Debug.Log("今回のルートは");
+        //Debug.Log("今回のルートは");
         if (route == null)
         {
-            Debug.Log("ないです");
+            //Debug.Log("ないです");
 
             isUseRoute = false;
             return;
@@ -291,7 +291,7 @@ public class ChaserController : MonoBehaviour
         }
         foreach (var item in route ?? new List<Transform>())
         {
-            Debug.Log(item.gameObject.name);
+            //Debug.Log(item.gameObject.name);
         }
         // 目標がなかったら直接プレイヤーを追う
         isUseRoute = route.Count >= 1;

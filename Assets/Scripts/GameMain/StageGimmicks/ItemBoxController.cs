@@ -30,8 +30,8 @@ public class ItemBoxController : MonoBehaviour
     // 取得用タグ名
     private readonly string playerTagName = "Player";   // プレイヤ
 
-    private readonly string chooseGuide = "Yボタンで\nアイテム抽選";
-    private readonly string getGuide = "もう一度Yボタンで\nアイテムゲット";
+    private readonly string chooseGuide = "Xボタンで\nアイテム抽選";
+    private readonly string getGuide = "もう一度Xボタンで\nアイテムゲット";
     private readonly string coolTimeGuide = "クールタイム...";
 
 
