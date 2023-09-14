@@ -13,6 +13,11 @@ public class ClipManager : MonoBehaviour
     private GameObject[] clips;
 
     [SerializeField]
+    private AudioSource audioSource;  // æ“¾‚ÌŒø‰Ê‰¹‚ğ–Â‚ç‚·
+    [SerializeField]
+    private AudioClip getSE;
+
+    [SerializeField]
     private Text countText;
 
     [SerializeField]
@@ -40,6 +45,7 @@ public class ClipManager : MonoBehaviour
     public void GetClip(ClipController clip)
     {
         count++;
+        audioSource.PlayOneShot(getSE);
         // æ“¾”•\¦
         if (countText != null)
         {

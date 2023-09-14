@@ -5,6 +5,7 @@ using UnityEngine;
 // クリップを制御するクラス
 public class ClipController : MonoBehaviour
 {
+
     // 取得時に発生させるアクション
     public System.Action<ClipController> GetAction { get; set; }
     // 取得用タグ名
